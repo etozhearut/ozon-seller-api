@@ -1,19 +1,4 @@
 {
-  "$schema": "https://context7.com/schema/context7.json",
   "url": "https://context7.com/etozhearut/ozon-seller-api",
-  "public_key": "pk_4MKQpdZwCS5yVfI6RP1ir",
-  "projectTitle": "Ozon Seller API",
-  "description": "Полная справочная документация Ozon Seller API: товары, цены и остатки, FBS/FBO/rFBS, поставки и грузоместа, возвраты, отчёты, аналитика, финансы, акции, отзывы, чаты, уведомления. 460 методов. Базовый URL: https://api-seller.ozon.ru. Авторизация: заголовки Client-Id и Api-Key.",
-  "folders": [
-    "docs"
-  ],
-  "excludeFolders": [],
-  "rules": [
-    "Все запросы отправляются на базовый URL https://api-seller.ozon.ru.",
-    "Авторизация — через HTTP-заголовки Client-Id и Api-Key.",
-    "Почти все методы — POST с телом application/json, включая операции чтения.",
-    "Файл docs/00-overview.md содержит начало работы, авторизацию и частые ошибки.",
-    "У каждого метода есть Operation ID, путь, описание, cURL-пример, схемы и пример ответа.",
-    "Документация на русском языке."
-  ]
+  "public_key": "pk_4MKQpdZwCS5yVfI6RP1ir"
 }
