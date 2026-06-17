@@ -18,4 +18,9 @@
     "Каждый метод снабжён Operation ID, HTTP-методом, путём, описанием, параметрами, схемой тела запроса, схемой ответа и примерами запроса/ответа в JSON.",
     "Документация на русском языке. Названия разделов соответствуют тегам Ozon Seller API (ProductAPI, FBS, FBO, FinanceAPI и т.д.)."
   ]
+},
+{
+  "url": "https://context7.com/etozhearut/ozon-seller-api",
+  "public_key": "pk_4MKQpdZwCS5yVfI6RP1ir"
 }
+
