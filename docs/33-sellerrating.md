@@ -1,8 +1,10 @@
 # Рейтинг продавца
 
-Рейтинг продавца Работая с Ozon, продавцы должны соблюдать требования по качеству обслуживания, срокам доставки и общению с клиентами. Система рейтингов отражает качество сервиса продавца, а некоторые показатели видны покупателям — это рейтинг товаров и индекс цен. Подробнее о системе рейтингов в Базе знаний продавца
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `SellerRating` · операций: 4_
+_Тег: `SellerRating` · методов: 4_
+
+Рейтинг продавца Работая с Ozon, продавцы должны соблюдать требования по качеству обслуживания, срокам доставки и общению с клиентами. Система рейтингов отражает качество сервиса продавца, а некоторые показатели видны покупателям — это рейтинг товаров и индекс цен. Подробнее о системе рейтингов в Базе знаний продавца
 
 ## Получить информацию о текущих рейтингах продавца
 
@@ -11,6 +13,12 @@ _Тег: `SellerRating` · операций: 4_
 Operation ID: `RatingAPI_RatingSummaryV1`
 
 Рейтинг продавца по следующим показателям: индекс цен, доставки вовремя, процент отмен, жалобы и другие. Соответствует разделу Рейтинги → Рейтинги продавца в личном кабинете.
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/rating/summary" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Ответы
 
@@ -25,7 +33,6 @@ Operation ID: `RatingAPI_RatingSummaryV1`
 - `premium_plus` — boolean Признак наличия подписки Premium Plus .
 
 Пример ответа:
-
 ```json
 {
   "groups": [
@@ -70,25 +77,27 @@ Operation ID: `RatingAPI_RatingHistoryV1`
 
 Информация о рейтингах за заданный период и с фильтром по нужному рейтингу. Соответствует разделу Рейтинги → Рейтинги продавца в личном кабинете.
 
-### Тело запроса (application/json)
-
-- `date_from required` — string <date-time> Начало периода.
-- `date_to required` — string <date-time> Конец периода.
-- `ratings required` — Array of strings Фильтр по рейтингу. Рейтинги, по которым нужно получить значение за период: rating_on_time — процент заказов, выполненных вовремя за последние 30 дней. rating_review_avg_score_total — средняя оценка всех товаров. rating_ssl — оценка работы по FBO. Учитывает rating_on_time_supply_delivery , rating_on_time_supply_cancellation и rating_order_accuracy . rating_on_time_supply_delivery — процент поставок, которые вы привезли на склад в выбранный временной интервал за последние 60 дней. rating_order_accuracy — процент поставок без излишков, недостач, пересорта и брака за последние 60 дней. rating_on_time_supply_cancellation — процент заявок на поставку, которые завершились или были отменены без опоздания за последние 60 дней. rating_reaction_time — время в секундах, в течение которого покупатели в среднем ждали ответа на своё первое сообщение в чате за последние 30 дней. rating_average_response_time — время в секундах, в течение которого покупатели в среднем ждали вашего ответа за последние 30 дней. rating_replied_dialogs_ratio — доля диалогов хотя бы с одним вашим ответом в течение 24 часов за последние 30 дней. rating_general_indicator_fbs_rfbs — индекс ошибок FBS и rFBS. rating_price_green — выгодный индекс цен. rating_price_yellow — умеренный индекс цен. rating_price_red — невыгодный индекс цен. rating_price_super — супер-выгодный индекс цен. Если вы хотите получить информацию по начисленным штрафным баллам для рейтингов rating_on_time и rating_review_avg_score_total , передайте значения нужных рейтингов в этом параметре и with_premium_scores=true .
-- `with_premium_scores` — boolean Признак, что в ответе нужно вернуть информацию о штрафных баллах в Premium-программе.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/rating/history" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "date_from": "2019-08-24T14:15:22Z",
   "date_to": "2019-08-24T14:15:22Z",
   "ratings": [
     "string"
   ],
   "with_premium_scores": true
-}
+}'
 ```
+
+### Тело запроса
+
+- `date_from required` — string <date-time> Начало периода.
+- `date_to required` — string <date-time> Конец периода.
+- `ratings required` — Array of strings Фильтр по рейтингу. Рейтинги, по которым нужно получить значение за период: rating_on_time — процент заказов, выполненных вовремя за последние 30 дней. rating_review_avg_score_total — средняя оценка всех товаров. rating_ssl — оценка работы по FBO. Учитывает rating_on_time_supply_delivery , rating_on_time_supply_cancellation и rating_order_accuracy . rating_on_time_supply_delivery — процент поставок, которые вы привезли на склад в выбранный временной интервал за последние 60 дней. rating_order_accuracy — процент поставок без излишков, недостач, пересорта и брака за последние 60 дней. rating_on_time_supply_cancellation — процент заявок на поставку, которые завершились или были отменены без опоздания за последние 60 дней. rating_reaction_time — время в секундах, в течение которого покупатели в среднем ждали ответа на своё первое сообщение в чате за последние 30 дней. rating_average_response_time — время в секундах, в течение которого покупатели в среднем ждали вашего ответа за последние 30 дней. rating_replied_dialogs_ratio — доля диалогов хотя бы с одним вашим ответом в течение 24 часов за последние 30 дней. rating_general_indicator_fbs_rfbs — индекс ошибок FBS и rFBS. rating_price_green — выгодный индекс цен. rating_price_yellow — умеренный индекс цен. rating_price_red — невыгодный индекс цен. rating_price_super — супер-выгодный индекс цен. Если вы хотите получить информацию по начисленным штрафным баллам для рейтингов rating_on_time и rating_review_avg_score_total , передайте значения нужных рейтингов в этом параметре и with_premium_scores=true .
+- `with_premium_scores` — boolean Признак, что в ответе нужно вернуть информацию о штрафных баллах в Premium-программе.
 
 ### Ответы
 
@@ -100,7 +109,6 @@ Operation ID: `RatingAPI_RatingHistoryV1`
 - `ratings` — Array of objects Информация о рейтингах продавца.
 
 Пример ответа:
-
 ```json
 {
   "premium_scores": [
@@ -146,6 +154,12 @@ Operation ID: `RatingAPI_RatingHistoryV1`
 
 Operation ID: `RatingAPI_GetFBSRatingIndexInfoV1`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/rating/index/fbs/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -165,7 +179,6 @@ Operation ID: `RatingAPI_GetFBSRatingIndexInfoV1`
 - `processing_costs_sum` — number <double> Расходы на обработку ошибок за период.
 
 Пример ответа:
-
 ```json
 {
   "currency_code": "string",
@@ -191,21 +204,12 @@ Operation ID: `RatingAPI_GetFBSRatingIndexInfoV1`
 
 Operation ID: `RatingAPI_ListFBSRatingIndexPostingsV1`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter required` — object Фильтр.
-- `limit required` — integer <int64> <= 1000 Количество значений в ответе.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/rating/index/fbs/posting/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "date_from": "2019-08-24T14:15:22Z",
@@ -215,8 +219,19 @@ Operation ID: `RatingAPI_ListFBSRatingIndexPostingsV1`
     ]
   },
   "limit": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter required` — object Фильтр.
+- `limit required` — integer <int64> <= 1000 Количество значений в ответе.
 
 ### Ответы
 
@@ -229,7 +244,6 @@ Operation ID: `RatingAPI_ListFBSRatingIndexPostingsV1`
 - `has_next` — boolean true , если в ответе вернулись не все отправления.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",

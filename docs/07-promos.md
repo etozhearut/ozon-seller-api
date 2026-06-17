@@ -1,8 +1,10 @@
 # Акции Ozon
 
-Акции Ozon Для продвижения товаров участвуйте в акциях, которые Ozon проводит для покупателей. Подробнее об акциях в Базе знаний продавца .
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `Promos` · операций: 8_
+_Тег: `Promos` · методов: 8_
+
+Акции Ozon Для продвижения товаров участвуйте в акциях, которые Ozon проводит для покупателей. Подробнее об акциях в Базе знаний продавца .
 
 ## Список акций
 
@@ -11,6 +13,12 @@ _Тег: `Promos` · операций: 8_
 Operation ID: `Promos`
 
 Метод для получения списка акций Ozon, в которых можно участвовать. Подробнее об акциях Ozon
+
+```bash
+curl -X GET "https://api-seller.ozon.ru/v1/actions" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Ответы
 
@@ -38,7 +46,6 @@ Operation ID: `Promos`
   - `discount_value` — number <double> Размер скидки.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -77,21 +84,23 @@ Operation ID: `PromosCandidates`
 
 Метод для получения списка товаров, которые могут участвовать в акции, по её идентификатору.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/candidates" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": 63337,
+  "limit": 10,
+  "last_id": "bnVсbA==123123das"
+}'
+```
+
+### Тело запроса
 
 - `action_id required` — number <double> Идентификатор акции. Можно получить с помощью метода /v1/actions .
 - `limit` — number <double> Количество ответов на странице. По умолчанию — 100.
 - `last_id` — number <double> Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым.
-
-Пример запроса:
-
-```json
-{
-  "action_id": 63337,
-  "limit": 10,
-  "last_id": "bnVсbA==123123das"
-}
-```
 
 ### Ответы
 
@@ -105,7 +114,6 @@ Operation ID: `PromosCandidates`
   - `last_id` — number <double> Идентификатор последнего значения на странице. Чтобы получить следующие значения, передайте полученное значение в следующем запросе в параметре last_id .
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -143,21 +151,23 @@ Operation ID: `PromosProducts`
 
 Метод для получения списка товаров, участвующих в акции, по её идентификатору.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/products" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": 66011,
+  "limit": 10,
+  "last_id": "bnVсbA=="
+}'
+```
+
+### Тело запроса
 
 - `action_id required` — number <double> Идентификатор акции. Можно получить с помощью метода /v1/actions .
 - `limit` — number <double> Количество ответов на странице. По умолчанию — 100.
 - `last_id` — number <double> Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым.
-
-Пример запроса:
-
-```json
-{
-  "action_id": 66011,
-  "limit": 10,
-  "last_id": "bnVсbA=="
-}
-```
 
 ### Ответы
 
@@ -171,7 +181,6 @@ Operation ID: `PromosProducts`
   - `last_id` — number <double> Идентификатор последнего значения на странице. Чтобы получить следующие значения, передайте полученное значение в следующем запросе в параметре last_id .
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -209,15 +218,12 @@ Operation ID: `PromosProductsActivate`
 
 Метод для добавления товаров в доступную акцию.
 
-### Тело запроса (application/json)
-
-- `action_id required` — number <double> Идентификатор акции. Можно получить с помощью метода /v1/actions .
-- `products required` — Array of objects <= 1000 items Список товаров.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/products/activate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 60564,
   "products": [
     {
@@ -226,8 +232,13 @@ Operation ID: `PromosProductsActivate`
       "stock": 10
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `action_id required` — number <double> Идентификатор акции. Можно получить с помощью метода /v1/actions .
+- `products required` — Array of objects <= 1000 items Список товаров.
 
 ### Ответы
 
@@ -240,7 +251,6 @@ Operation ID: `PromosProductsActivate`
   - `rejected` — Array of objects Список товаров, которые не удалось добавить в акцию.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -262,21 +272,23 @@ Operation ID: `PromosProductsDeactivate`
 
 Метод для удаления товаров из акции.
 
-### Тело запроса (application/json)
-
-- `action_id required` — number <double> Идентификатор акции. Можно получить с помощью метода /v1/actions .
-- `product_ids required` — Array of numbers <double> Список идентификаторов товаров в системе Ozon — product_id .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/products/deactivate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 66011,
   "product_ids": [
     14975
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `action_id required` — number <double> Идентификатор акции. Можно получить с помощью метода /v1/actions .
+- `product_ids required` — Array of numbers <double> Список идентификаторов товаров в системе Ozon — product_id .
 
 ### Ответы
 
@@ -289,7 +301,6 @@ Operation ID: `PromosProductsDeactivate`
   - `rejected` — Array of objects Список товаров, которые не удалось удалить из акции.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -311,21 +322,23 @@ Operation ID: `promos_task_list`
 
 Метод устаревает и будет отключён в будущем. Переключитесь на /v2/actions/discounts-task/list . Метод для получения списка товаров, которые покупатели хотят купить со скидкой.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/discounts-task/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "status": "UNKNOWN",
+  "page": 1,
+  "limit": 50
+}'
+```
+
+### Тело запроса
 
 - `status required` — string Default: "UNKNOWN" Enum: "NEW" "SEEN" "APPROVED" "PARTLY_APPROVED" "DECLINED" "AUTO_DECLINED" "DECLINED_BY_USER" "COUPON" "PURCHASED" Статус заявки на скидку: NEW — новая, SEEN — просмотренная, APPROVED — одобренная, PARTLY_APPROVED — одобренная частично, DECLINED — отклонённая, AUTO_DECLINED — отклонена автоматически, DECLINED_BY_USER — отклонена покупателем, COUPON — скидка по купону, PURCHASED — купленная.
 - `page required` — integer <uint64> Страница, с которой нужно выгрузить список заявок на скидку.
 - `limit required` — integer <uint64> Максимальное количество заявок на странице.
-
-Пример запроса:
-
-```json
-{
-  "status": "UNKNOWN",
-  "page": 1,
-  "limit": 50
-}
-```
 
 ### Ответы
 
@@ -371,7 +384,6 @@ Operation ID: `promos_task_list`
   - `approved_price_fee_percent` — number <double> Региональная наценка в процентах.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -426,14 +438,12 @@ Operation ID: `promos_task_approve`
 
 Вы можете согласовывать заявки в статусах: NEW — новые, SEEN — просмотренные.
 
-### Тело запроса (application/json)
-
-- `tasks required` — Array of objects Список заявок.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/discounts-task/approve" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "tasks": [
     {
       "id": 78901,
@@ -443,8 +453,12 @@ Operation ID: `promos_task_approve`
       "approved_quantity_max": 7
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `tasks required` — Array of objects Список заявок.
 
 ### Ответы
 
@@ -458,7 +472,6 @@ Operation ID: `promos_task_approve`
   - `fail_count` — integer <int32> Количество заявок, у которых не удалось сменить статус.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -484,22 +497,24 @@ Operation ID: `promos_task_decline`
 
 Вы можете отклонить заявки в статусах: NEW — новые, SEEN — просмотренные.
 
-### Тело запроса (application/json)
-
-- `tasks required` — Array of objects Список заявок.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/discounts-task/decline" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "tasks": [
     {
       "id": 78901,
       "seller_comment": "Ok"
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `tasks required` — Array of objects Список заявок.
 
 ### Ответы
 
@@ -513,7 +528,6 @@ Operation ID: `promos_task_decline`
   - `fail_count` — integer <int32> Количество заявок, у которых не удалось сменить статус.
 
 Пример ответа:
-
 ```json
 {
   "result": {

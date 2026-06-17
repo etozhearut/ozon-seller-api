@@ -1,6 +1,8 @@
 # Полигоны
 
-_Тег: `PolygonAPI` · операций: 7_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `PolygonAPI` · методов: 7_
 
 ## Создайте полигон доставки
 
@@ -10,22 +12,24 @@ Operation ID: `PolygonAPI_CreatePolygon`
 
 Вы можете добавить полигон к методу доставки. Создайте полигон, получив его координаты на https://geojson.io : отметьте на карте минимум 3 точки и соедините их линиями. Сервис geojson.io возвращает координаты в формате [[[long lat]]] . Поменяйте местами широту и долготу в запросе метода.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/polygon/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "coordinates": "[[[30.149574279785153,59.86550435303646],[30.21205902099609,59.846884387977326],[30.255661010742184,59.86240174913176],[30.149574279785153,59.86550435303646]]]"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `coordinates required` — string Координаты полигона доставки в формате [[[lat long]]] .
-
-Пример запроса:
-
-```json
-{
-  "coordinates": "[[[30.149574279785153,59.86550435303646],[30.21205902099609,59.846884387977326],[30.255661010742184,59.86240174913176],[30.149574279785153,59.86550435303646]]]"
-}
-```
 
 ### Ответы
 
@@ -48,35 +52,36 @@ Operation ID: `PolygonAPI_CreatePolygon`
 
 Operation ID: `PolygonBind`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/polygon/bind" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "delivery_method_id": 0,
+  "polygon_id": 0,
+  "time": 15,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
 - `polygon_id required` — integer <int64> Идентификатор полигона.
 - `time required` — integer <int64> Enum: 15 30 45 60 90 120 150 Время доставки в минутах.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
 
-Пример запроса:
-
-```json
-{
-  "delivery_method_id": 0,
-  "polygon_id": 0,
-  "time": 15,
-  "warehouse_id": 0
-}
-```
-
 ### Ответы
 
 - 200 Успешно
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -100,21 +105,12 @@ Operation ID: `PolygonAPI_BindPolygon`
 
 Метод устаревает и будет отключён в будущем. Переключитесь на /v2/polygon/bind .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `delivery_method_id required` — integer <int32> Идентификатор метода доставки.
-- `polygons required` — Array of objects Список полигонов.
-- `warehouse_location required` — object Расположение склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/polygon/bind" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "delivery_method_id": 0,
   "polygons": [
     {
@@ -126,8 +122,19 @@ Operation ID: `PolygonAPI_BindPolygon`
     "lat": "58.52391272075821",
     "lon": "31.236791610717773"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `delivery_method_id required` — integer <int32> Идентификатор метода доставки.
+- `polygons required` — Array of objects Список полигонов.
+- `warehouse_location required` — object Расположение склада.
 
 ### Ответы
 
@@ -146,33 +153,34 @@ Operation ID: `PolygonAPI_BindPolygon`
 
 Operation ID: `PolygonDelete`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/polygon/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "delivery_method_id": 0,
+  "polygon_id": 0,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
 - `polygon_id required` — integer <int64> Идентификатор полигона.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "delivery_method_id": 0,
-  "polygon_id": 0,
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
 - 200 Успешно
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -194,24 +202,26 @@ Operation ID: `PolygonDelete`
 
 Operation ID: `PolygonList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/polygon/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "delivery_method_id": 0,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "delivery_method_id": 0,
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -225,7 +235,6 @@ Operation ID: `PolygonList`
   - `time` — integer <int64> Время доставки в минутах.
 
 Пример ответа:
-
 ```json
 {
   "polygons": [
@@ -246,35 +255,36 @@ Operation ID: `PolygonList`
 
 Operation ID: `PolygonTimeCoordinatesUpdate`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/polygon/time/coordinates/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "coordinates": "string",
+  "delivery_method_id": 0,
+  "polygon_id": 0,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `coordinates required` — string Новые координаты полигона доставки в формате [[[lat,long],[lat,long]]] .
 - `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
 - `polygon_id required` — integer <int64> Идентификатор полигона.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
 
-Пример запроса:
-
-```json
-{
-  "coordinates": "string",
-  "delivery_method_id": 0,
-  "polygon_id": 0,
-  "warehouse_id": 0
-}
-```
-
 ### Ответы
 
 - 200 Успешно
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -296,12 +306,26 @@ Operation ID: `PolygonTimeCoordinatesUpdate`
 
 Operation ID: `PolygonTimeSet`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/polygon/time/set" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "current_time": 15,
+  "delivery_method_id": 0,
+  "new_time": 15,
+  "polygon_id": 0,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `current_time required` — integer <int64> Enum: 15 30 45 60 90 120 150 Текущее время доставки в минутах.
 - `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
@@ -309,24 +333,11 @@ Operation ID: `PolygonTimeSet`
 - `polygon_id required` — integer <int64> Идентификатор полигона.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
 
-Пример запроса:
-
-```json
-{
-  "current_time": 15,
-  "delivery_method_id": 0,
-  "new_time": 15,
-  "polygon_id": 0,
-  "warehouse_id": 0
-}
-```
-
 ### Ответы
 
 - 200 Успешно
 
 Пример ответа:
-
 ```json
 {
   "code": 0,

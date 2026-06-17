@@ -1,6 +1,8 @@
 # Работа с пуш-уведомлениями
 
-_Тег: `Notification` · операций: 7_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `Notification` · методов: 7_
 
 ## Подключить URL-адрес для уведомлений
 
@@ -10,26 +12,28 @@ Operation ID: `SetNotification`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/notification/set" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "types": [
+    "TYPE_NEW_MESSAGE"
+  ],
+  "url": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `types required` — Array of strings Items Enum: "TYPE_NEW_MESSAGE" "TYPE_UPDATE_MESSAGE" "TYPE_MESSAGE_READ" "TYPE_CHAT_CLOSED" "TYPE_NEW_POSTING" "TYPE_POSTING_CANCELLED" "TYPE_STATE_CHANGED" "TYPE_DELIVERY_DATE_CHANGED" "TYPE_CUTOFF_DATE_CHANGED" "TYPE_CREATE_ITEM" "TYPE_UPDATE_ITEM" "TYPE_CREATE_OR_UPDATE_ITEM" "TYPE_STOCKS_CHANGED" Типы уведомлений: TYPE_NEW_MESSAGE — новое сообщение в чате; TYPE_UPDATE_MESSAGE — изменение сообщения в чате; TYPE_MESSAGE_READ — ваше сообщение прочитано покупателем или поддержкой; TYPE_CHAT_CLOSED — чат закрыт; TYPE_NEW_POSTING — новое отправление; TYPE_POSTING_CANCELLED — отмена отправления; TYPE_STATE_CHANGED — изменение статуса отправления; TYPE_DELIVERY_DATE_CHANGED — изменение даты доставки отправления; TYPE_CUTOFF_DATE_CHANGED — изменение даты отгрузки отправления; TYPE_CREATE_ITEM — создание товара или ошибка при его создании; TYPE_UPDATE_ITEM — обновление товара или ошибка при обновлении; TYPE_CREATE_OR_UPDATE_ITEM — создание и обновление товара или ошибка в процессе; TYPE_STOCKS_CHANGED — изменение остатков на складах продавца.
 - `url required` — string URL-адрес.
-
-Пример запроса:
-
-```json
-{
-  "types": [
-    "TYPE_NEW_MESSAGE"
-  ],
-  "url": "string"
-}
-```
 
 ### Ответы
 
@@ -41,7 +45,6 @@ Operation ID: `SetNotification`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -65,28 +68,30 @@ Operation ID: `UpdateNotification`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `id required` — integer <int64> Идентификатор URL-адреса.
-- `types` — Array of strings Items Enum: "TYPE_NEW_MESSAGE" "TYPE_UPDATE_MESSAGE" "TYPE_MESSAGE_READ" "TYPE_CHAT_CLOSED" "TYPE_NEW_POSTING" "TYPE_POSTING_CANCELLED" "TYPE_STATE_CHANGED" "TYPE_DELIVERY_DATE_CHANGED" "TYPE_CUTOFF_DATE_CHANGED" "TYPE_CREATE_ITEM" "TYPE_UPDATE_ITEM" "TYPE_CREATE_OR_UPDATE_ITEM" "TYPE_STOCKS_CHANGED" Типы уведомлений: TYPE_NEW_MESSAGE — новое сообщение в чате; TYPE_UPDATE_MESSAGE — изменение сообщения в чате; TYPE_MESSAGE_READ — ваше сообщение прочитано покупателем или поддержкой; TYPE_CHAT_CLOSED — чат закрыт; TYPE_NEW_POSTING — новое отправление; TYPE_POSTING_CANCELLED — отмена отправления; TYPE_STATE_CHANGED — изменение статуса отправления; TYPE_DELIVERY_DATE_CHANGED — изменение даты доставки отправления; TYPE_CUTOFF_DATE_CHANGED — изменение даты отгрузки отправления; TYPE_CREATE_ITEM — создание товара или ошибка при его создании; TYPE_UPDATE_ITEM — обновление товара или ошибка при обновлении; TYPE_CREATE_OR_UPDATE_ITEM — создание и обновление товара или ошибка в процессе; TYPE_STOCKS_CHANGED — изменение остатков на складах продавца.
-- `url` — string Новый URL-адрес.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/notification/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "id": 0,
   "types": [
     "TYPE_NEW_MESSAGE"
   ],
   "url": "string"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `id required` — integer <int64> Идентификатор URL-адреса.
+- `types` — Array of strings Items Enum: "TYPE_NEW_MESSAGE" "TYPE_UPDATE_MESSAGE" "TYPE_MESSAGE_READ" "TYPE_CHAT_CLOSED" "TYPE_NEW_POSTING" "TYPE_POSTING_CANCELLED" "TYPE_STATE_CHANGED" "TYPE_DELIVERY_DATE_CHANGED" "TYPE_CUTOFF_DATE_CHANGED" "TYPE_CREATE_ITEM" "TYPE_UPDATE_ITEM" "TYPE_CREATE_OR_UPDATE_ITEM" "TYPE_STOCKS_CHANGED" Типы уведомлений: TYPE_NEW_MESSAGE — новое сообщение в чате; TYPE_UPDATE_MESSAGE — изменение сообщения в чате; TYPE_MESSAGE_READ — ваше сообщение прочитано покупателем или поддержкой; TYPE_CHAT_CLOSED — чат закрыт; TYPE_NEW_POSTING — новое отправление; TYPE_POSTING_CANCELLED — отмена отправления; TYPE_STATE_CHANGED — изменение статуса отправления; TYPE_DELIVERY_DATE_CHANGED — изменение даты доставки отправления; TYPE_CUTOFF_DATE_CHANGED — изменение даты отгрузки отправления; TYPE_CREATE_ITEM — создание товара или ошибка при его создании; TYPE_UPDATE_ITEM — обновление товара или ошибка при обновлении; TYPE_CREATE_OR_UPDATE_ITEM — создание и обновление товара или ошибка в процессе; TYPE_STOCKS_CHANGED — изменение остатков на складах продавца.
+- `url` — string Новый URL-адрес.
 
 ### Ответы
 
@@ -98,7 +103,6 @@ Operation ID: `UpdateNotification`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -122,12 +126,18 @@ Operation ID: `DeleteNotification`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/notification/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Идентификатор URL-адреса.
 
@@ -141,7 +151,6 @@ Operation ID: `DeleteNotification`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -165,12 +174,18 @@ Operation ID: `CheckNotification`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/notification/check" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `url required` — string URL-адрес.
 
@@ -189,7 +204,6 @@ Operation ID: `CheckNotification`
 - `is_active required` — boolean true , если URL-адрес активен.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -212,12 +226,18 @@ Operation ID: `EnableNotification`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/notification/enable" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `enabled required` — boolean Передайте: true — чтобы включить уведомления; false — чтобы выключить уведомления.
 - `id required` — integer <int64> Идентификатор URL-адреса.
@@ -232,7 +252,6 @@ Operation ID: `EnableNotification`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -255,6 +274,12 @@ Operation ID: `EnableNotification`
 Operation ID: `NotificationList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/notification/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -280,7 +305,6 @@ Operation ID: `NotificationList`
   - `url required` — string URL-адрес.
 
 Пример ответа:
-
 ```json
 {
   "urls": [
@@ -310,6 +334,12 @@ Operation ID: `GetNotificationPushTypeList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/notification/push-type/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -332,7 +362,6 @@ Operation ID: `GetNotificationPushTypeList`
   - `type required` — string Enum: "TYPE_NEW_MESSAGE" "TYPE_UPDATE_MESSAGE" "TYPE_MESSAGE_READ" "TYPE_CHAT_CLOSED" "TYPE_NEW_POSTING" "TYPE_POSTING_CANCELLED" "TYPE_STATE_CHANGED" "TYPE_DELIVERY_DATE_CHANGED" "TYPE_CUTOFF_DATE_CHANGED" "TYPE_CREATE_ITEM" "TYPE_UPDATE_ITEM" "TYPE_CREATE_OR_UPDATE_ITEM" "TYPE_STOCKS_CHANGED" Тип уведомления: TYPE_NEW_MESSAGE — новое сообщение в чате; TYPE_UPDATE_MESSAGE — изменение сообщения в чате; TYPE_MESSAGE_READ — ваше сообщение прочитано покупателем или поддержкой; TYPE_CHAT_CLOSED — чат закрыт; TYPE_NEW_POSTING — новое отправление; TYPE_POSTING_CANCELLED — отмена отправления; TYPE_STATE_CHANGED — изменение статуса отправления; TYPE_DELIVERY_DATE_CHANGED — изменение даты доставки отправления; TYPE_CUTOFF_DATE_CHANGED — изменение даты отгрузки отправления; TYPE_CREATE_ITEM — создание товара или ошибка при его создании; TYPE_UPDATE_ITEM — обновление товара или ошибка при обновлении; TYPE_CREATE_OR_UPDATE_ITEM — создание и обновление товара или ошибка в процессе; TYPE_STOCKS_CHANGED — изменение остатков на складах продавца.
 
 Пример ответа:
-
 ```json
 {
   "types": [

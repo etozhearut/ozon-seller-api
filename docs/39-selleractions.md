@@ -1,8 +1,10 @@
 # Акции продавца
 
-Акции продавца Как работать с акциями продавца Подробнее об акциях продавца в Базе знаний продавца
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `SellerActions` · операций: 18_
+_Тег: `SellerActions` · методов: 18_
+
+Акции продавца Как работать с акциями продавца Подробнее об акциях продавца в Базе знаний продавца
 
 ## Создать акцию с механикой «Скидка»
 
@@ -12,28 +14,30 @@ Operation ID: `SellerActionsCreateDiscount`
 
 Недоступен для продавцов из СНГ. Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/create/discount" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date_end": "2019-08-24T14:15:22Z",
+  "date_start": "2019-08-24T14:15:22Z",
+  "min_action_percent": 0,
+  "title": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date_end required` — string <date-time> Дата и время окончания акции.
 - `date_start required` — string <date-time> Дата и время начала акции.
 - `min_action_percent required` — number <double> Минимальный процент скидки.
 - `title` — string [ 1 .. 256 ] characters Название акции.
-
-Пример запроса:
-
-```json
-{
-  "date_end": "2019-08-24T14:15:22Z",
-  "date_start": "2019-08-24T14:15:22Z",
-  "min_action_percent": 0,
-  "title": "string"
-}
-```
 
 ### Ответы
 
@@ -53,12 +57,27 @@ Operation ID: `SellerActionsCreateDiscountWithCondition`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/create/discount-with-condition" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date_end": "2019-08-24T14:15:22Z",
+  "date_start": "2019-08-24T14:15:22Z",
+  "discount_type": "PERCENT",
+  "discount_value": 0,
+  "min_order_amount": 0,
+  "title": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date_end required` — string <date-time> Дата и время окончания акции.
 - `date_start required` — string <date-time> Дата и время начала акции.
@@ -66,19 +85,6 @@ Operation ID: `SellerActionsCreateDiscountWithCondition`
 - `discount_value required` — number <float> Размер скидки.
 - `min_order_amount required` — number <double> Сумма заказа, с которой действует скидка.
 - `title` — string [ 1 .. 256 ] characters Название акции.
-
-Пример запроса:
-
-```json
-{
-  "date_end": "2019-08-24T14:15:22Z",
-  "date_start": "2019-08-24T14:15:22Z",
-  "discount_type": "PERCENT",
-  "discount_value": 0,
-  "min_order_amount": 0,
-  "title": "string"
-}
-```
 
 ### Ответы
 
@@ -98,24 +104,26 @@ Operation ID: `SellerActionsCreateInstallment`
 
 Период рассрочки — 6 месяцев. Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/create/installment" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date_start": "2019-08-24T14:15:22Z",
+  "title": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date_start required` — string <date-time> Дата и время начала акции.
 - `title required` — string [ 1 .. 256 ] characters Название акции.
-
-Пример запроса:
-
-```json
-{
-  "date_start": "2019-08-24T14:15:22Z",
-  "title": "string"
-}
-```
 
 ### Ответы
 
@@ -135,24 +143,12 @@ Operation ID: `SellerActionsCreateMultiLevelDiscount`
 
 Товары в акцию добавляются автоматически, использовать метод /v1/seller-actions/products/add не нужно. Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `date_end required` — string <date-time> Дата и время окончания акции.
-- `date_start required` — string <date-time> Дата и время начала акции.
-- `discount_levels required` — Array of objects [ 2 .. 4 ] items Уровни скидки.
-- `discount_type required` — string Enum: "PERCENT" "CURRENCY" Тип скидки: PERCENT — скидка в процентах; CURRENCY — скидка в валюте.
-- `is_legal_entities_segment` — boolean true , если акция только для юридических лиц.
-- `title` — string [ 1 .. 256 ] characters Название акции.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/create/multi-level-discount" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "date_end": "2019-08-24T14:15:22Z",
   "date_start": "2019-08-24T14:15:22Z",
   "discount_levels": [
@@ -168,8 +164,22 @@ Operation ID: `SellerActionsCreateMultiLevelDiscount`
   "discount_type": "PERCENT",
   "is_legal_entities_segment": true,
   "title": "string"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `date_end required` — string <date-time> Дата и время окончания акции.
+- `date_start required` — string <date-time> Дата и время начала акции.
+- `discount_levels required` — Array of objects [ 2 .. 4 ] items Уровни скидки.
+- `discount_type required` — string Enum: "PERCENT" "CURRENCY" Тип скидки: PERCENT — скидка в процентах; CURRENCY — скидка в валюте.
+- `is_legal_entities_segment` — boolean true , если акция только для юридических лиц.
+- `title` — string [ 1 .. 256 ] characters Название акции.
 
 ### Ответы
 
@@ -189,26 +199,12 @@ Operation ID: `SellerActionsCreateVoucher`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `budget required` — integer <int64> Бюджет акции. Если бюджет закончится, акция остановится.
-- `date_end required` — string <date-time> Дата и время окончания акции.
-- `date_start required` — string <date-time> Дата и время начала акции.
-- `discount_type required` — string Enum: "PERCENT" "CURRENCY" Тип скидки: PERCENT — скидка в процентах; CURRENCY — скидка в валюте.
-- `discount_value required` — number <double> Размер скидки.
-- `title required` — string [ 1 .. 256 ] characters Название акции.
-- `user_ids` — Array of strings <uint64> <= 50 Идентификаторы пользователей, которым доступен промокод.
-- `voucher_parameters required` — object Параметры промокодов.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/create/voucher" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "budget": 0,
   "date_end": "2019-08-24T14:15:22Z",
   "date_start": "2019-08-24T14:15:22Z",
@@ -223,8 +219,24 @@ Operation ID: `SellerActionsCreateVoucher`
     "is_private": true,
     "type": "ONE"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `budget required` — integer <int64> Бюджет акции. Если бюджет закончится, акция остановится.
+- `date_end required` — string <date-time> Дата и время окончания акции.
+- `date_start required` — string <date-time> Дата и время начала акции.
+- `discount_type required` — string Enum: "PERCENT" "CURRENCY" Тип скидки: PERCENT — скидка в процентах; CURRENCY — скидка в валюте.
+- `discount_value required` — number <double> Размер скидки.
+- `title required` — string [ 1 .. 256 ] characters Название акции.
+- `user_ids` — Array of strings <uint64> <= 50 Идентификаторы пользователей, которым доступен промокод.
+- `voucher_parameters required` — object Параметры промокодов.
 
 ### Ответы
 
@@ -244,28 +256,30 @@ Operation ID: `SellerActionsUpdateDiscount`
 
 Недоступен для продавцов из СНГ. Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
-- `action_parameters` — object Параметры акции.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/update/discount" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 0,
   "action_parameters": {
     "date_end": "2019-08-24T14:15:22Z",
     "date_start": "2019-08-24T14:15:22Z",
     "title": "string"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
+- `action_parameters` — object Параметры акции.
 
 ### Ответы
 
@@ -277,7 +291,6 @@ Operation ID: `SellerActionsUpdateDiscount`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -301,20 +314,12 @@ Operation ID: `SellerActionsUpdateDiscountWithCondition`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
-- `action_parameters` — object Параметры акции.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/update/discount-with-condition" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 0,
   "action_parameters": {
     "date_end": "2019-08-24T14:15:22Z",
@@ -323,8 +328,18 @@ Operation ID: `SellerActionsUpdateDiscountWithCondition`
     "min_order_amount": 0,
     "title": "string"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
+- `action_parameters` — object Параметры акции.
 
 ### Ответы
 
@@ -336,7 +351,6 @@ Operation ID: `SellerActionsUpdateDiscountWithCondition`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -360,27 +374,29 @@ Operation ID: `SellerActionsUpdateInstallment`
 
 Период рассрочки — 6 месяцев. Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
-- `action_parameters` — object Параметры акции.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/update/installment" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 0,
   "action_parameters": {
     "date_start": "2019-08-24T14:15:22Z",
     "title": "string"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
+- `action_parameters` — object Параметры акции.
 
 ### Ответы
 
@@ -392,7 +408,6 @@ Operation ID: `SellerActionsUpdateInstallment`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -416,20 +431,12 @@ Operation ID: `SellerActionsUpdateMultiLevelDiscount`
 
 Товары в акцию добавляются автоматически, вызывать метод /v1/seller-actions/products/add не нужно. Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
-- `action_parameters` — object Параметры акции.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/update/multi-level-discount" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 0,
   "action_parameters": {
     "date_end": "2019-08-24T14:15:22Z",
@@ -447,8 +454,18 @@ Operation ID: `SellerActionsUpdateMultiLevelDiscount`
     "is_legal_entities_segment": true,
     "title": "string"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
+- `action_parameters` — object Параметры акции.
 
 ### Ответы
 
@@ -460,7 +477,6 @@ Operation ID: `SellerActionsUpdateMultiLevelDiscount`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -484,20 +500,12 @@ Operation ID: `SellerActionsUpdateVoucher`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
-- `action_parameters` — object Параметры акции.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/update/voucher" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 0,
   "action_parameters": {
     "budget": 0,
@@ -509,8 +517,18 @@ Operation ID: `SellerActionsUpdateVoucher`
       "string"
     ]
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
+- `action_parameters` — object Параметры акции.
 
 ### Ответы
 
@@ -522,7 +540,6 @@ Operation ID: `SellerActionsUpdateVoucher`
 - 500 Внутренняя ошибка сервера
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -546,20 +563,12 @@ Operation ID: `SellerActionsProductsAdd`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
-- `products required` — Array of objects <= 100 items Информация о товарах.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/products/add" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": 0,
   "products": [
     {
@@ -568,15 +577,24 @@ Operation ID: `SellerActionsProductsAdd`
       "sku": 0
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
+- `products required` — Array of objects <= 100 items Информация о товарах.
 
 ### Ответы
 
 - 200 Товары добавлены
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -600,26 +618,28 @@ Operation ID: `SellerActionsProductsCandidates`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/products/candidates" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": 0,
+  "cursor": 0,
+  "limit": 100
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
 - `cursor` — integer <uint64> Указатель для выборки следующих данных.
 - `limit required` — integer <int64> [ 1 .. 100 ] Default: 100 Максимальное количество элементов в ответе.
-
-Пример запроса:
-
-```json
-{
-  "action_id": 0,
-  "cursor": 0,
-  "limit": 100
-}
-```
 
 ### Ответы
 
@@ -632,7 +652,6 @@ Operation ID: `SellerActionsProductsCandidates`
 - `products` — Array of objects Информация о товарах.
 
 Пример ответа:
-
 ```json
 {
   "cursor": 0,
@@ -669,33 +688,34 @@ Operation ID: `SellerActionsProductsDelete`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/products/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": 0,
+  "skus": [
+    "string"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
 - `skus required` — Array of strings <uint64> <= 100 items Идентификаторы товаров в системе Ozon — SKU.
-
-Пример запроса:
-
-```json
-{
-  "action_id": 0,
-  "skus": [
-    "string"
-  ]
-}
-```
 
 ### Ответы
 
 - 200 Товары удалены
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -719,26 +739,28 @@ Operation ID: `SellerActionsProductsList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/products/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": 0,
+  "cursor": 0,
+  "limit": 100
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
 - `cursor` — integer <uint64> Указатель для выборки следующих данных.
 - `limit required` — integer <int64> [ 1 .. 100 ] Default: 100 Максимальное количество элементов в ответе.
-
-Пример запроса:
-
-```json
-{
-  "action_id": 0,
-  "cursor": 0,
-  "limit": 100
-}
-```
 
 ### Ответы
 
@@ -751,7 +773,6 @@ Operation ID: `SellerActionsProductsList`
 - `products` — Array of objects Информация о товарах.
 
 Пример ответа:
-
 ```json
 {
   "cursor": 0,
@@ -788,12 +809,18 @@ Operation ID: `SellerActionsArchive`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/archive" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
 
@@ -802,7 +829,6 @@ Operation ID: `SellerActionsArchive`
 - 200 Акция в архиве
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -826,31 +852,32 @@ Operation ID: `SellerActionsChangeActivity`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/change-activity" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": 0,
+  "is_turn_on": true
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
 - `is_turn_on required` — boolean true , чтобы включить акцию.
-
-Пример запроса:
-
-```json
-{
-  "action_id": 0,
-  "is_turn_on": true
-}
-```
 
 ### Ответы
 
 - 200 Успешно
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -874,24 +901,12 @@ Operation ID: `SellerActionsList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_ids` — Array of strings <uint64> <= 100 items Идентификаторы акций.
-- `action_type` — Array of strings Items Enum: "DISCOUNT" "VOUCHER_DISCOUNT" "DISCOUNT_WITH_CONDITION" "INSTALLMENT" "INDIVIDUAL_DISCOUNT_BY_PRODUCTS" "OZON_ACCOUNT_DISCOUNT" "MULTI_LEVEL_DISCOUNT_ON_AMOUNT" Механика акции: DISCOUNT — скидка; VOUCHER_DISCOUNT — скидка по промокоду; DISCOUNT_WITH_CONDITION — скидка от суммы заказа; INSTALLMENT — беспроцентная рассрочка; INDIVIDUAL_DISCOUNT_BY_PRODUCTS — бонусы продавца; OZON_ACCOUNT_DISCOUNT — повышенная скидка с картой Ozon Банка; MULTI_LEVEL_DISCOUNT_ON_AMOUNT — многоуровневая скидка от суммы.
-- `limit required` — integer <uint64> [ 1 .. 100 ] Количество значений на странице.
-- `offset` — integer <uint64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
-- `search` — string >= 3 characters Поиск по названию акции.
-- `status` — Array of strings Items Enum: "ACTIVE" "ENDED" "PLANNED" "PAUSED" Статус акции: ACTIVE — активна; ENDED — завершена; PLANNED — запланирована; PAUSED — приостановлена.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_ids": [
     "string"
   ],
@@ -904,8 +919,22 @@ Operation ID: `SellerActionsList`
   "status": [
     "ACTIVE"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_ids` — Array of strings <uint64> <= 100 items Идентификаторы акций.
+- `action_type` — Array of strings Items Enum: "DISCOUNT" "VOUCHER_DISCOUNT" "DISCOUNT_WITH_CONDITION" "INSTALLMENT" "INDIVIDUAL_DISCOUNT_BY_PRODUCTS" "OZON_ACCOUNT_DISCOUNT" "MULTI_LEVEL_DISCOUNT_ON_AMOUNT" Механика акции: DISCOUNT — скидка; VOUCHER_DISCOUNT — скидка по промокоду; DISCOUNT_WITH_CONDITION — скидка от суммы заказа; INSTALLMENT — беспроцентная рассрочка; INDIVIDUAL_DISCOUNT_BY_PRODUCTS — бонусы продавца; OZON_ACCOUNT_DISCOUNT — повышенная скидка с картой Ozon Банка; MULTI_LEVEL_DISCOUNT_ON_AMOUNT — многоуровневая скидка от суммы.
+- `limit required` — integer <uint64> [ 1 .. 100 ] Количество значений на странице.
+- `offset` — integer <uint64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
+- `search` — string >= 3 characters Поиск по названию акции.
+- `status` — Array of strings Items Enum: "ACTIVE" "ENDED" "PLANNED" "PAUSED" Статус акции: ACTIVE — активна; ENDED — завершена; PLANNED — запланирована; PAUSED — приостановлена.
 
 ### Ответы
 
@@ -917,7 +946,6 @@ Operation ID: `SellerActionsList`
 - `total` — integer <uint64> Общее количество акций.
 
 Пример ответа:
-
 ```json
 {
   "actions": [
@@ -989,12 +1017,18 @@ Operation ID: `SellerActionsVoucherGet`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller-actions/voucher/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции. Получите значение параметра методом /v1/seller-actions/list .
 

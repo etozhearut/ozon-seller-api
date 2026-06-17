@@ -1,6 +1,8 @@
 # Обработка заказов FBS и rFBS
 
-_Тег: `FBS` · операций: 23_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `FBS` · методов: 23_
 
 ## Получить список необработанных отправлений
 
@@ -8,39 +10,14 @@ _Тег: `FBS` · операций: 23_
 
 Operation ID: `PostingFbsUnfulfilledList`
 
-Возвращает список необработанных отправлений за указанный период времени — он должен быть не больше одного года. Возможные статусы отправлений: awaiting_registration — ожидает регистрации; acceptance_in_progress — идёт приёмка; awaiting_approve — ожидает подтверждения; awaiting_packaging — ожидает упаковки; awaiting_deliver — ожидает отгрузки; arbitration — арбитраж; client_arbitration — клиентский арбитраж доставки; delivering — доставляется; driver_pickup — у водителя; cancelled — отменено; not_accepted — не принято на сортировочном центре. Чтобы получать актуальную дату отгрузки, регулярно обновляйте информацию об отправлениях или подключите пуш-уведомления .
+Возвращает список необработанных отправлений за указанный период времени — он должен быть не больше одного года. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтр запроса. Используйте фильтр по времени сборки — cutoff или по дате передачи отправления в доставку — delivering_date . Если использовать их вместе, в ответе вернётся ошибка. Чтобы использовать фильтр по времени сборки, заполните поля cutoff_from и cutoff_to . Чтобы использовать фильтр по дате передачи отправления в доставку, заполните поля delivering_date_from и delivering_date_to .
-  - `cutoff_from` — string <date-time> YYYY-MM-DDThh:mm:ss.mcsZ Время, до которого продавцу нужно собрать заказ. Начало периода.
-  - `cutoff_to` — string <date-time> YYYY-MM-DDThh:mm:ss.mcsZ Время, до которого продавцу нужно собрать заказ. Конец периода.
-  - `delivering_date_from` — string <date-time> Минимальная дата передачи отправления в доставку.
-  - `delivering_date_to` — string <date-time> Максимальная дата передачи отправления в доставку.
-  - `delivery_method_ids` — Array of strings <int64> <= 1000 items Идентификатор способа доставки. Можно получить с помощью метода /v1/delivery-method/list .
-  - `last_changed_status_date` — object Период, в который последний раз изменялся статус отправления.
-  - `provider_ids` — Array of strings <int64> <= 1000 items Идентификатор службы доставки. Можно получить с помощью метода /v1/delivery-method/list .
-  - `statuses` — Array of strings Статус отправления: acceptance_in_progress — идёт приёмка; awaiting_approve — ожидает подтверждения; awaiting_packaging — ожидает упаковки; awaiting_registration — ожидает регистрации; awaiting_deliver — ожидает отгрузки; arbitration — арбитраж; client_arbitration — клиентский арбитраж доставки; delivering — доставляется; driver_pickup — у водителя; not_accepted — не принято на сортировочном центре.
-  - `warehouse_ids` — Array of strings <int64> <= 1000 items Идентификатор склада. Можно получить с помощью метода /v1/warehouse/list .
-- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-- `translit` — boolean true , чтобы включить транслитерацию адреса из кириллицы в латиницу.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-  - `analytics_data` — boolean true , чтобы добавить в ответ данные аналитики.
-  - `barcodes` — boolean true , чтобы добавить в ответ штрихкоды отправления.
-  - `financial_data` — boolean true , чтобы добавить в ответ финансовые данные.
-  - `legal_info` — boolean true , чтобы добавить в ответ юридическую информацию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v4/posting/fbs/unfulfilled/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "sort_dir": "asc",
   "limit": 100,
   "filter": {
@@ -72,8 +49,35 @@ Operation ID: `PostingFbsUnfulfilledList`
     "financial_data": true,
     "legal_info": true
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтр запроса. Используйте фильтр по времени сборки — cutoff или по дате передачи отправления в доставку — delivering_date . Если использовать их вместе, в ответе вернётся ошибка. Чтобы использовать фильтр по времени сборки, заполните поля cutoff_from и cutoff_to . Чтобы использовать фильтр по дате передачи отправления в доставку, заполните поля delivering_date_from и delivering_date_to .
+  - `cutoff_from` — string <date-time> YYYY-MM-DDThh:mm:ss.mcsZ Время, до которого продавцу нужно собрать заказ. Начало периода.
+  - `cutoff_to` — string <date-time> YYYY-MM-DDThh:mm:ss.mcsZ Время, до которого продавцу нужно собрать заказ. Конец периода.
+  - `delivering_date_from` — string <date-time> Минимальная дата передачи отправления в доставку.
+  - `delivering_date_to` — string <date-time> Максимальная дата передачи отправления в доставку.
+  - `delivery_method_ids` — Array of strings <int64> <= 1000 items Идентификатор способа доставки. Можно получить с помощью метода /v1/delivery-method/list .
+  - `last_changed_status_date` — object Период, в который последний раз изменялся статус отправления.
+  - `provider_ids` — Array of strings <int64> <= 1000 items Идентификатор службы доставки. Можно получить с помощью метода /v1/delivery-method/list .
+  - `statuses` — Array of strings Статус отправления: acceptance_in_progress — идёт приёмка; awaiting_approve — ожидает подтверждения; awaiting_packaging — ожидает упаковки; awaiting_registration — ожидает регистрации; awaiting_deliver — ожидает отгрузки; arbitration — арбитраж; client_arbitration — клиентский арбитраж доставки; delivering — доставляется; driver_pickup — у водителя; not_accepted — не принято на сортировочном центре.
+  - `warehouse_ids` — Array of strings <int64> <= 1000 items Идентификатор склада. Можно получить с помощью метода /v1/warehouse/list .
+- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
+- `translit` — boolean true , чтобы включить транслитерацию адреса из кириллицы в латиницу.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
+  - `analytics_data` — boolean true , чтобы добавить в ответ данные аналитики.
+  - `barcodes` — boolean true , чтобы добавить в ответ штрихкоды отправления.
+  - `financial_data` — boolean true , чтобы добавить в ответ финансовые данные.
+  - `legal_info` — boolean true , чтобы добавить в ответ юридическую информацию.
 
 ### Ответы
 
@@ -92,7 +96,6 @@ Operation ID: `PostingFbsUnfulfilledList`
 - `postings` — Array of objects Список отправлений.
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -114,25 +117,14 @@ Operation ID: `PostingFbsUnfulfilledList`
 
 Operation ID: `PostingAPI_GetFbsPostingUnfulfilledList`
 
-С 1 июня 2026 года метод будет отключён. Переключитесь на /v4/posting/fbs/unfulfilled/list . Возвращает список необработанных отправлений за указанный период времени — он должен быть не больше одного года. Возможные статусы отправлений: awaiting_registration — ожидает регистрации, acceptance_in_progress — идёт приёмка, awaiting_approve — ожидает подтверждения, awaiting_packaging — ожидает упаковки, awaiting_deliver — ожидает отгрузки, arbitration — арбитраж, client_arbitration — клиентский арбитраж доставки, delivering — доставляется, driver_pickup — у водителя, cancelled — отменено, not_accepted — не принят на сортировочном центре. Чтобы получать актуальную дату отгрузки, регулярно обновляйте информацию об отправлениях или подключите пуш-уведомления .
+С 1 июня 2026 года метод будет отключён. Переключитесь на /v4/posting/fbs/unfulfilled/list . Возвращает список необработанных отправлений за указанный период времени — он должен быть не больше одного года. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `dir` — string Направление сортировки: asc — по возрастанию, desc — по убыванию.
-- `filter required` — object Фильтр запроса. Используйте фильтр либо по времени сборки — cutoff , либо по дате передачи отправления в доставку — delivering_date . Если использовать их вместе, в ответе вернётся ошибка. Чтобы использовать фильтр по времени сборки, заполните поля cutoff_from и cutoff_to . Чтобы использовать фильтр по дате передачи отправления в доставку, заполните поля delivering_date_from и delivering_date_to .
-- `limit required` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
-- `offset required` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/posting/fbs/unfulfilled/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "dir": "ASC",
   "filter": {
     "cutoff_from": "2021-08-24T14:15:22Z",
@@ -152,8 +144,21 @@ Operation ID: `PostingAPI_GetFbsPostingUnfulfilledList`
     "legal_info": false,
     "translit": true
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `dir` — string Направление сортировки: asc — по возрастанию, desc — по убыванию.
+- `filter required` — object Фильтр запроса. Используйте фильтр либо по времени сборки — cutoff , либо по дате передачи отправления в доставку — delivering_date . Если использовать их вместе, в ответе вернётся ошибка. Чтобы использовать фильтр по времени сборки, заполните поля cutoff_from и cutoff_to . Чтобы использовать фильтр по дате передачи отправления в доставку, заполните поля delivering_date_from и delivering_date_to .
+- `limit required` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
+- `offset required` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -171,7 +176,6 @@ Operation ID: `PostingAPI_GetFbsPostingUnfulfilledList`
   - `postings` — Array of objects Список отправлений и подробная информация по каждому.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -386,38 +390,12 @@ Operation ID: `PostingFbsList`
 
 Возвращает список отправлений за указанный период времени — он должен быть не больше одного года. Чтобы получать актуальную дату отгрузки, регулярно обновляйте информацию об отправлениях или подключите пуш-уведомления .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter required` — object Фильтр.
-  - `delivery_method_ids` — Array of strings <int64> <= 1000 items Идентификатор способа доставки. Можно получить с помощью метода /v1/delivery-method/list .
-  - `is_blr_traceable` — boolean true , если товар отслеживаемый.
-  - `last_changed_status_date` — object Период, в который последний раз изменялся статус у отправлений.
-  - `order_id` — integer <int64> Идентификатор заказа.
-  - `order_numbers` — Array of strings <= 100 items Номера заказов, к которым относятся отправления.
-  - `provider_ids` — Array of strings <int64> <= 1000 items Идентификатор службы доставки. Можно получить с помощью метода /v1/delivery-method/list .
-  - `since required` — string <date-time> YYYY-MM-DDThh:mm:ssZ Дата начала периода, за который нужно получить список отправлений.
-  - `statuses` — Array of strings Статус отправления: awaiting_registration — ожидает регистрации; acceptance_in_progress — идёт приёмка; awaiting_approve — ожидает подтверждения; awaiting_packaging — ожидает упаковки; awaiting_deliver — ожидает отгрузки; arbitration — арбитраж; client_arbitration — клиентский арбитраж доставки; delivering — доставляется; driver_pickup — у водителя; delivered — доставлено; cancelled — отменено; not_accepted — не принято на сортировочном центре; sent_by_seller – отправлено продавцом.
-  - `to required` — string <date-time> YYYY-MM-DDThh:mm:ssZ Дата конца периода, за который нужно получить список отправлений.
-  - `warehouse_ids` — Array of strings <int64> <= 1000 items Идентификатор склада. Можно получить с помощью метода /v1/warehouse/list .
-- `limit required` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-- `translit` — boolean true , чтобы включить транслитерацию адреса из кириллицы в латиницу.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-  - `analytics_data` — boolean true , чтобы добавить в ответ данные аналитики.
-  - `barcodes` — boolean true , чтобы добавить в ответ штрихкоды отправления.
-  - `financial_data` — boolean true , чтобы добавить в ответ финансовые данные.
-  - `legal_info` — boolean true , чтобы добавить в ответ юридическую информацию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v4/posting/fbs/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "sort_dir": "asc",
   "filter": {
     "order_numbers": [
@@ -456,8 +434,36 @@ Operation ID: `PostingFbsList`
     "legal_info": true,
     "translit": true
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter required` — object Фильтр.
+  - `delivery_method_ids` — Array of strings <int64> <= 1000 items Идентификатор способа доставки. Можно получить с помощью метода /v1/delivery-method/list .
+  - `is_blr_traceable` — boolean true , если товар отслеживаемый.
+  - `last_changed_status_date` — object Период, в который последний раз изменялся статус у отправлений.
+  - `order_id` — integer <int64> Идентификатор заказа.
+  - `order_numbers` — Array of strings <= 100 items Номера заказов, к которым относятся отправления.
+  - `provider_ids` — Array of strings <int64> <= 1000 items Идентификатор службы доставки. Можно получить с помощью метода /v1/delivery-method/list .
+  - `since required` — string <date-time> YYYY-MM-DDThh:mm:ssZ Дата начала периода, за который нужно получить список отправлений.
+  - `statuses` — Array of strings Статус отправления: awaiting_registration — ожидает регистрации; acceptance_in_progress — идёт приёмка; awaiting_approve — ожидает подтверждения; awaiting_packaging — ожидает упаковки; awaiting_deliver — ожидает отгрузки; arbitration — арбитраж; client_arbitration — клиентский арбитраж доставки; delivering — доставляется; driver_pickup — у водителя; delivered — доставлено; cancelled — отменено; not_accepted — не принято на сортировочном центре; sent_by_seller – отправлено продавцом.
+  - `to required` — string <date-time> YYYY-MM-DDThh:mm:ssZ Дата конца периода, за который нужно получить список отправлений.
+  - `warehouse_ids` — Array of strings <int64> <= 1000 items Идентификатор склада. Можно получить с помощью метода /v1/warehouse/list .
+- `limit required` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
+- `translit` — boolean true , чтобы включить транслитерацию адреса из кириллицы в латиницу.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
+  - `analytics_data` — boolean true , чтобы добавить в ответ данные аналитики.
+  - `barcodes` — boolean true , чтобы добавить в ответ штрихкоды отправления.
+  - `financial_data` — boolean true , чтобы добавить в ответ финансовые данные.
+  - `legal_info` — boolean true , чтобы добавить в ответ юридическую информацию.
 
 ### Ответы
 
@@ -475,7 +481,6 @@ Operation ID: `PostingFbsList`
 - `postings` — Array of objects Список отправлений.
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -497,25 +502,14 @@ Operation ID: `PostingFbsList`
 
 Operation ID: `PostingAPI_GetFbsPostingListV3`
 
-С 1 июня 2026 года метод будет отключён. Переключитесь на /v4/posting/fbs/list . Возвращает список отправлений за указанный период времени — он должен быть не больше одного года. has_next = true в ответе может значить, что вернули не весь массив отправлений. Чтобы получить информацию об остальных отправлениях, сделайте новый запрос с другим значением offset . Чтобы получать актуальную дату отгрузки, регулярно обновляйте информацию об отправлениях или подключите пуш-уведомления .
+С 1 июня 2026 года метод будет отключён. Переключитесь на /v4/posting/fbs/list . Возвращает список отправлений за указанный период времени — он должен быть не больше одного года. has_next = true в ответе может значить, что вернули не весь массив отправлений. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `dir` — string Направление сортировки: asc — по возрастанию, desc — по убыванию.
-- `filter required` — object Фильтр.
-- `limit required` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
-- `offset required` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/posting/fbs/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "dir": "ASC",
   "filter": {
     "delivery_method_id": [
@@ -546,8 +540,21 @@ Operation ID: `PostingAPI_GetFbsPostingListV3`
     "financial_data": true,
     "translit": true
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `dir` — string Направление сортировки: asc — по возрастанию, desc — по убыванию.
+- `filter required` — object Фильтр.
+- `limit required` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
+- `offset required` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -565,7 +572,6 @@ Operation ID: `PostingAPI_GetFbsPostingListV3`
   - `postings` — Array of objects Информация об отправлении.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -805,27 +811,12 @@ Operation ID: `PostingAPI_GetFbsPostingV3`
 
 Чтобы получать актуальную дату отгрузки, регулярно обновляйте информацию об отправлениях или подключите пуш-уведомления .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `posting_number required` — string Идентификатор отправления.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-  - `analytics_data` — boolean Добавить в ответ данные аналитики.
-  - `barcodes` — boolean Добавить в ответ штрихкоды отправления.
-  - `financial_data` — boolean Добавить в ответ финансовые данные.
-  - `legal_info` — boolean Добавить в ответ юридическую информацию.
-  - `product_exemplars` — boolean Добавить в ответ данные о продуктах и их экземплярах.
-  - `related_postings` — boolean Добавить в ответ номера связанных отправлений. Связанные отправления — те, на которое было разделено родительское отправление при сборке.
-  - `translit` — boolean Выполнить транслитерацию возвращаемых значений.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/posting/fbs/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "posting_number": "57195475-0050-3",
   "with": {
     "analytics_data": false,
@@ -836,8 +827,25 @@ Operation ID: `PostingAPI_GetFbsPostingV3`
     "related_postings": true,
     "translit": false
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `posting_number required` — string Идентификатор отправления.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
+  - `analytics_data` — boolean Добавить в ответ данные аналитики.
+  - `barcodes` — boolean Добавить в ответ штрихкоды отправления.
+  - `financial_data` — boolean Добавить в ответ финансовые данные.
+  - `legal_info` — boolean Добавить в ответ юридическую информацию.
+  - `product_exemplars` — boolean Добавить в ответ данные о продуктах и их экземплярах.
+  - `related_postings` — boolean Добавить в ответ номера связанных отправлений. Связанные отправления — те, на которое было разделено родительское отправление при сборке.
+  - `translit` — boolean Выполнить транслитерацию возвращаемых значений.
 
 ### Ответы
 
@@ -896,7 +904,6 @@ Operation ID: `PostingAPI_GetFbsPostingV3`
   - `tariffication_steps` — Array of objects Этапы тарификации.
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -918,12 +925,18 @@ Operation ID: `PostingAPI_GetFbsPostingV3`
 
 Operation ID: `PostingAPI_GetFbsPostingByBarcode`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/get-by-barcode" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `barcode required` — string Штрихкод отправления. Можно получить с помощью методов: /v3/posting/fbs/get , /v3/posting/fbs/list и /v3/posting/fbs/unfulfilled/list в массиве barcodes .
 
@@ -951,7 +964,6 @@ Operation ID: `PostingAPI_GetFbsPostingByBarcode`
   - `status` — string Статус отправления.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -990,24 +1002,26 @@ Operation ID: `PostingAPI_PostingMultiBoxQtySetV3`
 
 Метод для передачи количества коробок для отправлений, в которых есть многокоробочные товары. Используйте метод при работе по схеме rFBS Агрегатор — c доставкой партнёрами Ozon.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/posting/multiboxqty/set" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "multi_box_qty": 321231,
+  "posting_number": "228245774-2229-1"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — string Идентификатор многокоробочного отправления.
 - `multi_box_qty required` — integer <int64> Количество коробок, в которые упакован товар.
-
-Пример запроса:
-
-```json
-{
-  "multi_box_qty": 321231,
-  "posting_number": "228245774-2229-1"
-}
-```
 
 ### Ответы
 
@@ -1033,7 +1047,13 @@ Operation ID: `PostingAPI_ListCountryProductFbsPostingV2`
 
 Метод для получения списка доступных стран-изготовителей и их ISO кодов.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/product/country/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `name_search` — string Фильтрация по строке.
 
@@ -1048,7 +1068,6 @@ Operation ID: `PostingAPI_ListCountryProductFbsPostingV2`
   - `country_iso_code` — string ISO код страны.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -1070,21 +1089,23 @@ Operation ID: `PostingAPI_SetCountryProductFbsPostingV2`
 
 Метод для добавления на продукт атрибута «Страна-изготовитель», если он не был указан.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/product/country/set" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "country_iso_code": "NO",
+  "posting_number": "57195475-0050-3",
+  "product_id": 180550365
+}'
+```
+
+### Тело запроса
 
 - `posting_number required` — string Номер отправления.
 - `product_id required` — integer <int64> Идентификатор товара в системе Ozon — product_id .
 - `country_iso_code required` — string Двухбуквенный код добавляемой страны по стандарту ISO_3166-1. Список доступных стран-изготовителей и их ISO коды можно получить с помощью метода /v2/posting/fbs/product/country/list .
-
-Пример запроса:
-
-```json
-{
-  "country_iso_code": "NO",
-  "posting_number": "57195475-0050-3",
-  "product_id": 180550365
-}
-```
 
 ### Ответы
 
@@ -1096,7 +1117,6 @@ Operation ID: `PostingAPI_SetCountryProductFbsPostingV2`
 - `is_gtd_needed` — boolean Признак того, что необходимо передать номер грузовой таможенной декларации (ГТД) для продукта и отправления.
 
 Пример ответа:
-
 ```json
 {
   "product_id": 180550365,
@@ -1114,22 +1134,24 @@ Operation ID: `PostingAPI_GetRestrictions`
 
 Метод для получения габаритных, весовых и прочих ограничений пункта приёма по номеру отправления. Метод применим только для работы по схеме FBS.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/restrictions" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_number": "76673629-0020-1"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — string Номер отправления, для которого нужно определить ограничения.
-
-Пример запроса:
-
-```json
-{
-  "posting_number": "76673629-0020-1"
-}
-```
 
 ### Ответы
 
@@ -1153,7 +1175,6 @@ Operation ID: `PostingAPI_GetRestrictions`
   - `min_posting_price` — number <double> Ограничение по минимальной стоимости отправления в рублях.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -1177,26 +1198,28 @@ Operation ID: `PostingAPI_GetRestrictions`
 
 Operation ID: `PostingAPI_PostingFBSPackageLabel`
 
-Если вы работаете по схеме rFBS или rFBS Express, изучите процесс печати этикетки в Базе знаний продавца . Генерирует PDF-файл с этикетками для указанных отправлений в статусе «Ожидает отгрузки» — awaiting_deliver . В одном запросе можно передать не больше 20 идентификаторов. Если хотя бы для одного отправления возникнет ошибка, этикетки не будут подготовлены для всех отправлений в запросе. Рекомендуем запрашивать этикетки через 45–60 секунд после сборки заказа. Ошибка The next postings aren't ready означает, что этикетки ещё не готовы, повторите запрос позднее.
+Если вы работаете по схеме rFBS или rFBS Express, изучите процесс печати этикетки в Базе знаний продавца . Генерирует PDF-файл с этикетками для указанных отправлений в статусе «Ожидает отгрузки» — awaiting_deliver . В одном запросе можно передать не больше 20 идентификаторов. …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/package-label" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_number": [
+    "48173252-0034-4"
+  ]
+}'
+```
 
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — Array of strings Идентификатор отправления.
-
-Пример запроса:
-
-```json
-{
-  "posting_number": [
-    "48173252-0034-4"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1214,7 +1237,6 @@ Operation ID: `PostingAPI_PostingFBSPackageLabel`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "application/pdf",
@@ -1231,27 +1253,29 @@ Operation ID: `PostingAPI_PostingFBSPackageLabel`
 
 Operation ID: `PostingAPI_CreateLabelBatchV2`
 
-Если вы работаете по схеме rFBS или rFBS Express, изучите процесс печати этикетки в Базе знаний продавца . Метод для создания задания на асинхронное формирование этикеток для отправлений в статусе «Ожидает отгрузки» — awaiting_deliver . Метод может вернуть несколько заданий: на формирование маленькой и большой этикетки. Рекомендуем запрашивать этикетки через 45–60 секунд после сборки заказа. Чтобы получить созданные этикетки, используйте /v1/posting/fbs/package-label/get .
+Если вы работаете по схеме rFBS или rFBS Express, изучите процесс печати этикетки в Базе знаний продавца . Метод для создания задания на асинхронное формирование этикеток для отправлений в статусе «Ожидает отгрузки» — awaiting_deliver . …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/package-label/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_number": [
+    "4708216109137",
+    "3697105098026"
+  ]
+}'
+```
 
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — Array of strings Номера отправлений, для которых нужны этикетки.
-
-Пример запроса:
-
-```json
-{
-  "posting_number": [
-    "4708216109137",
-    "3697105098026"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1268,7 +1292,6 @@ Operation ID: `PostingAPI_CreateLabelBatchV2`
   - `tasks` — Array of objects Список заданий.
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -1292,24 +1315,26 @@ Operation ID: `PostingAPI_CreateLabelBatch`
 
 В будущем метод будет отключён. Мы предупредим вас об этом за месяц. Переключитесь на /v2/posting/fbs/package-label/create . Метод для создания задания на асинхронное формирование этикеток. Для получения этикеток, созданных в результате вызова метода, используйте /v1/posting/fbs/package-label/get .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/package-label/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_number": [
+    "228245774-2229-1"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — Array of strings Номера отправлений, для которых нужны этикетки.
-
-Пример запроса:
-
-```json
-{
-  "posting_number": [
-    "228245774-2229-1"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1326,7 +1351,6 @@ Operation ID: `PostingAPI_CreateLabelBatch`
   - `task_id` — integer <int64> Идентификатор задания на формирование этикеток.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -1345,12 +1369,18 @@ Operation ID: `PostingAPI_GetLabelBatch`
 
 Метод для получения этикеток после вызова /v1/posting/fbs/package-label/create .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/package-label/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `task_id required` — integer <int64> Номер задания на формирование этикеток из ответа метода /v1/posting/fbs/package-label/create .
 
@@ -1374,7 +1404,6 @@ Operation ID: `PostingAPI_GetLabelBatch`
   - `unprinted_postings_count` — integer <int32> Количество этикеток, которые не получилось напечатать.
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -1398,24 +1427,26 @@ Operation ID: `PostingAPI_GetPostingFbsCancelReasonV1`
 
 Возвращает список причин отмены для конкретных отправлений.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/cancel-reason" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "related_posting_numbers": [
+    "73837363-0010-3"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `related_posting_numbers required` — Array of strings Номера отправлений.
-
-Пример запроса:
-
-```json
-{
-  "related_posting_numbers": [
-    "73837363-0010-3"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1433,7 +1464,6 @@ Operation ID: `PostingAPI_GetPostingFbsCancelReasonV1`
   - `reasons` — Array of objects Информация о причинах отмены.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -1471,6 +1501,12 @@ Operation ID: `PostingAPI_GetPostingFbsCancelReasonList`
 
 Возвращает список причин отмены для всех отправлений.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/cancel-reason/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -1494,7 +1530,6 @@ Operation ID: `PostingAPI_GetPostingFbsCancelReasonList`
   - `type_id` — string Инициатор отмены отправления: buyer — покупатель, seller — продавец.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -1536,22 +1571,12 @@ Operation ID: `PostingAPI_CancelFbsPostingProduct`
 
 Используйте метод, если вы не можете отправить часть продуктов из отправления. Чтобы получить идентификаторы причин отмены cancel_reason_id при работе по схемам FBS или rFBS, используйте метод /v2/posting/fbs/cancel-reason/list . Условно-доставленные отправления отменить нельзя.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cancel_reason_id required` — integer <int64> Идентификатор причины отмены отправления товара.
-- `cancel_reason_message required` — string Обязательное поле. Дополнительная информация по отмене.
-- `items required` — Array of objects Информация о товарах.
-- `posting_number required` — string Идентификатор отправления.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/product/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cancel_reason_id": 352,
   "cancel_reason_message": "Product is out of stock",
   "items": [
@@ -1561,8 +1586,20 @@ Operation ID: `PostingAPI_CancelFbsPostingProduct`
     }
   ],
   "posting_number": "33920113-1231-1"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cancel_reason_id required` — integer <int64> Идентификатор причины отмены отправления товара.
+- `cancel_reason_message required` — string Обязательное поле. Дополнительная информация по отмене.
+- `items required` — Array of objects Информация о товарах.
+- `posting_number required` — string Идентификатор отправления.
 
 ### Ответы
 
@@ -1587,26 +1624,28 @@ Operation ID: `PostingAPI_CancelFbsPosting`
 
 Меняет статус отправления на cancelled . Перед началом работы проверьте причины отмены для конкретного отправления методом /v1/posting/fbs/cancel-reason . Условно-доставленные отправления отменить нельзя. Если значение параметра cancel_reason_id — 402, заполните поле cancel_reason_message .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "cancel_reason_id": 352,
+  "cancel_reason_message": "Product is out of stock",
+  "posting_number": "33920113-1231-1"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `cancel_reason_id required` — integer <int64> Идентификатор причины отмены отправления.
 - `cancel_reason_message` — string Дополнительная информация по отмене. Если cancel_reason_id = 402 , параметр обязательный.
 - `posting_number required` — string Идентификатор отправления.
-
-Пример запроса:
-
-```json
-{
-  "cancel_reason_id": 352,
-  "cancel_reason_message": "Product is out of stock",
-  "posting_number": "33920113-1231-1"
-}
-```
 
 ### Ответы
 
@@ -1631,24 +1670,26 @@ Operation ID: `PostingAPI_MoveFbsPostingToArbitration`
 
 Если отправление передано в доставку, но не просканировано в сортировочном центре, можно открыть спор. Открытый спор переведёт отправление в статус arbitration .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/arbitration" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_number": [
+    "33920143-1195-1"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — Array of strings Идентификатор отправления.
-
-Пример запроса:
-
-```json
-{
-  "posting_number": [
-    "33920143-1195-1"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1673,24 +1714,26 @@ Operation ID: `PostingAPI_MoveFbsPostingToAwaitingDelivery`
 
 Передает спорные заказы к отгрузке. Статус отправления изменится на awaiting_deliver .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/awaiting-delivery" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_number": [
+    "33920143-1195-1"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — Array of strings Идентификатор отправления. Максимальное количество в одном запросе — 100.
-
-Пример запроса:
-
-```json
-{
-  "posting_number": [
-    "33920143-1195-1"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1715,19 +1758,21 @@ Operation ID: `PostingAPI_PostingFBSPickupCodeVerify`
 
 Метод позволяет проверить код курьера при передаче отправлений realFBS Express. Подробнее о передаче отправлений в Базе знаний продавца .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/pick-up-code/verify" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pickup_code": "342341212312",
+  "posting_number": "228245774-2229-1"
+}'
+```
+
+### Тело запроса
 
 - `pickup_code required` — string Код курьера.
 - `posting_number required` — string Номер отправления.
-
-Пример запроса:
-
-```json
-{
-  "pickup_code": "342341212312",
-  "posting_number": "228245774-2229-1"
-}
-```
 
 ### Ответы
 
@@ -1747,25 +1792,27 @@ Operation ID: `PostingAPI_GetEtgb`
 
 Метод для получения таможенных деклараций Elektronik Ticaret Gümrük Beyannamesi (ETGB) для продавцов из Турции.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/global/etgb" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date": {
+    "from": "2023-02-13T12:13:16.818Z",
+    "to": "2023-02-13T12:13:16.818Z"
+  }
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date required` — object Фильтр по периоду создания деклараций.
-
-Пример запроса:
-
-```json
-{
-  "date": {
-    "from": "2023-02-13T12:13:16.818Z",
-    "to": "2023-02-13T12:13:16.818Z"
-  }
-}
-```
 
 ### Ответы
 
@@ -1783,7 +1830,6 @@ Operation ID: `PostingAPI_GetEtgb`
   - `etgb` — object Информация о декларации.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -1807,12 +1853,18 @@ Operation ID: `PostingAPI_GetEtgb`
 
 Operation ID: `PostingAPI_UnpaidLegalProductList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/unpaid-legal/product/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `cursor` — string Указатель для выборки следующих данных.
 - `limit required` — integer <int32> [ 1 .. 1000 ] Количество значений в ответе.
@@ -1832,7 +1884,6 @@ Operation ID: `PostingAPI_UnpaidLegalProductList`
 - `cursor` — string Указатель для выборки следующих данных.
 
 Пример ответа:
-
 ```json
 {
   "products": [

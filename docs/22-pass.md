@@ -1,6 +1,8 @@
 # Пропуски
 
-_Тег: `Pass` · операций: 7_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `Pass` · методов: 7_
 
 ## Список пропусков
 
@@ -8,16 +10,12 @@ _Тег: `Pass` · операций: 7_
 
 Operation ID: `PassList`
 
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтры.
-- `limit required` — integer <int32> [ 1 .. 1000 ] Default: 1000 Ограничение по количеству записей в ответе.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pass/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "",
   "filter": {
     "arrival_pass_ids": [
@@ -36,8 +34,14 @@ Operation ID: `PassList`
     ]
   },
   "limit": 1000
-}
+}'
 ```
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтры.
+- `limit required` — integer <int32> [ 1 .. 1000 ] Default: 1000 Ограничение по количеству записей в ответе.
 
 ### Ответы
 
@@ -49,7 +53,6 @@ Operation ID: `PassList`
 - `cursor` — string Указатель для выборки следующих данных. Если параметр пустой, данных больше нет.
 
 Пример ответа:
-
 ```json
 {
   "arrival_passes": [
@@ -97,15 +100,12 @@ Operation ID: `carriagePassCreate`
 
 Идентификатор созданного пропуска добавится к перевозке.
 
-### Тело запроса (application/json)
-
-- `arrival_passes required` — Array of objects Список пропусков.
-- `carriage_id required` — integer <int64> Идентификатор перевозки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/pass/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "carriage_id": 5000123456,
   "arrival_passes": [
     {
@@ -116,8 +116,13 @@ Operation ID: `carriagePassCreate`
       "with_returns": true
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `arrival_passes required` — Array of objects Список пропусков.
+- `carriage_id required` — integer <int64> Идентификатор перевозки.
 
 ### Ответы
 
@@ -128,7 +133,6 @@ Operation ID: `carriagePassCreate`
 - `arrival_pass_ids` — Array of strings <int64> Идентификаторы пропусков.
 
 Пример ответа:
-
 ```json
 {
   "arrival_pass_ids": [
@@ -145,15 +149,12 @@ Operation ID: `carriagePassCreate`
 
 Operation ID: `carriagePassUpdate`
 
-### Тело запроса (application/json)
-
-- `arrival_passes required` — Array of objects Список пропусков.
-- `carriage_id required` — integer <int64> Идентификатор перевозки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/pass/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "carriage_id": 5000123456,
   "arrival_passes": [
     {
@@ -165,15 +166,19 @@ Operation ID: `carriagePassUpdate`
       "with_returns": true
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `arrival_passes required` — Array of objects Список пропусков.
+- `carriage_id required` — integer <int64> Идентификатор перевозки.
 
 ### Ответы
 
 - 200 Пропуск обновлён
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -195,29 +200,30 @@ Operation ID: `carriagePassUpdate`
 
 Operation ID: `carriagePassDelete`
 
-### Тело запроса (application/json)
-
-- `arrival_pass_ids required` — Array of strings <int64> Идентификаторы пропусков.
-- `carriage_id required` — integer <int64> Идентификатор перевозки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/pass/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "carriage_id": 5000123456,
   "arrival_pass_ids": [
     6000123456,
     6000123457
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `arrival_pass_ids required` — Array of strings <int64> Идентификаторы пропусков.
+- `carriage_id required` — integer <int64> Идентификатор перевозки.
 
 ### Ответы
 
 - 200 Пропуск удалён
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -239,14 +245,12 @@ Operation ID: `carriagePassDelete`
 
 Operation ID: `returnPassCreate`
 
-### Тело запроса (application/json)
-
-- `arrival_passes required` — Array of objects Список пропусков.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/pass/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "arrival_passes": [
     {
       "arrival_time": "2026-03-17T10:00:00Z",
@@ -258,8 +262,12 @@ Operation ID: `returnPassCreate`
       "warehouse_id": 3000007863
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `arrival_passes required` — Array of objects Список пропусков.
 
 ### Ответы
 
@@ -270,7 +278,6 @@ Operation ID: `returnPassCreate`
 - `arrival_pass_ids` — Array of strings <int64> Идентификаторы пропусков.
 
 Пример ответа:
-
 ```json
 {
   "arrival_pass_ids": [
@@ -287,14 +294,12 @@ Operation ID: `returnPassCreate`
 
 Operation ID: `returnPassUpdate`
 
-### Тело запроса (application/json)
-
-- `arrival_passes required` — Array of objects Список пропусков.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/pass/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "arrival_passes": [
     {
       "arrival_pass_id": 6000123456,
@@ -305,15 +310,18 @@ Operation ID: `returnPassUpdate`
       "vehicle_model": "ГАЗель NEXT"
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `arrival_passes required` — Array of objects Список пропусков.
 
 ### Ответы
 
 - 200 Пропуск обновлён
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -335,27 +343,28 @@ Operation ID: `returnPassUpdate`
 
 Operation ID: `returnPassDelete`
 
-### Тело запроса (application/json)
-
-- `arrival_pass_ids required` — Array of strings <int64> Идентификаторы пропусков.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/pass/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "arrival_pass_ids": [
     6000123456,
     6000123457
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `arrival_pass_ids required` — Array of strings <int64> Идентификаторы пропусков.
 
 ### Ответы
 
 - 200 Пропуск удалён
 
 Пример ответа:
-
 ```json
 {
   "code": 0,

@@ -1,6 +1,8 @@
 # Доставка
 
-_Тег: `DeliveryAPI` · операций: 5_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `DeliveryAPI` · методов: 5_
 
 ## Проверить доступность доставки для покупателя
 
@@ -10,7 +12,13 @@ Operation ID: `DeliveryCheck`
 
 Проверяет доступность доставки Ozon для покупателя. Не учитывает ограничения по сумме покупки, категории товаров и географии.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/delivery/check" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `client_phone required` — string 7XXXXXXXXXX Номер телефона покупателя.
 
@@ -32,17 +40,12 @@ Operation ID: `DeliveryCheckout`
 
 Проверяет доступность доставки товаров на указанный адрес или в точку выдачи и отображает сроки доставки. Проверяйте наличие товаров и маршруты во время оформления заказа, чтобы точно рассчитать сроки доставки.
 
-### Тело запроса (application/json)
-
-- `buyer_phone` — string Номер телефона покупателя.
-- `delivery_schema` — string Default: "MIX" Enum: "MIX" "FBO" "FBS" Схема доставки: MIX — на выбор Ozon; FBO — FBO; FBS — FBS.
-- `delivery_type` — object Способ доставки.
-- `items` — Array of objects <= 1000 items Информация о товарах.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/delivery/checkout" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "buyer_phone": "string",
   "delivery_schema": "MIX",
   "delivery_type": {
@@ -63,8 +66,15 @@ Operation ID: `DeliveryCheckout`
       "sku": 0
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `buyer_phone` — string Номер телефона покупателя.
+- `delivery_schema` — string Default: "MIX" Enum: "MIX" "FBO" "FBS" Схема доставки: MIX — на выбор Ozon; FBO — FBO; FBS — FBS.
+- `delivery_type` — object Способ доставки.
+- `items` — Array of objects <= 1000 items Информация о товарах.
 
 ### Ответы
 
@@ -80,7 +90,6 @@ Operation ID: `DeliveryCheckout`
   - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "splits": [
@@ -131,15 +140,12 @@ Operation ID: `DeliveryMap`
 
 Возвращает объединённые кластеры точек самовывоза на области из параметра viewport . Используйте значения из параметра clusters.viewport , чтобы получить список точек или мелких кластеров внутри большого кластера. Используйте метод /v1/delivery/point/info , чтобы получить информацию о конкретной точке самовывоза.
 
-### Тело запроса (application/json)
-
-- `viewport` — object Область карты для получения кластеров и точек самовывоза.
-- `zoom` — integer <int32> [ 0 .. 19 ] Масштаб карты.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/delivery/map" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "viewport": {
     "left_bottom": {
       "lat": 0,
@@ -151,8 +157,13 @@ Operation ID: `DeliveryMap`
     }
   },
   "zoom": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `viewport` — object Область карты для получения кластеров и точек самовывоза.
+- `zoom` — integer <int32> [ 0 .. 19 ] Масштаб карты.
 
 ### Ответы
 
@@ -168,7 +179,6 @@ Operation ID: `DeliveryMap`
   - `viewport` — object Область карты для получения точек в кластере.
 
 Пример ответа:
-
 ```json
 {
   "clusters": [
@@ -207,7 +217,13 @@ Operation ID: `DeliveryPointInfo`
 
 Возвращает подробную информацию о точке самовывоза для пользователя.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/delivery/point/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `map_point_ids` — Array of strings <int64> <= 100 items Идентификаторы точек на карте.
 
@@ -222,7 +238,6 @@ Operation ID: `DeliveryPointInfo`
   - `enabled` — boolean true , если пункт самовывоза доступен.
 
 Пример ответа:
-
 ```json
 {
   "points": [
@@ -300,6 +315,12 @@ Operation ID: `DeliveryAPI_DeliveryPointList`
 
 Возвращает координаты всех точек самовывоза без объединения в кластеры.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/delivery/point/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Ответы
 
 - 200 Список точек самовывоза
@@ -311,7 +332,6 @@ Operation ID: `DeliveryAPI_DeliveryPointList`
   - `map_point_id` — integer <int64> Идентификатор точки на карте.
 
 Пример ответа:
-
 ```json
 {
   "points": [

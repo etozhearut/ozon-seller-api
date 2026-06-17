@@ -1,6 +1,8 @@
 # Отправления
 
-_Тег: `FboPostingAPI` · операций: 3_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `FboPostingAPI` · методов: 3_
 
 ## Отменить отправление из заказа
 
@@ -10,21 +12,23 @@ Operation ID: `PostingAPI_PostingCancel`
 
 Отменяет отправление из заказа. Используйте идентификатор причины отмены reasons.id из метода /v1/cancel-reason/list-by-posting .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_number": "string",
+  "reason_id": 0,
+  "reason_message": "string"
+}'
+```
+
+### Тело запроса
 
 - `posting_number required` — string Номер отправления.
 - `reason_id required` — integer <int32> Идентификатор причины отмены.
 - `reason_message` — string Дополнительная информация по отмене.
-
-Пример запроса:
-
-```json
-{
-  "posting_number": "string",
-  "reason_id": 0,
-  "reason_message": "string"
-}
-```
 
 ### Ответы
 
@@ -42,7 +46,13 @@ Operation ID: `PostingAPI_PostingCancel`
 
 Operation ID: `PostingAPI_PostingCancelStatus`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/cancel/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `posting_number` — string Идентификатор отправления.
 
@@ -57,7 +67,6 @@ Operation ID: `PostingAPI_PostingCancelStatus`
 - `state` — string Статус отмены отправления.
 
 Пример ответа:
-
 ```json
 {
   "order_number": "string",
@@ -78,19 +87,21 @@ Operation ID: `PostingAPI_PostingMarks`
 
 Возвращает статусы выдачи экземпляров и коды маркировки «Честный ЗНАК» для каждого отправления. Укажите в чеке и выведите из оборота маркировки экземпляров из параметра issued_exemplars в ответе.
 
-### Тело запроса (application/json)
-
-- `posting_numbers` — Array of strings Идентификаторы отправлений.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/marks" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "posting_numbers": [
     "string"
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `posting_numbers` — Array of strings Идентификаторы отправлений.
 
 ### Ответы
 
@@ -103,7 +114,6 @@ Operation ID: `PostingAPI_PostingMarks`
 - `non_issued_exemplars` — Array of objects Список не выданных покупателям экземпляров товаров.
 
 Пример ответа:
-
 ```json
 {
   "invalid_postings": [

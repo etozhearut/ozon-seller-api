@@ -1,6 +1,8 @@
 # Возвратные отгрузки
 
-_Тег: `ReturnAPI` · операций: 8_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `ReturnAPI` · методов: 8_
 
 ## Количество возвратов FBS
 
@@ -10,20 +12,12 @@ Operation ID: `returnsCompanyFBSInfo`
 
 Метод для получения информации о возвратах FBS и их количестве.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтры.
-- `pagination required` — object Разделение ответа метода.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/returns/company/fbs/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "place_id": 0
   },
@@ -31,8 +25,18 @@ Operation ID: `returnsCompanyFBSInfo`
     "last_id": 0,
     "limit": 500
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтры.
+- `pagination required` — object Разделение ответа метода.
 
 ### Ответы
 
@@ -44,7 +48,6 @@ Operation ID: `returnsCompanyFBSInfo`
 - `has_next` — boolean Признак, есть ли ещё пункты, где продавца ожидают возвраты.
 
 Пример ответа:
-
 ```json
 {
   "drop_off_points": [
@@ -79,6 +82,12 @@ Operation ID: `ReturnAPI_GiveoutIsEnabled`
 
 Если у вас есть доступ, в параметре enabled будет указано значение true .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/giveout/is-enabled" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -102,12 +111,18 @@ Operation ID: `ReturnAPI_GiveoutList`
 
 Метод для получения списка активных возвратов. Возвратная отгрузка становится активной после сканирования штрихкода. После сканирования штрихкода второй раз активная выдача переходит в статус неактивной.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/giveout/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `last_id` — integer <int64> Идентификатор последнего значения на странице.
 - `limit required` — integer <int64> Количество элементов в ответе.
@@ -129,7 +144,6 @@ Operation ID: `ReturnAPI_GiveoutList`
   - `warehouse_name` — string Название склада.
 
 Пример ответа:
-
 ```json
 {
   "giveouts": [
@@ -157,12 +171,18 @@ Operation ID: `ReturnAPI_GiveoutInfo`
 
 Метод для получения информации о возвратной отгрузке. В параметр giveout_id передаётся значение, полученное в методе /v1/return/giveout/list .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/giveout/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `giveout_id required` — integer <int64> Идентификатор отгрузки.
 
@@ -179,7 +199,6 @@ Operation ID: `ReturnAPI_GiveoutInfo`
 - `warehouse_name` — string Название склада.
 
 Пример ответа:
-
 ```json
 {
   "articles": [
@@ -207,6 +226,12 @@ Operation ID: `ReturnAPI_GiveoutGetBarcode`
 
 Используйте этот метод, чтобы получить штрихкод из ответа методов /v1/return/giveout/get-png и /v1/return/giveout/get-pdf в текстовом виде.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/giveout/barcode" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -230,6 +255,12 @@ Operation ID: `ReturnAPI_GiveoutGetPDF`
 
 Возвращает PDF-файл со штрихкодом. Метод работает только для схемы FBS.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/giveout/get-pdf" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -246,7 +277,6 @@ Operation ID: `ReturnAPI_GiveoutGetPDF`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "application/pdf",
@@ -265,6 +295,12 @@ Operation ID: `ReturnAPI_GiveoutGetPNG`
 
 Возвращает PNG-файл со штрихкодом.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/giveout/get-png" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -281,7 +317,6 @@ Operation ID: `ReturnAPI_GiveoutGetPNG`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "image/png",
@@ -300,6 +335,12 @@ Operation ID: `ReturnAPI_GiveoutBarcodeReset`
 
 Используйте метод, если ваш штрихкод попал в посторонние руки. Метод возвращает PNG-файл с новым штрихкодом. После использования метода вы не сможете получить возвратную отгрузку по старым штрихкодам. Чтобы получить новый штрихкод в PDF-формате, запросите его методом /v1/return/giveout/get-pdf .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/return/giveout/barcode-reset" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -316,7 +357,6 @@ Operation ID: `ReturnAPI_GiveoutBarcodeReset`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "image/png",

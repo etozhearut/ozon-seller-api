@@ -1,6 +1,8 @@
 # Загрузка и обновление товаров
 
-_Тег: `ProductAPI` · операций: 19_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `ProductAPI` · методов: 19_
 
 ## Создать или обновить товар
 
@@ -8,21 +10,14 @@ _Тег: `ProductAPI` · операций: 19_
 
 Operation ID: `ProductAPI_ImportProductsV3`
 
-Метод для создания товаров и обновления информации о них. В сутки можно создать или обновить определённое количество товаров. Чтобы узнать лимит, используйте /v4/product/info/limit . Если количество загрузок и обновлений товаров превысит лимит, появится ошибка item_limit_exceeded . У метода есть лимит на количество операций c товарами в минуту. Если вы превысите лимит, вернётся ошибка 429 с описанием в поле message и заголовками: Item-Retry-After — время в минутах до обновления лимита. Для суточного лимита — время до 03:00 по московскому времени. Item-Rate-Limit-Remaining — остаток операций до следующего сброса лимита. В одном запросе можно передать до 100 товаров. Каждый товар — это отдельный элемент в массиве items . Укажите всю информацию о товаре: его характеристики, штрихкод, изображения, габариты, цену и валюту цены. При обновлении товара передайте в запросе всю информацию о нём. Указанная валюта должна совпадать с той, которая установлена в настройках личного кабинета. По умолчанию передаётся RUB — российский рубль. Например, если у вас установлена валюта юань, передавайте значение CNY , иначе вернётся ошибка. Товар не будет создан или обновлён, если вы заполните неправильно или не укажете: Обязательные характеристики : характеристики отличаются для разных категорий — их можно посмотреть в Базе знаний продавца или получить методом /v1/description-category/attribute . Реальные объёмно-весовые характеристики : depth , width , height , dimension_unit , weight , weight_unit . Не пропускайте эти параметры в запросе и не указывайте 0. Для некоторых характеристик можно использовать HTML-теги. Получите статус модерации созданного или обновлённого товара в параметре items.statuses.moderate_status метода /v3/product/info/list . После модерации товар появится в вашем личном кабинете, но не будет виден пользователям, пока вы не выставите его на продажу. Каждый товар в запросе — отдельный элемент массива items . Чтобы объединить две карточки, для каждой передайте 9048 в массиве attributes . Все атрибуты в этих карточках, кроме размера или цвета, должны совпадать. Загрузка изображений Для загрузки передайте в запросе ссылки на изображения в общедоступном облачном хранилище. Формат изображения по ссылке — JPG или PNG. Изображения в массиве images располагайте в соответствии с желаемым порядком на сайте. Для загрузки главного изображения товара используйте параметр primary_image . Если не передать значение primary_image , главным будет первое изображение в массиве images . Чтобы загрузить главное изображение для Ozon Селект: Проверьте, что в ответе метода /v1/description-category/attribute возвращается характеристика с result.id = 23500 . Передайте ссылку на изображение в параметре items.attributes.values.value с id = 23500 . Для каждого товара вы можете загрузить до 30 изображений, включая главное. Если передать значение primary_image , максимальное количество изображений в images — 29. Если параметр primary_image пустой, то в images можно передать до 30 изображений. Для загрузки изображений 360 используйте поле images360 , для загрузки маркетингового цвета — color_image . Подробнее о требованиях к фото в Базе знаний продавца Если вы хотите изменить состав или порядок изображений, получите информацию с помощью метода /v3/product/info/list — в нём отображается текущий порядок и состав изображений. Скопируйте данные полей images , images360 , color_image , измените и дополните состав или порядок в соответствии с необходимостью. Загрузка видео Для загрузки передайте в запросе ссылки на видео длительностью от 8 секунд до 5 минут. Формат видео по ссылке — MP4, MOV. Подробнее о требованиях к видео в Базе знаний продавца Для этого в параметре complex_attributes передайте объект. В нём в массиве attributes передайте 2 объекта с complex_id = 100001 : В первом укажите id = 21841 и в массиве values передайте объект с ссылкой на видео. Пример : { "complex_id" : 100001 , "id" : 21841 , "values" : [ { "value" : "https://www.youtube.com/watch?v=ZwM0iBn03dY" } ] } Во втором укажите значение id = 21837 и в массиве values передайте объект с названием видео. Пример : { "complex_id" : 100001 , "id" : 21837 , "values" : [ { "value" : "videoName_1" } ] } Если вы хотите загрузить несколько видео, передавайте значения для каждого видео в разных объектах массива values . Объекты в массиве располагайте в соответствии с желаемым порядком на сайте. Максимальное количество видео — 5. Пример : { "complex_id" : 100001 , "id" : 21837 , "values" : [ { "value" : "videoName_1" } , { "value" : "videoName_2" } ] } , { "complex_id" : 100001 , "id" : 21841 , "values" : [ { "value" : "https://www.youtube.com/watch?v=ZwM0iBn03dY" } , { "value" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ" } ] } Загрузка видеообложки Вы можете загрузить видеообложку через complex_attributes . Подробнее о требованиях к видеообложкам в Базе знаний продавца Пример : "complex_attributes" : [ { "attributes" : [ { "id" : 21845 , "complex_id" : 100002 , "values" : [ { "dictionary_value_id" : 0 , "value" : "https://v.ozone.ru/vod/video-10/01GFATWQVCDE7G5B721421P1231Q7/asset_1.mp4" } ] } ] } ] Подробнее о видеообложке в Базе знаний продавца Загрузка таблицы размеров Вы можете добавить в карточку товара таблицу размеров, созданную с помощью конструктора . Передайте её в массиве attributes в формате JSON как Rich-контент id = 13164 . Конструктор в формате JSON Подробнее о конструкторе в Базе знаний продавца
+Метод для создания товаров и обновления информации о них. В сутки можно создать или обновить определённое количество товаров. Чтобы узнать лимит, используйте /v4/product/info/limit . Если количество загрузок и обновлений товаров превысит лимит, появится ошибка item_limit_exceeded . …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `items` — Array of objects Массив данных.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/product/import" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "items": [
     {
       "attributes": [
@@ -106,8 +101,17 @@ Operation ID: `ProductAPI_ImportProductsV3`
       "width": 150
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `items` — Array of objects Массив данных.
 
 ### Ответы
 
@@ -125,7 +129,6 @@ Operation ID: `ProductAPI_ImportProductsV3`
   - `task_id` — integer <int64> Номер задания на загрузку товаров. Проверьте статус создания или обновления товара методом /v1/product/import/info .
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -144,12 +147,18 @@ Operation ID: `ProductAPI_GetImportProductsInfo`
 
 Позволяет получить статус создания или обновления карточки товара. Если вы обновили изображение или видео по ссылке, но ссылка не изменилась, для изображения или видео в параметре result.items.status вернётся skipped .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/import/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `task_id required` — integer <int64> Код задачи на импорт товаров. Можно получить с помощью метода /v3/product/import .
 
@@ -169,7 +178,6 @@ Operation ID: `ProductAPI_GetImportProductsInfo`
   - `total` — integer <int32> Идентификатор товара в системе продавца — артикул.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -194,21 +202,14 @@ Operation ID: `ProductAPI_GetImportProductsInfo`
 
 Operation ID: `ProductAPI_ImportProductsBySKU`
 
-Метод создаёт копию карточки товара с указанным SKU. Метод копирует только карточку товара другого продавца, скопировать свой товар не получится. Создать копию не получится, если продавец запретил копирование своих карточек. Обновить товар по SKU нельзя. У метода есть лимит на количество операций c товарами в минуту и в сутки. Если вы превысите лимит, вернётся ошибка 429 с описанием в поле message и заголовками: Item-Retry-After — время в минутах до обновления лимита. Для суточного лимита — время до 03:00 по московскому времени. Item-Rate-Limit-Remaining — остаток операций до следующего сброса лимита.
+Метод создаёт копию карточки товара с указанным SKU. Метод копирует только карточку товара другого продавца, скопировать свой товар не получится. Создать копию не получится, если продавец запретил копирование своих карточек. Обновить товар по SKU нельзя. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `items` — Array of objects <= 1000 items Информация о товарах.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/import-by-sku" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "items": [
     {
       "sku": 298789742,
@@ -220,8 +221,17 @@ Operation ID: `ProductAPI_ImportProductsBySKU`
       "vat": "0.1"
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `items` — Array of objects <= 1000 items Информация о товарах.
 
 ### Ответы
 
@@ -240,7 +250,6 @@ Operation ID: `ProductAPI_ImportProductsBySKU`
   - `unmatched_sku_list` — Array of integers <int64> Список идентификаторов товаров в системе Ozon — product_id .
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -258,21 +267,14 @@ Operation ID: `ProductAPI_ImportProductsBySKU`
 
 Operation ID: `ProductAPI_ProductUpdateAttributes`
 
-Метод позволяет добавлять характеристики и изменять их значения. Изменятся только характеристики, которые вы указали в запросе. Удалить уже заполненные характеристики не получится. Для полного обновления характеристик используйте /v3/product/import . У метода есть лимит на количество операций c товарами в минуту и в сутки. Если вы превысите лимит, вернётся ошибка 429 с описанием в поле message и заголовками: Item-Retry-After — время в минутах до обновления лимита. Для суточного лимита — время до 03:00 по московскому времени. Item-Rate-Limit-Remaining — остаток операций до следующего сброса лимита.
+Метод позволяет добавлять характеристики и изменять их значения. Изменятся только характеристики, которые вы указали в запросе. Удалить уже заполненные характеристики не получится. Для полного обновления характеристик используйте /v3/product/import . …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `items` — Array of objects <= 100 items Товары и характеристики, которые нужно обновить.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/attributes/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "items": [
     {
       "offer_id": "PROD-2023-001",
@@ -314,8 +316,17 @@ Operation ID: `ProductAPI_ProductUpdateAttributes`
       ]
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `items` — Array of objects <= 100 items Товары и характеристики, которые нужно обновить.
 
 ### Ответы
 
@@ -339,24 +350,14 @@ Operation ID: `ProductAPI_ProductUpdateAttributes`
 
 Operation ID: `ProductAPI_ProductImportPictures`
 
-Метод для загрузки или обновления изображений товара. При каждом вызове метода передавайте все изображения, которые должны быть на карточке товара. Например, если вы вызвали метод и загрузили 10 изображений, а затем вызвали метод второй раз и загрузили ещё одно, то все 10 предыдущих сотрутся. Для загрузки передайте адрес ссылки на изображение в общедоступном облачном хранилище. Формат изображения по ссылке — JPG или PNG. Изображения в массиве images располагайте в соответствии с желаемым порядком на сайте. Главным будет первое изображение в массиве. Для каждого товара вы можете загрузить до 30 изображений. Для загрузки изображений 360 используйте поле images360 , для загрузки маркетингового цвета — color_image . Подробнее о требованиях к фото в Базе знаний продавца Если вы хотите изменить состав или порядок изображений, получите информацию с помощью метода /v3/product/info/list — в нём отображается текущий порядок и состав изображений. Скопируйте данные полей images , images360 , color_image , измените и дополните состав или порядок в соответствии с необходимостью. Если вы обновили изображение по ссылке, но ссылка не изменилась, в методе /v1/product/import/info для изображения в параметре result.items.status вернётся skipped . У метода есть лимит на количество операций c товарами в минуту и в сутки. Если вы превысите лимит, вернётся ошибка 429 с описанием в поле message и заголовками: Item-Retry-After — время в минутах до обновления лимита. Для суточного лимита — время до 03:00 по московскому времени. Item-Rate-Limit-Remaining — остаток операций до следующего сброса лимита.
+Метод для загрузки или обновления изображений товара. При каждом вызове метода передавайте все изображения, которые должны быть на карточке товара. Например, если вы вызвали метод и загрузили 10 изображений, а затем вызвали метод второй раз и загрузили ещё одно, то все 10 предыдущих сотрутся. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `color_image` — string Маркетинговый цвет.
-- `images` — Array of strings Массив ссылок на изображения. До 30 штук. Изображения в массиве расположены в порядке их расположения на сайте. Первое изображение в массиве будет главным.
-- `images360` — Array of strings Массив изображений 360. До 70 штук. Формат: адрес ссылки на изображение в общедоступном облачном хранилище. Формат изображения по ссылке — JPG.
-- `product_id required` — integer <int64> Идентификатор товара в системе Ozon — product_id .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/pictures/import" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "color_image": "https://example.com/cloud-storage/color/marketing-color-red.jpg",
   "images": [
     "https://example.com/cloud-storage/images/main-image-front.jpg",
@@ -373,8 +374,20 @@ Operation ID: `ProductAPI_ProductImportPictures`
     "https://example.com/cloud-storage/images360/360-view-005.jpg"
   ],
   "product_id": 123456789
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `color_image` — string Маркетинговый цвет.
+- `images` — Array of strings Массив ссылок на изображения. До 30 штук. Изображения в массиве расположены в порядке их расположения на сайте. Первое изображение в массиве будет главным.
+- `images360` — Array of strings Массив изображений 360. До 70 штук. Формат: адрес ссылки на изображение в общедоступном облачном хранилище. Формат изображения по ссылке — JPG.
+- `product_id required` — integer <int64> Идентификатор товара в системе Ozon — product_id .
 
 ### Ответы
 
@@ -392,7 +405,6 @@ Operation ID: `ProductAPI_ProductImportPictures`
   - `pictures` — Array of objects
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -418,26 +430,14 @@ Operation ID: `ProductAPI_ProductImportPictures`
 
 Operation ID: `ProductAPI_GetProductList`
 
-Метод для получения списка всех товаров. Если вы используете фильтр по идентификатору offer_id или product_id , остальные параметры заполнять не обязательно. Вернутся все товары с указанными идентификаторами, независимо от видимости. За один раз вы можете использовать только одну группу идентификаторов, не больше 1000 товаров. Если вы не используете для отображения идентификаторы, укажите limit и last_id в следующих запросах.
+Метод для получения списка всех товаров. Если вы используете фильтр по идентификатору offer_id или product_id , остальные параметры заполнять не обязательно. Вернутся все товары с указанными идентификаторами, независимо от видимости. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтр по товарам.
-  - `offer_id` — Array of strings Фильтр по параметру offer_id . Вы можете передавать список значений.
-  - `product_id` — Array of strings <int64> Фильтр по параметру product_id . Вы можете передавать список значений.
-  - `visibility` — string Default: "ALL" Enum: "ALL" "VISIBLE" "INVISIBLE" "EMPTY_STOCK" "NOT_MODERATED" "MODERATED" "DISABLED" "STATE_FAILED" "READY_TO_SUPPLY" "VALIDATION_STATE_PENDING" "VALIDATION_STATE_FAIL" "VALIDATION_STATE_SUCCESS" "TO_SUPPLY" "IN_SALE" "REMOVED_FROM_SALE" "OVERPRICED" "CRITICALLY_OVERPRICED" "EMPTY_BARCODE" "BARCODE_EXISTS" "QUARANTINE" "ARCHIVED" "OVERPRICED_WITH_STOCK" "PARTIAL_APPROVED" "AUTO_ARCHIVED" "MANUAL_ARCHIVED" "SEASONAL_AUTO_ARCHIVED" "VISIBLE_WITH_FBO_STOCK" Фильтр по видимости товара: ALL — все товары, кроме архивных; VISIBLE — товары, которые видны покупателям; INVISIBLE — товары, которые не видны покупателям; EMPTY_STOCK — товары, у которых не указано наличие; NOT_MODERATED — товары, которые не прошли модерацию; MODERATED — товары, которые прошли модерацию; DISABLED — товары, которые видны покупателям, но недоступны к покупке; STATE_FAILED — товары, создание которых завершилось ошибкой; READY_TO_SUPPLY — товары, готовые к поставке; VALIDATION_STATE_PENDING — товары, которые проходят проверку валидатором на премодерации; VALIDATION_STATE_FAIL — товары, которые не прошли проверку валидатором на премодерации; VALIDATION_STATE_SUCCESS — товары, которые прошли проверку валидатором на премодерации; TO_SUPPLY — товары, готовые к продаже; IN_SALE — товары в продаже; REMOVED_FROM_SALE — товары, скрытые от покупателей; OVERPRICED — товары с завышенной ценой; CRITICALLY_OVERPRICED — товары со слишком завышенной ценой; EMPTY_BARCODE — товары без штрихкода; BARCODE_EXISTS — товары со штрихкодом; QUARANTINE — товары на карантине после изменения цены более чем на 50%; ARCHIVED — товары в архиве; OVERPRICED_WITH_STOCK — товары в продаже со стоимостью выше, чем у конкурентов; PARTIAL_APPROVED — товары в продаже с пустым или неполным описанием; AUTO_ARCHIVED — товары, которые система перенесла в архив автоматически; MANUAL_ARCHIVED — товары, которые продавец перенёс в архив вручную; SEASONAL_AUTO_ARCHIVED — сезонные товары, которые система перенесла в архив автоматически; VISIBLE_WITH_FBO_STOCK — товары с остатками на FBO, которые видят покупатели.
-- `last_id` — string Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
-- `limit` — integer <int64> Количество значений на странице. Минимум — 1, максимум — 1000.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/product/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "offer_id": [
       "136748"
@@ -449,8 +449,22 @@ Operation ID: `ProductAPI_GetProductList`
   },
   "last_id": "",
   "limit": 100
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтр по товарам.
+  - `offer_id` — Array of strings Фильтр по параметру offer_id . Вы можете передавать список значений.
+  - `product_id` — Array of strings <int64> Фильтр по параметру product_id . Вы можете передавать список значений.
+  - `visibility` — string Default: "ALL" Enum: "ALL" "VISIBLE" "INVISIBLE" "EMPTY_STOCK" "NOT_MODERATED" "MODERATED" "DISABLED" "STATE_FAILED" "READY_TO_SUPPLY" "VALIDATION_STATE_PENDING" "VALIDATION_STATE_FAIL" "VALIDATION_STATE_SUCCESS" "TO_SUPPLY" "IN_SALE" "REMOVED_FROM_SALE" "OVERPRICED" "CRITICALLY_OVERPRICED" "EMPTY_BARCODE" "BARCODE_EXISTS" "QUARANTINE" "ARCHIVED" "OVERPRICED_WITH_STOCK" "PARTIAL_APPROVED" "AUTO_ARCHIVED" "MANUAL_ARCHIVED" "SEASONAL_AUTO_ARCHIVED" "VISIBLE_WITH_FBO_STOCK" Фильтр по видимости товара: ALL — все товары, кроме архивных; VISIBLE — товары, которые видны покупателям; INVISIBLE — товары, которые не видны покупателям; EMPTY_STOCK — товары, у которых не указано наличие; NOT_MODERATED — товары, которые не прошли модерацию; MODERATED — товары, которые прошли модерацию; DISABLED — товары, которые видны покупателям, но недоступны к покупке; STATE_FAILED — товары, создание которых завершилось ошибкой; READY_TO_SUPPLY — товары, готовые к поставке; VALIDATION_STATE_PENDING — товары, которые проходят проверку валидатором на премодерации; VALIDATION_STATE_FAIL — товары, которые не прошли проверку валидатором на премодерации; VALIDATION_STATE_SUCCESS — товары, которые прошли проверку валидатором на премодерации; TO_SUPPLY — товары, готовые к продаже; IN_SALE — товары в продаже; REMOVED_FROM_SALE — товары, скрытые от покупателей; OVERPRICED — товары с завышенной ценой; CRITICALLY_OVERPRICED — товары со слишком завышенной ценой; EMPTY_BARCODE — товары без штрихкода; BARCODE_EXISTS — товары со штрихкодом; QUARANTINE — товары на карантине после изменения цены более чем на 50%; ARCHIVED — товары в архиве; OVERPRICED_WITH_STOCK — товары в продаже со стоимостью выше, чем у конкурентов; PARTIAL_APPROVED — товары в продаже с пустым или неполным описанием; AUTO_ARCHIVED — товары, которые система перенесла в архив автоматически; MANUAL_ARCHIVED — товары, которые продавец перенёс в архив вручную; SEASONAL_AUTO_ARCHIVED — сезонные товары, которые система перенесла в архив автоматически; VISIBLE_WITH_FBO_STOCK — товары с остатками на FBO, которые видят покупатели.
+- `last_id` — string Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
+- `limit` — integer <int64> Количество значений на странице. Минимум — 1, максимум — 1000.
 
 ### Ответы
 
@@ -469,7 +483,6 @@ Operation ID: `ProductAPI_GetProductList`
   - `total` — integer <int32> Всего товаров.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -500,12 +513,18 @@ Operation ID: `ProductAPI_GetProductRatingBySku`
 
 Метод для получения контент-рейтинга товаров, а также рекомендаций по его увеличению. Подробнее о контент-рейтинге
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/rating-by-sku" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `skus required` — Array of strings <int64> Идентификаторы товаров в системе Ozon — SKU, для которых нужно вернуть контент-рейтинг.
 
@@ -526,7 +545,6 @@ Operation ID: `ProductAPI_GetProductRatingBySku`
   - `groups` — Array of objects Группы характеристик, из которых складывается контент-рейтинг.
 
 Пример ответа:
-
 ```json
 {
   "products": [
@@ -726,21 +744,12 @@ Operation ID: `ProductAPI_GetProductInfoList`
 
 Метод для получения информации о товарах по их идентификаторам. В теле запроса должен быть массив однотипных идентификаторов, в ответе будет массив items . В одном запросе вы можете передать не больше 1000 товаров по параметрам offer_id , product_id и sku в сумме.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `offer_id` — Array of strings Идентификатор товара в системе продавца — артикул.
-- `product_id` — Array of strings <int64> Идентификатор товара в системе Ozon — product_id .
-- `sku` — Array of strings <int64> Идентификатор товара в системе Ozon — SKU.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/product/info/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "offer_id": [
     "2026113PDF"
   ],
@@ -750,8 +759,19 @@ Operation ID: `ProductAPI_GetProductInfoList`
   "sku": [
     "33373353831"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `offer_id` — Array of strings Идентификатор товара в системе продавца — артикул.
+- `product_id` — Array of strings <int64> Идентификатор товара в системе Ozon — product_id .
+- `sku` — Array of strings <int64> Идентификатор товара в системе Ozon — SKU.
 
 ### Ответы
 
@@ -804,7 +824,6 @@ Operation ID: `ProductAPI_GetProductInfoList`
   - `volume_weight` — number <double> Объёмный вес товара.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -971,23 +990,12 @@ Operation ID: `ProductAPI_GetProductAttributesV4`
 
 Возвращает описание характеристик товаров по идентификатору и видимости. Товар можно искать по offer_id , product_id или sku .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтр по товарам.
-- `last_id` — string Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
-- `limit` — integer <int32> [ 1 .. 1000 ] Количество значений на странице.
-- `sort_by` — string Параметр, по которому товары будут отсортированы: sku — сортировка по идентификатору товара в системе Ozon; offer_id — сортировка по артикулу товара; id — сортировка по идентификатору товара; title — сортировка по названию товара.
-- `sort_dir` — string Направление сортировки: asc — по возрастанию, desc — по убыванию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v4/product/info/attributes" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "product_id": [
       "0"
@@ -1002,8 +1010,21 @@ Operation ID: `ProductAPI_GetProductAttributesV4`
   },
   "limit": 100,
   "sort_dir": "ASC"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтр по товарам.
+- `last_id` — string Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
+- `limit` — integer <int32> [ 1 .. 1000 ] Количество значений на странице.
+- `sort_by` — string Параметр, по которому товары будут отсортированы: sku — сортировка по идентификатору товара в системе Ozon; offer_id — сортировка по артикулу товара; id — сортировка по идентификатору товара; title — сортировка по названию товара.
+- `sort_dir` — string Направление сортировки: asc — по возрастанию, desc — по убыванию.
 
 ### Ответы
 
@@ -1043,7 +1064,6 @@ Operation ID: `ProductAPI_GetProductAttributesV4`
 - `total` — string <int64> Количество товаров в списке.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -1228,24 +1248,26 @@ Operation ID: `ProductAPI_GetProductAttributesV4`
 
 Operation ID: `ProductAPI_GetProductInfoDescription`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/info/description" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "offer_id": "5",
+  "product_id": 73453843
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `offer_id required` — string Идентификатор товара в системе продавца — артикул.
 - `product_id` — integer <int64> Идентификатор товара в системе Ozon — product_id .
-
-Пример запроса:
-
-```json
-{
-  "offer_id": "5",
-  "product_id": 73453843
-}
-```
 
 ### Ответы
 
@@ -1265,7 +1287,6 @@ Operation ID: `ProductAPI_GetProductInfoDescription`
   - `offer_id` — string Идентификатор товара в системе продавца — артикул.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -1285,7 +1306,13 @@ Operation ID: `ProductAPI_GetProductInfoDescription`
 
 Operation ID: `ProductAPI_GetUploadQuota`
 
-Метод для получения информации о лимитах: На ассортимент — сколько всего товаров можно создать в вашем личном кабинете. На создание товаров — сколько товаров можно создать в сутки. На обновление товаров — сколько товаров можно отредактировать в сутки. На работу с товарами — сколько товаров можно создать в минуту. Если у вас есть лимит на ассортимент и вы израсходуете его, вы не сможете создавать новые товары. Подробнее о лимитах в Базе знаний продавца
+Метод для получения информации о лимитах: На ассортимент — сколько всего товаров можно создать в вашем личном кабинете. На создание товаров — сколько товаров можно создать в сутки. На обновление товаров — сколько товаров можно отредактировать в сутки. На работу с товарами — сколько товаров можно создать в минуту. …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v4/product/info/limit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -1309,7 +1336,6 @@ Operation ID: `ProductAPI_GetUploadQuota`
 - `total` — object Лимит на ассортимент.
 
 Пример ответа:
-
 ```json
 {
   "daily_create": {
@@ -1341,29 +1367,31 @@ Operation ID: `ProductAPI_GetUploadQuota`
 
 Operation ID: `ProductAPI_ProductUpdateOfferID`
 
-Метод для изменения offer_id , привязанных к товарам. Вы можете изменить несколько offer_id . Если offer_id уже используется для другого товара, вернётся ошибка OFFER_ID_ALREADY_EXISTS . У метода есть лимит на количество операций c товарами в минуту. Если вы превысите лимит, вернётся ошибка 429 с описанием в поле message и заголовками: Item-Retry-After — время в минутах до обновления лимита. Для суточного лимита — время до 03:00 по московскому времени. Item-Rate-Limit-Remaining — остаток операций до следующего сброса лимита.
+Метод для изменения offer_id , привязанных к товарам. Вы можете изменить несколько offer_id . Если offer_id уже используется для другого товара, вернётся ошибка OFFER_ID_ALREADY_EXISTS . У метода есть лимит на количество операций c товарами в минуту. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `update_offer_id required` — Array of objects [ 1 .. 25 ] items Список пар с новыми и старыми значениями артикулов.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/update/offer-id" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "update_offer_id": [
     {
       "new_offer_id": "haval",
       "offer_id": "chery"
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `update_offer_id required` — Array of objects [ 1 .. 25 ] items Список пар с новыми и старыми значениями артикулов.
 
 ### Ответы
 
@@ -1382,7 +1410,6 @@ Operation ID: `ProductAPI_ProductUpdateOfferID`
   - `offer_id` — string Артикул товара, который не получилось изменить.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -1404,25 +1431,27 @@ Operation ID: `ProductAPI_ProductArchive`
 
 Возвращает статус запроса на архивацию. Чтобы проверить фактическое состояние товара после архивации, используйте метод /v3/product/info/list . Подробнее об управлении товарами в архиве в Базе знаний продавца
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/archive" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "product_id": [
+    "125529926",
+    "987654321"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_id required` — Array of integers <int64> Список идентификаторов товаров в системе Ozon — product_id . Вы можете передать до 100 идентификаторов за раз.
-
-Пример запроса:
-
-```json
-{
-  "product_id": [
-    "125529926",
-    "987654321"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1447,25 +1476,27 @@ Operation ID: `ProductAPI_ProductUnarchive`
 
 Восстанавливает товары, которые были архивированы автоматически. Если вы превысите лимит на восстановление, вернётся ошибка autoarchive_restore_failed . Подробнее об управлении товарами в архиве в Базе знаний продавца
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/unarchive" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "product_id": [
+    "125529926",
+    "987654321"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_id required` — Array of integers <int64> Список идентификаторов товаров в системе Ozon — product_id . Вы можете передать до 100 идентификаторов за раз. В сутки можно восстановить из архива не больше 100 товаров, которые были архивированы автоматически. Лимит обновляется в 03:00 по московскому времени. На разархивацию товаров, перенесённых в архив вручную, ограничений нет.
-
-Пример запроса:
-
-```json
-{
-  "product_id": [
-    "125529926",
-    "987654321"
-  ]
-}
-```
 
 ### Ответы
 
@@ -1490,26 +1521,28 @@ Operation ID: `ProductAPI_DeleteProducts`
 
 В одном запросе можно передать до 500 идентификаторов.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `products required` — Array of objects Идентификатор товара в системе Ozon — product_id .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/products/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "products": [
     {
       "offer_id": "033"
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `products required` — Array of objects Идентификатор товара в системе Ozon — product_id .
 
 ### Ответы
 
@@ -1528,7 +1561,6 @@ Operation ID: `ProductAPI_DeleteProducts`
   - `offer_id` — string Идентификатор товара в системе продавца — артикул.
 
 Пример ответа:
-
 ```json
 {
   "status": [
@@ -1551,21 +1583,23 @@ Operation ID: `ProductAPI_GetProductInfoSubscription`
 
 Метод для получения количества пользователей, которые нажали Узнать о поступлении на странице товара. Вы можете передать несколько товаров в запросе.
 
-### Тело запроса (application/json)
-
-- `skus required` — Array of strings <int64> Список SKU, идентификаторов товара в системе Ozon.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/info/subscription" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "skus": [
     "889283932",
     "123456789",
     "987654321"
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `skus required` — Array of strings <int64> Список SKU, идентификаторов товара в системе Ozon.
 
 ### Ответы
 
@@ -1578,7 +1612,6 @@ Operation ID: `ProductAPI_GetProductInfoSubscription`
   - `sku` — integer <int64> Идентификатор товара в системе Ozon, SKU.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -1600,12 +1633,18 @@ Operation ID: `ProductAPI_ProductGetRelatedSKU`
 
 Метод для получения единого SKU по старым идентификаторам SKU FBS и SKU FBO. В ответе будут все SKU, связанные с переданными. Метод может обработать любые SKU, даже скрытые или удалённые. Передавайте до 200 SKU в одном запросе.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/related-sku/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `sku required` — Array of strings <int64> Список SKU.
 
@@ -1619,7 +1658,6 @@ Operation ID: `ProductAPI_ProductGetRelatedSKU`
 - `errors` — Array of objects Ошибки.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -1649,12 +1687,18 @@ Operation ID: `ProductAPI_ProductGetRelatedSKU`
 
 Operation ID: `ProductAPI_ProductInfoPicturesV2`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/product/pictures/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_id required` — Array of strings <int64> <= 1000 items Список идентификаторов товаров в системе Ozon — product_id .
 
@@ -1673,7 +1717,6 @@ Operation ID: `ProductAPI_ProductInfoPicturesV2`
   - `errors` — Array of objects Список ошибок по изображениям товара.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -1719,12 +1762,18 @@ Operation ID: `ProductAPI_ProductInfoWrongVolume`
 
 Возвращает список товаров с некорректными объёмно-весовыми характеристиками (ОВХ). Если вы указали размеры правильно, обратитесь в поддержку Ozon. Подробнее об объёмно-весовых характеристиках в Базе знаний продавца
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/info/wrong-volume" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `cursor` — string Указатель для выборки следующих данных.
 - `limit required` — integer <int64> [ 1 .. 1000 ] Максимальное количество элементов в ответе.
@@ -1744,7 +1793,6 @@ Operation ID: `ProductAPI_ProductInfoWrongVolume`
 - `products` — Array of objects Список товаров.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",

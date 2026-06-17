@@ -1,6 +1,8 @@
 # Работа с созданной поставкой FBP
 
-_Тег: `DeliveryFBP` · операций: 11_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `DeliveryFBP` · методов: 11_
 
 ## Сгенерировать акт приёмки
 
@@ -10,7 +12,13 @@ Operation ID: `FbpAPI_FbpCreateAct`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/act-from/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -25,7 +33,6 @@ Operation ID: `FbpAPI_FbpCreateAct`
 - `is_success` — boolean true , если в запросе нет ошибок.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -46,7 +53,13 @@ Operation ID: `FbpAPI_FbpCheckActState`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/act-from/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `file_uuid required` — string Идентификатор акта приёмки.
 
@@ -61,7 +74,6 @@ Operation ID: `FbpAPI_FbpCheckActState`
 - `status` — string Default: "STATUS_UNSPECIFIED" Enum: "STATUS_UNSPECIFIED" "NOT_EXIST" "PROCESSING" "EXIST" "ERROR" Статус генерации: STATUS_UNSPECIFIED — не определён; NOT_EXIST — не существует; PROCESSING — в процессе; EXIST — завершена; ERROR — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "cdn_url": "string",
@@ -80,7 +92,13 @@ Operation ID: `FbpAPI_FbpCreateConsignmentNote`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/act-to/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -102,19 +120,21 @@ Operation ID: `FbpAPI_FbpCheckConsignmentNoteState`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/act-to/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "code": "string",
+  "supply_id": "string"
+}'
+```
+
+### Тело запроса
 
 - `code required` — string Идентификатор транспортной накладной.
 - `supply_id required` — string Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
-  "code": "string",
-  "supply_id": "string"
-}
-```
 
 ### Ответы
 
@@ -127,7 +147,6 @@ Operation ID: `FbpAPI_FbpCheckConsignmentNoteState`
 - `state` — string Default: "STATE_TYPE_UNSPECIFIED" Enum: "STATE_TYPE_UNSPECIFIED" "IN_PROGRESS" "FINISHED" "FAILED" Статус генерации: STATE_TYPE_UNSPECIFIED — не определён; IN_PROGRESS — в процессе; FINISHED — завершилась успешно; FAILED — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "error_message": "string",
@@ -146,7 +165,13 @@ Operation ID: `FbpAPI_FbpArchiveGet`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/archive/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -176,7 +201,6 @@ Operation ID: `FbpAPI_FbpArchiveGet`
 - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "act_file_uuid": "string",
@@ -252,19 +276,21 @@ Operation ID: `FbpAPI_FbpArchiveList`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/archive/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "count": "string",
+  "last_id": "string"
+}'
+```
+
+### Тело запроса
 
 - `count required` — string <int32> Количество элементов в ответе.
 - `last_id` — string <int64> Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
-
-Пример запроса:
-
-```json
-{
-  "count": "string",
-  "last_id": "string"
-}
-```
 
 ### Ответы
 
@@ -277,7 +303,6 @@ Operation ID: `FbpAPI_FbpArchiveList`
 - `last_id` — integer <int64> Идентификатор последнего значения на странице.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -358,7 +383,13 @@ Operation ID: `FbpAPI_FbpCreateLabel`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/label/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -380,19 +411,21 @@ Operation ID: `FbpAPI_FbpGetLabel`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/label/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "code": "string",
+  "supply_id": "string"
+}'
+```
+
+### Тело запроса
 
 - `code required` — string Идентификатор задания на генерацию этикеток.
 - `supply_id required` — string Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
-  "code": "string",
-  "supply_id": "string"
-}
-```
 
 ### Ответы
 
@@ -404,7 +437,6 @@ Operation ID: `FbpAPI_FbpGetLabel`
 - `state` — string Default: "UNSPECIFIED" Enum: "UNSPECIFIED" "IN_PROGRESS" "FINISHED" "FAILED" Статус задания на генерацию этикеток: UNSPECIFIED — не определён; IN_PROGRESS — в процессе генерации; FINISHED — генерация завершилась успешно; FAILED — генерация завершилась с ошибкой.
 
 Пример ответа:
-
 ```json
 {
   "label_url": "string",
@@ -422,7 +454,13 @@ Operation ID: `FbpAPI_FbpOrderGet`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -452,7 +490,6 @@ Operation ID: `FbpAPI_FbpOrderGet`
 - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "attention_reasons": "ORDER_ATTENTION_TYPE_UNSPECIFIED",
@@ -527,7 +564,13 @@ Operation ID: `FbpAPI_FbpOrderList`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `count required` — integer <int32> Количество поставок в ответе.
 - `last_id` — integer <int64> Идентификатор последней поставки на странице. Для первого запроса оставьте это поле пустым. Чтобы получить следующие значения, укажите id последней поставки из ответа предыдущего запроса.
@@ -543,7 +586,6 @@ Operation ID: `FbpAPI_FbpOrderList`
 - `last_id` — integer <int64> Идентификатор последней поставки на странице.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -626,23 +668,12 @@ Operation ID: `PostingFbpList`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтр для поиска отправлений.
-- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
-- `sort_by` — string Параметр, по которому сортируются отправления: last_change_status_date — по дате последнего изменения статуса; in_process_at — по дате начала обработки.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbp/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "name": "string",
@@ -659,8 +690,21 @@ Operation ID: `PostingFbpList`
   "limit": 1,
   "sort_by": "string",
   "sort_dir": "ASC"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтр для поиска отправлений.
+- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
+- `sort_by` — string Параметр, по которому сортируются отправления: last_change_status_date — по дате последнего изменения статуса; in_process_at — по дате начала обработки.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
 
 ### Ответы
 
@@ -677,7 +721,6 @@ Operation ID: `PostingFbpList`
 - `postings` — Array of objects Список отправлений.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",

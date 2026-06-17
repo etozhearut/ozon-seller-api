@@ -1,6 +1,8 @@
 # Работа с FBP-поставками с доставкой pick-up
 
-_Тег: `OrderPickupFBP` · операций: 2_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `OrderPickupFBP` · методов: 2_
 
 ## Отменить pick-up поставку
 
@@ -10,7 +12,13 @@ Operation ID: `FbpAPI_FbpOrderPickUpCancel`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/pick-up/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -25,7 +33,6 @@ Operation ID: `FbpAPI_FbpOrderPickUpCancel`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {
@@ -46,24 +53,26 @@ Operation ID: `FbpAPI_FbpOrderPickUpDlvEdit`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
-
-- `pickup_details required` — object Детали отправителя.
-- `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
-- `supply_id required` — string Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/pick-up/dlv/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "pickup_details": {
     "sender_name": "string",
     "sender_phone": "string"
   },
   "row_version": 0,
   "supply_id": "string"
-}
+}'
 ```
+
+### Тело запроса
+
+- `pickup_details required` — object Детали отправителя.
+- `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
+- `supply_id required` — string Идентификатор поставки.
 
 ### Ответы
 
@@ -76,7 +85,6 @@ Operation ID: `FbpAPI_FbpOrderPickUpDlvEdit`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {

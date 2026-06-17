@@ -1,8 +1,10 @@
 # Работа с грузоместами FBS
 
-Работа с грузоместами FBS Методы в этом разделе работают только для доверительной приёмки грузовых мест. Подробнее о доверительной приёмке грузового места в Базе знаний продавца
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `CarriageAPI` · операций: 13_
+_Тег: `CarriageAPI` · методов: 13_
+
+Работа с грузоместами FBS Методы в этом разделе работают только для доверительной приёмки грузовых мест. Подробнее о доверительной приёмке грузового места в Базе знаний продавца
 
 ## Создать грузоместо
 
@@ -12,28 +14,30 @@ Operation ID: `CarriageContainerCreate`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "cargo_type": "string",
+  "containers_count": 1,
+  "sort_type": "string",
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `cargo_type required` — string Тип грузоместа: box — коробка; pallet — палета.
 - `containers_count required` — integer <int32> [ 1 .. 100 ] Количество грузомест.
 - `sort_type required` — string Тип сортировки: sort — сортируемый; non-sort — несортируемый.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "cargo_type": "string",
-  "containers_count": 1,
-  "sort_type": "string",
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -53,26 +57,28 @@ Operation ID: `CarriageContainerFill`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/fill" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "container_id": 0,
+  "posting_numbers": [
+    "string"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `container_id required` — integer <int64> Идентификатор грузоместа.
 - `posting_numbers required` — Array of strings <= 300 Номера отправлений.
-
-Пример запроса:
-
-```json
-{
-  "container_id": 0,
-  "posting_numbers": [
-    "string"
-  ]
-}
-```
 
 ### Ответы
 
@@ -84,7 +90,6 @@ Operation ID: `CarriageContainerFill`
 - `task_id` — integer <int64> Идентификатор задания.
 
 Пример ответа:
-
 ```json
 {
   "error_postings": [
@@ -107,12 +112,18 @@ Operation ID: `CarriageContainerApprove`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/approve" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `container_ids required` — Array of strings <int64> Идентификаторы грузомест.
 
@@ -126,7 +137,6 @@ Operation ID: `CarriageContainerApprove`
 - `task_id` — integer <int64> Идентификатор задания.
 
 Пример ответа:
-
 ```json
 {
   "error_containers": [
@@ -149,26 +159,28 @@ Operation ID: `CarriageContainerPlaceInto`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/place-into" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "child_container_ids": [
+    "string"
+  ],
+  "parent_container_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `child_container_ids required` — Array of strings <int64> Идентификаторы грузомест.
 - `parent_container_id required` — integer <int64> Идентификатор родительского грузоместа — палеты.
-
-Пример запроса:
-
-```json
-{
-  "child_container_ids": [
-    "string"
-  ],
-  "parent_container_id": 0
-}
-```
 
 ### Ответы
 
@@ -180,7 +192,6 @@ Operation ID: `CarriageContainerPlaceInto`
 - `task_id` — integer <int64> Идентификатор задания.
 
 Пример ответа:
-
 ```json
 {
   "error_containers": [
@@ -203,26 +214,28 @@ Operation ID: `CarriageContainerRemovePostings`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/remove-postings" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "container_id": 0,
+  "posting_numbers": [
+    "string"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `container_id required` — integer <int64> Идентификатор грузоместа.
 - `posting_numbers required` — Array of strings Номера отправлений.
-
-Пример запроса:
-
-```json
-{
-  "container_id": 0,
-  "posting_numbers": [
-    "string"
-  ]
-}
-```
 
 ### Ответы
 
@@ -234,7 +247,6 @@ Operation ID: `CarriageContainerRemovePostings`
 - `task_id` — integer <int64> Идентификатор задания.
 
 Пример ответа:
-
 ```json
 {
   "error_postings": [
@@ -257,26 +269,28 @@ Operation ID: `CarriageContainerRemoveFrom`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/remove-from" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "child_container_ids": [
+    "string"
+  ],
+  "parent_container_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `child_container_ids required` — Array of strings <int64> Идентификаторы грузомест.
 - `parent_container_id required` — integer <int64> Идентификатор родительского грузоместа — палеты.
-
-Пример запроса:
-
-```json
-{
-  "child_container_ids": [
-    "string"
-  ],
-  "parent_container_id": 0
-}
-```
 
 ### Ответы
 
@@ -288,7 +302,6 @@ Operation ID: `CarriageContainerRemoveFrom`
 - `task_id` — integer <int64> Идентификатор задания.
 
 Пример ответа:
-
 ```json
 {
   "error_containers": [
@@ -311,12 +324,18 @@ Operation ID: `CarriageContainerCancel`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `container_ids required` — Array of strings <int64> <= 100 Идентификаторы грузомест.
 
@@ -330,7 +349,6 @@ Operation ID: `CarriageContainerCancel`
 - `task_id` — integer <int64> Идентификатор задания.
 
 Пример ответа:
-
 ```json
 {
   "error_containers": [
@@ -353,17 +371,12 @@ Operation ID: `CarriageContainerList`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
-### Тело запроса (application/json)
-
-- `cursor` — string <= 1000 Указатель для выборки следующих данных.
-- `filter` — object Фильтр.
-- `limit` — integer <int64> [ 1 .. 300 ] Количество значений в ответе. Значение по умолчанию — 100.
-- `sort_dir` — string Default: "ASC" Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "cargo_type": "string",
@@ -377,8 +390,15 @@ Operation ID: `CarriageContainerList`
   },
   "limit": 1,
   "sort_dir": "ASC"
-}
+}'
 ```
+
+### Тело запроса
+
+- `cursor` — string <= 1000 Указатель для выборки следующих данных.
+- `filter` — object Фильтр.
+- `limit` — integer <int64> [ 1 .. 300 ] Количество значений в ответе. Значение по умолчанию — 100.
+- `sort_dir` — string Default: "ASC" Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
 
 ### Ответы
 
@@ -390,7 +410,6 @@ Operation ID: `CarriageContainerList`
 - `cursor` — string Указатель для выборки следующих данных. Если параметр пустой, данных больше нет.
 
 Пример ответа:
-
 ```json
 {
   "containers": [
@@ -426,7 +445,13 @@ Operation ID: `CarriageContainerGet`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `container_id required` — integer <int64> Идентификатор грузоместа.
 
@@ -453,7 +478,6 @@ Operation ID: `CarriageContainerGet`
 - `weight` — number <float> Суммарный вес отправлений в грузоместе, кг.
 
 Пример ответа:
-
 ```json
 {
   "available_actions": [
@@ -510,7 +534,13 @@ Operation ID: `CarriageContainerStatusGet`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/status/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `container_ids required` — Array of strings <int64> [ 1 .. 1000 ] Идентификаторы грузомест.
 
@@ -525,7 +555,6 @@ Operation ID: `CarriageContainerStatusGet`
   - `status` — string Статус грузоместа.
 
 Пример ответа:
-
 ```json
 {
   "containers": [
@@ -547,7 +576,13 @@ Operation ID: `CarriageContainerTaskInfo`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/task/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `task_id` — integer <int64> Идентификатор задачи. Получите его в ответе метода /v1/carriage/container/fill или /v1/carriage/container/approve .
 
@@ -561,7 +596,6 @@ Operation ID: `CarriageContainerTaskInfo`
 - `status` — string Статус выполнения задачи: pending — в ожидании; in_progress — в процессе; completed — выполнено; failed — ошибка при выполнении;
 
 Пример ответа:
-
 ```json
 {
   "error_message": "string",
@@ -579,7 +613,13 @@ Operation ID: `CarriageContainerDocumentGet`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/document/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `container_ids required` — Array of strings <int64> Идентификаторы грузомест.
 
@@ -594,7 +634,6 @@ Operation ID: `CarriageContainerDocumentGet`
 - `file_name` — string Название файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "string",
@@ -613,7 +652,13 @@ Operation ID: `CarriageContainerLabelGet`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/container/label/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `container_ids` — Array of strings <int64> <= 300 Идентификаторы грузомест.
 
@@ -627,7 +672,6 @@ Operation ID: `CarriageContainerLabelGet`
 - `error_containers` — Array of objects Ошибки грузомест, по которым не удалось сформировать этикетку.
 
 Пример ответа:
-
 ```json
 {
   "content": {

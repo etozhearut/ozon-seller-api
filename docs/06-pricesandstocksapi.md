@@ -1,6 +1,8 @@
 # Цены и остатки товаров
 
-_Тег: `PricesandStocksAPI` · операций: 11_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `PricesandStocksAPI` · методов: 11_
 
 ## Обновить количество товаров на складах
 
@@ -8,25 +10,14 @@ _Тег: `PricesandStocksAPI` · операций: 11_
 
 Operation ID: `ProductAPI_ProductsStocksV2`
 
-Позволяет изменить информацию о количестве товара в наличии. Переданный остаток — количество товара в наличии без учёта зарезервированных товаров. Перед обновлением остатков проверьте количество зарезервированных товаров с помощью метода /v2/product/info/stocks-by-warehouse/fbs . За один запрос можно изменить наличие для 100 пар товар-склад. С одного аккаунта продавца можно отправить до 80 запросов в минуту. Обновлять остатки у одной пары товар-склад можно только 1 раз в 30 секунд, иначе в параметре result.errors в ответе будет ошибка TOO_MANY_REQUESTS . Вы можете задать наличие товара только после того, как его статус сменится на price_sent . Остатки крупногабаритных товаров можно обновлять только на предназначенных для них складах. Если запрос содержит оба параметра — offer_id и product_id , изменения применятся к товару с offer_id . Для избежания неоднозначности используйте только один из параметров.
+Позволяет изменить информацию о количестве товара в наличии. Переданный остаток — количество товара в наличии без учёта зарезервированных товаров. Перед обновлением остатков проверьте количество зарезервированных товаров с помощью метода /v2/product/info/stocks-by-warehouse/fbs . …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `stocks required` — Array of objects Информация о товарах на складах.
-  - `offer_id` — string Идентификатор товара в системе продавца — артикул.
-  - `product_id required` — integer <int64> Идентификатор товара в системе Ozon — product_id .
-  - `stock required` — integer <int64> Количество товара в наличии без учёта зарезервированных товаров.
-  - `warehouse_id required` — integer <int64> Идентификатор склада, полученный из метода /v1/warehouse/list .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/products/stocks" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "stocks": [
     {
       "offer_id": "PH11042",
@@ -35,8 +26,21 @@ Operation ID: `ProductAPI_ProductsStocksV2`
       "warehouse_id": 22142605386000
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `stocks required` — Array of objects Информация о товарах на складах.
+  - `offer_id` — string Идентификатор товара в системе продавца — артикул.
+  - `product_id required` — integer <int64> Идентификатор товара в системе Ozon — product_id .
+  - `stock required` — integer <int64> Количество товара в наличии без учёта зарезервированных товаров.
+  - `warehouse_id required` — integer <int64> Идентификатор склада, полученный из метода /v1/warehouse/list .
 
 ### Ответы
 
@@ -57,7 +61,6 @@ Operation ID: `ProductAPI_ProductsStocksV2`
   - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -82,27 +85,12 @@ Operation ID: `ProductAPI_GetProductInfoStocks`
 
 Возвращает информацию о ĸоличестве товаров по схемам FBS, rFBS и FBP: сĸольĸо единиц есть в наличии, сĸольĸо зарезервировано поĸупателями. Чтобы получить информацию об остатках по схеме FBO, используйте метод /v1/analytics/stocks .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter required` — object Фильтр по товарам.
-  - `offer_id` — Array of strings Фильтр по параметру offer_id . Можно передавать список значений.
-  - `product_id` — Array of strings <int64> Фильтр по параметру product_id . Можно передавать список значений.
-  - `visibility` — string Default: "ALL" Enum: "ALL" "VISIBLE" "INVISIBLE" "EMPTY_STOCK" "NOT_MODERATED" "MODERATED" "DISABLED" "STATE_FAILED" "READY_TO_SUPPLY" "VALIDATION_STATE_PENDING" "VALIDATION_STATE_FAIL" "VALIDATION_STATE_SUCCESS" "TO_SUPPLY" "IN_SALE" "REMOVED_FROM_SALE" "BANNED" "OVERPRICED" "CRITICALLY_OVERPRICED" "EMPTY_BARCODE" "BARCODE_EXISTS" "QUARANTINE" "ARCHIVED" "OVERPRICED_WITH_STOCK" "PARTIAL_APPROVED" "AUTO_ARCHIVED" "MANUAL_ARCHIVED" "SEASONAL_AUTO_ARCHIVED" "VISIBLE_WITH_FBO_STOCK" Фильтр по видимости товара: ALL — все товары, кроме архивных; VISIBLE — товары, которые видны покупателям; INVISIBLE — товары, которые не видны покупателям; EMPTY_STOCK — товары, у которых не указано наличие; NOT_MODERATED — товары, которые не прошли модерацию; MODERATED — товары, которые прошли модерацию; DISABLED — товары, которые видны покупателям, но недоступны к покупке; STATE_FAILED — товары, создание которых завершилось ошибкой; READY_TO_SUPPLY — товары, готовые к поставке; VALIDATION_STATE_PENDING — товары, которые проходят проверку валидатором на премодерации; VALIDATION_STATE_FAIL — товары, которые не прошли проверку валидатором на премодерации; VALIDATION_STATE_SUCCESS — товары, которые прошли проверку валидатором на премодерации; TO_SUPPLY — товары, готовые к продаже; IN_SALE — товары в продаже; REMOVED_FROM_SALE — товары, скрытые от покупателей; BANNED — заблокированные товары; OVERPRICED — товары с завышенной ценой; CRITICALLY_OVERPRICED — товары со слишком завышенной ценой; EMPTY_BARCODE — товары без штрихкода; BARCODE_EXISTS — товары со штрихкодом; QUARANTINE — товары на карантине после изменения цены более чем на 50%; ARCHIVED — товары в архиве; OVERPRICED_WITH_STOCK — товары в продаже со стоимостью выше, чем у конкурентов; PARTIAL_APPROVED — товары в продаже с пустым или неполным описанием; AUTO_ARCHIVED — товары, которые система перенесла в архив автоматически; MANUAL_ARCHIVED — товары, которые продавец перенёс в архив вручную; SEASONAL_AUTO_ARCHIVED — сезонные товары, которые система перенесла в архив автоматически; VISIBLE_WITH_FBO_STOCK — товары с остатками на FBO, которые видят покупатели.
-  - `with_quant` — object Товары по тарифу «Эконом».
-    - `created` — boolean Активные эконом-товары.
-    - `exists` — boolean Эконом-товары во всех статусах.
-- `limit required` — integer <int32> Количество значений на странице. Минимум — 1, максимум — 1000.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v4/product/info/stocks" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "",
   "filter": {
     "offer_id": [
@@ -118,8 +106,25 @@ Operation ID: `ProductAPI_GetProductInfoStocks`
     }
   },
   "limit": 100
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter required` — object Фильтр по товарам.
+  - `offer_id` — Array of strings Фильтр по параметру offer_id . Можно передавать список значений.
+  - `product_id` — Array of strings <int64> Фильтр по параметру product_id . Можно передавать список значений.
+  - `visibility` — string Default: "ALL" Enum: "ALL" "VISIBLE" "INVISIBLE" "EMPTY_STOCK" "NOT_MODERATED" "MODERATED" "DISABLED" "STATE_FAILED" "READY_TO_SUPPLY" "VALIDATION_STATE_PENDING" "VALIDATION_STATE_FAIL" "VALIDATION_STATE_SUCCESS" "TO_SUPPLY" "IN_SALE" "REMOVED_FROM_SALE" "BANNED" "OVERPRICED" "CRITICALLY_OVERPRICED" "EMPTY_BARCODE" "BARCODE_EXISTS" "QUARANTINE" "ARCHIVED" "OVERPRICED_WITH_STOCK" "PARTIAL_APPROVED" "AUTO_ARCHIVED" "MANUAL_ARCHIVED" "SEASONAL_AUTO_ARCHIVED" "VISIBLE_WITH_FBO_STOCK" Фильтр по видимости товара: ALL — все товары, кроме архивных; VISIBLE — товары, которые видны покупателям; INVISIBLE — товары, которые не видны покупателям; EMPTY_STOCK — товары, у которых не указано наличие; NOT_MODERATED — товары, которые не прошли модерацию; MODERATED — товары, которые прошли модерацию; DISABLED — товары, которые видны покупателям, но недоступны к покупке; STATE_FAILED — товары, создание которых завершилось ошибкой; READY_TO_SUPPLY — товары, готовые к поставке; VALIDATION_STATE_PENDING — товары, которые проходят проверку валидатором на премодерации; VALIDATION_STATE_FAIL — товары, которые не прошли проверку валидатором на премодерации; VALIDATION_STATE_SUCCESS — товары, которые прошли проверку валидатором на премодерации; TO_SUPPLY — товары, готовые к продаже; IN_SALE — товары в продаже; REMOVED_FROM_SALE — товары, скрытые от покупателей; BANNED — заблокированные товары; OVERPRICED — товары с завышенной ценой; CRITICALLY_OVERPRICED — товары со слишком завышенной ценой; EMPTY_BARCODE — товары без штрихкода; BARCODE_EXISTS — товары со штрихкодом; QUARANTINE — товары на карантине после изменения цены более чем на 50%; ARCHIVED — товары в архиве; OVERPRICED_WITH_STOCK — товары в продаже со стоимостью выше, чем у конкурентов; PARTIAL_APPROVED — товары в продаже с пустым или неполным описанием; AUTO_ARCHIVED — товары, которые система перенесла в архив автоматически; MANUAL_ARCHIVED — товары, которые продавец перенёс в архив вручную; SEASONAL_AUTO_ARCHIVED — сезонные товары, которые система перенесла в архив автоматически; VISIBLE_WITH_FBO_STOCK — товары с остатками на FBO, которые видят покупатели.
+  - `with_quant` — object Товары по тарифу «Эконом».
+    - `created` — boolean Активные эконом-товары.
+    - `exists` — boolean Эконом-товары во всех статусах.
+- `limit required` — integer <int32> Количество значений на странице. Минимум — 1, максимум — 1000.
 
 ### Ответы
 
@@ -132,7 +137,6 @@ Operation ID: `ProductAPI_GetProductInfoStocks`
 - `total` — integer <int32> Количество уникальных товаров, для которых выводится информация об остатках.
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -154,21 +158,23 @@ Operation ID: `ProductAPI_GetProductInfoStocks`
 
 Operation ID: `ProductInfoWarehouseStocks`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/info/warehouse/stocks" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "cursor": "",
+  "limit": 10,
+  "warehouse_id": 1020003080073000
+}'
+```
+
+### Тело запроса
 
 - `cursor` — string Указатель для выборки следующих данных.
 - `limit required` — integer <int64> [ 1 .. 1000 ] Количество значений на странице.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "cursor": "",
-  "limit": 10,
-  "warehouse_id": 1020003080073000
-}
-```
 
 ### Ответы
 
@@ -181,7 +187,6 @@ Operation ID: `ProductInfoWarehouseStocks`
 - `stocks` — Array of objects Информация об остатках товара.
 
 Пример ответа:
-
 ```json
 {
   "stocks": [
@@ -209,22 +214,12 @@ Operation ID: `ProductInfoWarehouseStocks`
 
 Operation ID: `ProductAPI_GetProductInfoStocksByWarehouseFbsV2`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `limit required` — integer <uint64> <= 1000 Количество значений в ответе.
-- `offer_id` — Array of strings <= 1000 items Идентификаторы товаров в системе продавца — артикул.
-- `sku required` — Array of strings <int64> <= 1000 items Идентификаторы товаров в системе Ozon — SKU.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/product/info/stocks-by-warehouse/fbs" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "limit": 0,
   "offer_id": [
@@ -233,8 +228,20 @@ Operation ID: `ProductAPI_GetProductInfoStocksByWarehouseFbsV2`
   "sku": [
     "string"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `limit required` — integer <uint64> <= 1000 Количество значений в ответе.
+- `offer_id` — Array of strings <= 1000 items Идентификаторы товаров в системе продавца — артикул.
+- `sku required` — Array of strings <int64> <= 1000 items Идентификаторы товаров в системе Ozon — SKU.
 
 ### Ответы
 
@@ -252,7 +259,6 @@ Operation ID: `ProductAPI_GetProductInfoStocksByWarehouseFbsV2`
 - `products` — Array of objects Остатки товаров.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",
@@ -282,28 +288,30 @@ Operation ID: `ProductAPI_ProductStocksByWarehouseFbs`
 
 Метод устаревает и будет отключён 7 апреля 2026 года. Переключитесь на /v2/product/info/stocks-by-warehouse/fbs . Передайте в запросе offer_id или sku . Если укажете оба, будет использован только sku .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `sku required` — Array of strings <int64> Идентификатор товара в системе Ozon — SKU.
-- `offer_id` — Array of strings <int64> Идентификатор товара в системе продавца — артикул.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/info/stocks-by-warehouse/fbs" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "sku": [
     "string"
   ],
   "offer_id": [
     "string"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `sku required` — Array of strings <int64> Идентификатор товара в системе Ozon — SKU.
+- `offer_id` — Array of strings <int64> Идентификатор товара в системе продавца — артикул.
 
 ### Ответы
 
@@ -326,7 +334,6 @@ Operation ID: `ProductAPI_ProductStocksByWarehouseFbs`
   - `warehouse_name` — string Название склада.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -351,21 +358,14 @@ Operation ID: `ProductAPI_ProductStocksByWarehouseFbs`
 
 Operation ID: `ProductAPI_ImportProductsPrices`
 
-Позволяет изменить цену одного или нескольких товаров. Цену каждого товара можно обновлять не больше 10 раз в час. Чтобы сбросить old_price , поставьте 0 у этого параметра. Если у товара установлена минимальная цена и включено автоприменение в акции, отключите его и обновите минимальную цену. Иначе вернётся ошибка action_price_enabled_min_price_missing . Если запрос содержит оба параметра — offer_id и product_id , изменения применятся к товару с offer_id . Для избежания неоднозначности используйте только один из параметров.
+Позволяет изменить цену одного или нескольких товаров. Цену каждого товара можно обновлять не больше 10 раз в час. Чтобы сбросить old_price , поставьте 0 у этого параметра. Если у товара установлена минимальная цена и включено автоприменение в акции, отключите его и обновите минимальную цену. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `prices` — Array of objects <= 1000 items Информация о ценах товаров.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/import/prices" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "prices": [
     {
       "auto_action_enabled": "UNKNOWN",
@@ -384,8 +384,17 @@ Operation ID: `ProductAPI_ImportProductsPrices`
       "vat": "0.1"
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `prices` — Array of objects <= 1000 items Информация о ценах товаров.
 
 ### Ответы
 
@@ -405,7 +414,6 @@ Operation ID: `ProductAPI_ImportProductsPrices`
   - `updated` — boolean Если информации о товаре успешно обновлена — true .
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -429,12 +437,18 @@ Operation ID: `ProductAPI_ActionTimerUpdate`
 
 Минимальная цена действует 30 дней после установки. После этого настройка выключается. Вы можете продлить её: вызовите метод повторно и укажите product_ids .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/action/timer/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_ids` — Array of strings <int64> <= 1000 items Список идентификаторов товаров в системе Ozon — product_id .
 
@@ -443,7 +457,6 @@ Operation ID: `ProductAPI_ActionTimerUpdate`
 - 200 Обновлено
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -465,12 +478,18 @@ Operation ID: `ProductAPI_ActionTimerUpdate`
 
 Operation ID: `ProductAPI_ActionTimerStatus`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/action/timer/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_ids` — number <= 1000 Список идентификаторов товаров в системе Ozon — product_id .
 
@@ -486,7 +505,6 @@ Operation ID: `ProductAPI_ActionTimerStatus`
   - `product_id` — integer <int64> Идентификатор товара в системе Ozon — product_id .
 
 Пример ответа:
-
 ```json
 {
   "statuses": [
@@ -509,21 +527,12 @@ Operation ID: `ProductAPI_GetProductInfoPrices`
 
 Вы можете посмотреть историю обновления цен только в личном кабинете продавца. Подробнее об истории обновления цен в Базе знаний продавца
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter required` — object Фильтр по товарам.
-- `limit required` — integer <int32> [ 1 .. 1000 ] Количество значений на странице.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v5/product/info/prices" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "",
   "filter": {
     "offer_id": [
@@ -535,8 +544,19 @@ Operation ID: `ProductAPI_GetProductInfoPrices`
     "visibility": "ALL"
   },
   "limit": 100
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter required` — object Фильтр по товарам.
+- `limit required` — integer <int32> [ 1 .. 1000 ] Количество значений на странице.
 
 ### Ответы
 
@@ -554,7 +574,6 @@ Operation ID: `ProductAPI_GetProductInfoPrices`
 - `total` — integer <int32> Количество товаров в списке.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -659,24 +678,26 @@ Operation ID: `ProductAPI_GetProductInfoDiscounted`
 
 Метод для получения информации о состоянии и дефектах уценённого товара по его SKU. Работает только с уценёнными товарами по схеме FBO. Также метод возвращает SKU основного товара.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/info/discounted" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "discounted_skus": [
+    "635548518"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `discounted_skus required` — Array of strings <int64> Список SKU уценённых товаров.
-
-Пример запроса:
-
-```json
-{
-  "discounted_skus": [
-    "635548518"
-  ]
-}
-```
 
 ### Ответы
 
@@ -705,7 +726,6 @@ Operation ID: `ProductAPI_GetProductInfoDiscounted`
   - `warranty_type` — string Наличие у товара действующей гарантии.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -738,24 +758,26 @@ Operation ID: `ProductAPI_ProductUpdateDiscount`
 
 Метод для установки размера скидки на уценённые товары, продающиеся по схеме FBS.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/update/discount" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "discount": 10,
+  "product_id": 876763232
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `discount required` — integer <int32> Размер скидки: от 3 до 99 процентов.
 - `product_id required` — integer <int64> Идентификатор товара в системе Ozon — product_id .
-
-Пример запроса:
-
-```json
-{
-  "discount": 10,
-  "product_id": 876763232
-}
-```
 
 ### Ответы
 

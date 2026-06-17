@@ -1,6 +1,8 @@
 # Акции Ozon
 
-_Тег: `PromosBeta` · операций: 4_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `PromosBeta` · методов: 4_
 
 ## Получить список товаров из автодобавления в акцию
 
@@ -10,28 +12,30 @@ Operation ID: `ActionsAutoAddProductsList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/auto-add/products/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": "250204",
+  "auto_add_date": "2035-08-28T14:00:00Z",
+  "limit": "1",
+  "offset": "0"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции.
 - `auto_add_date required` — string <date-time> Дата и время автодобавления товаров в акцию из параметра result.auto_add_dates в ответе метода /v1/actions .
 - `limit required` — integer <uint64> [ 1 .. 100 ] Количество значений в ответе.
 - `offset` — integer <uint64> Default: 0 Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , ответ начнётся с 11-го найденного элемента.
-
-Пример запроса:
-
-```json
-{
-  "action_id": "250204",
-  "auto_add_date": "2035-08-28T14:00:00Z",
-  "limit": "1",
-  "offset": "0"
-}
-```
 
 ### Ответы
 
@@ -48,7 +52,6 @@ Operation ID: `ActionsAutoAddProductsList`
 - `total` — integer <uint64> Общее количество товаров.
 
 Пример ответа:
-
 ```json
 {
   "products": [
@@ -82,28 +85,30 @@ Operation ID: `ActionsAutoAddProductsCandidates`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/auto-add/products/candidates" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "action_id": "250204",
+  "auto_add_date": "2035-08-28T14:00:00Z",
+  "limit": "1",
+  "offset": "0"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `action_id required` — integer <uint64> Идентификатор акции.
 - `auto_add_date required` — string <date-time> Дата и время автодобавления товаров в акцию из параметра result.auto_add_dates в ответе метода /v1/actions .
 - `limit required` — integer <uint64> [ 1 .. 100 ] Количество значений в ответе.
 - `offset` — integer <uint64> Default: 0 Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , ответ начнётся с 11-го найденного элемента.
-
-Пример запроса:
-
-```json
-{
-  "action_id": "250204",
-  "auto_add_date": "2035-08-28T14:00:00Z",
-  "limit": "1",
-  "offset": "0"
-}
-```
 
 ### Ответы
 
@@ -120,7 +125,6 @@ Operation ID: `ActionsAutoAddProductsCandidates`
 - `total` — integer <uint64> Общее количество товаров.
 
 Пример ответа:
-
 ```json
 {
   "products": [
@@ -154,28 +158,30 @@ Operation ID: `ActionsAutoAddProductsDelete`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id` — integer <uint64> Идентификатор акции.
-- `auto_add_date` — string <date-time> Дата и время автодобавления товаров в акцию из параметра result.auto_add_dates в ответе метода /v1/actions .
-- `product_ids` — Array of strings <uint64> [ 1 .. 1000 ] items Идентификаторы товаров в системе Ozon — product_id .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/auto-add/products/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": "250204",
   "auto_add_date": "2035-08-28T14:00:00Z",
   "product_ids": [
     "14914"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id` — integer <uint64> Идентификатор акции.
+- `auto_add_date` — string <date-time> Дата и время автодобавления товаров в акцию из параметра result.auto_add_dates в ответе метода /v1/actions .
+- `product_ids` — Array of strings <uint64> [ 1 .. 1000 ] items Идентификаторы товаров в системе Ozon — product_id .
 
 ### Ответы
 
@@ -200,21 +206,12 @@ Operation ID: `ActionsAutoAddProductsUpdate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `action_id` — integer <uint64> Идентификатор акции.
-- `auto_add_date` — string <date-time> Дата и время автодобавления товаров в акцию из параметра result.auto_add_dates в ответе метода /v1/actions .
-- `to_update` — Array of objects Список товаров, которые нужно добавить или обновить в автодобавлении.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/actions/auto-add/products/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "action_id": "250204",
   "auto_add_dates": "2035-08-28T14:00:00Z",
   "to_update": [
@@ -225,8 +222,19 @@ Operation ID: `ActionsAutoAddProductsUpdate`
       "action_price": 100
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `action_id` — integer <uint64> Идентификатор акции.
+- `auto_add_date` — string <date-time> Дата и время автодобавления товаров в акцию из параметра result.auto_add_dates в ответе метода /v1/actions .
+- `to_update` — Array of objects Список товаров, которые нужно добавить или обновить в автодобавлении.
 
 ### Ответы
 
@@ -246,7 +254,6 @@ Operation ID: `ActionsAutoAddProductsUpdate`
 - `updated_ids` — Array of strings <uint64> Идентификаторы товаров, которые получилось добавить или обновить.
 
 Пример ответа:
-
 ```json
 {
   "updated_ids": [

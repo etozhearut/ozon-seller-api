@@ -1,6 +1,8 @@
 # Стратегии ценообразования
 
-_Тег: `PricingStrategyAPI` · операций: 12_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `PricingStrategyAPI` · методов: 12_
 
 ## Список конкурентов
 
@@ -10,7 +12,13 @@ Operation ID: `pricing_competitors`
 
 Метод для получения списка конкурентов — продавцов с похожими товарами в других интернет-магазинах и маркетплейсах.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/competitors/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `page required` — integer <int64> Страница списка, с которой нужно выгрузить конкурентов. Минимальное значение — 1 .
 - `limit required` — integer <int64> Максимальное количество конкурентов на странице. Допустимы значения от 1 до 50 .
@@ -25,7 +33,6 @@ Operation ID: `pricing_competitors`
 - `total` — integer <int32> Общее количество конкурентов.
 
 Пример ответа:
-
 ```json
 {
   "competitor": [
@@ -46,7 +53,13 @@ Operation ID: `pricing_competitors`
 
 Operation ID: `pricing_list`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `page required` — integer <int64> Страница списка, с которой нужно выгрузить стратегии. Минимальное значение — 1 .
 - `limit required` — integer <int64> Максимальное количество стратегий на странице. Допустимые значения — от 1 до 50 .
@@ -61,7 +74,6 @@ Operation ID: `pricing_list`
 - `total` — integer <int32> Общее количество стратегий.
 
 Пример ответа:
-
 ```json
 {
   "strategies": [
@@ -88,15 +100,12 @@ Operation ID: `pricing_list`
 
 Operation ID: `pricing_create`
 
-### Тело запроса (application/json)
-
-- `competitors required` — Array of objects Список конкурентов.
-- `strategy_name required` — string Название стратегии.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "strategy_name": "Новая стратегия",
   "competitors": [
     {
@@ -117,8 +126,13 @@ Operation ID: `pricing_create`
     }
   ],
   "company_id": 7
-}
+}'
 ```
+
+### Тело запроса
+
+- `competitors required` — Array of objects Список конкурентов.
+- `strategy_name required` — string Название стратегии.
 
 ### Ответы
 
@@ -130,7 +144,6 @@ Operation ID: `pricing_create`
   - `strategy_id` — string Идентификатор стратегии.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -147,22 +160,24 @@ Operation ID: `pricing_create`
 
 Operation ID: `pricing_info`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "strategy_id": "2fb3e6a3-3db5-4bb4-8430-b2de39fc3265"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `strategy_id required` — string Идентификатор стратегии.
-
-Пример запроса:
-
-```json
-{
-  "strategy_id": "2fb3e6a3-3db5-4bb4-8430-b2de39fc3265"
-}
-```
 
 ### Ответы
 
@@ -178,7 +193,6 @@ Operation ID: `pricing_info`
   - `update_type` — string Тип последнего изменения стратегии: strategyEnabled — возобновлена, strategyDisabled — остановлена, strategyChanged — обновлена, strategyCreated — создана, strategyItemsListChanged — изменён набор товаров в стратегии.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -210,16 +224,12 @@ Operation ID: `pricing_update`
 
 Можно обновить все стратегии кроме системной.
 
-### Тело запроса (application/json)
-
-- `competitors required` — Array of objects Список конкурентов.
-- `strategy_id required` — string Идентификатор стратегии.
-- `strategy_name required` — string Название стратегии.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "strategy_id": "a3de1826-9c54-40f1-bb6d-1a9e2638b058",
   "strategy_name": "Новая стратегия",
   "competitors": [
@@ -244,8 +254,14 @@ Operation ID: `pricing_update`
       "coefficient": 1
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `competitors required` — Array of objects Список конкурентов.
+- `strategy_id required` — string Идентификатор стратегии.
+- `strategy_name required` — string Название стратегии.
 
 ### Ответы
 
@@ -259,21 +275,23 @@ Operation ID: `pricing_update`
 
 Operation ID: `pricing_items-add`
 
-### Тело запроса (application/json)
-
-- `product_id required` — Array of strings <int64> Список идентификаторов товаров в системе Ozon — product_id . Максимальное количество — 50.
-- `strategy_id required` — string Идентификатор стратегии.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/products/add" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "product_id": [
     "29209"
   ],
   "strategy_id": "e29114f0-177d-4160-8d06-2bc528470dda"
-}
+}'
 ```
+
+### Тело запроса
+
+- `product_id required` — Array of strings <int64> Список идентификаторов товаров в системе Ozon — product_id . Максимальное количество — 50.
+- `strategy_id required` — string Идентификатор стратегии.
 
 ### Ответы
 
@@ -286,7 +304,6 @@ Operation ID: `pricing_items-add`
   - `failed_product_count` — integer <int32> Количество товаров с ошибками.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -303,12 +320,18 @@ Operation ID: `pricing_items-add`
 
 Operation ID: `pricing_ids`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/strategy-ids-by-product-ids" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_id required` — Array of strings <int64> Список идентификаторов товаров в системе Ozon — product_id . Максимальное количество — 50.
 
@@ -322,7 +345,6 @@ Operation ID: `pricing_ids`
   - `products_info` — Array of objects Информация о товаре.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -344,22 +366,24 @@ Operation ID: `pricing_ids`
 
 Operation ID: `pricing_items-list`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/products/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "strategy_id": "b7cd30e6-5667-424d-b105-fbec30a52477"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `strategy_id required` — string Идентификатор стратегии.
-
-Пример запроса:
-
-```json
-{
-  "strategy_id": "b7cd30e6-5667-424d-b105-fbec30a52477"
-}
-```
 
 ### Ответы
 
@@ -371,7 +395,6 @@ Operation ID: `pricing_items-list`
   - `product_id` — Array of strings <int64> Идентификатор товара в системе Ozon — product_id .
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -392,12 +415,18 @@ Operation ID: `pricing_items-info`
 
 Если вы добавили товар в стратегию ценообразования, метод вернёт цену и ссылку на товар у конкурента.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/product/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_id required` — integer <int64> Идентификатор товара в системе Ozon — product_id .
 
@@ -416,7 +445,6 @@ Operation ID: `pricing_items-info`
   - `strategy_competitor_product_url` — string Ссылка на товар конкурента.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -438,12 +466,18 @@ Operation ID: `pricing_items-info`
 
 Operation ID: `pricing_items-delete`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/products/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `product_id required` — Array of strings <int64> Список идентификаторов товаров в системе Ozon — product_id . Максимальное количество — 50.
 
@@ -457,7 +491,6 @@ Operation ID: `pricing_items-delete`
   - `failed_product_count` — integer <int32> Количество товаров с ошибками.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -476,19 +509,21 @@ Operation ID: `pricing_status`
 
 Можно изменить статус любой стратегии кроме системной.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "strategy_id": "c7516438-7124-4e2c-85d3-ccd92b6b9b65",
+  "enabled": true
+}'
+```
+
+### Тело запроса
 
 - `enabled` — boolean Статус стратегии: true — включена, false — отключена.
 - `strategy_id required` — string Идентификатор стратегии.
-
-Пример запроса:
-
-```json
-{
-  "strategy_id": "c7516438-7124-4e2c-85d3-ccd92b6b9b65",
-  "enabled": true
-}
-```
 
 ### Ответы
 
@@ -504,22 +539,24 @@ Operation ID: `pricing_delete`
 
 Можно удалить любую стратегию кроме системной.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/pricing-strategy/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "strategy_id": "b7cd30e6-5667-424d-b105-fbec30a52477"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `strategy_id required` — string Идентификатор стратегии.
-
-Пример запроса:
-
-```json
-{
-  "strategy_id": "b7cd30e6-5667-424d-b105-fbec30a52477"
-}
-```
 
 ### Ответы
 

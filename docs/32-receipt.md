@@ -1,8 +1,10 @@
 # Чеки
 
-Чеки Подробнее о чеках в Справке для продавцов Ozon Global .
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `Receipt` · операций: 3_
+_Тег: `Receipt` · методов: 3_
+
+Чеки Подробнее о чеках в Справке для продавцов Ozon Global .
 
 ## Получить чек в формате PDF
 
@@ -12,12 +14,18 @@ Operation ID: `GetReceipt`
 
 Метод доступен продавцам, которые заключили договор с ТОО «ОЗОН Маркетплейс Казахстан».
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/receipts/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `receipt_id required` — string Идентификатор чека. Получите значение параметра методом /v1/receipts/seller/list .
 
@@ -39,28 +47,30 @@ Operation ID: `ReceiptsSellerList`
 
 Метод доступен продавцам, которые заключили договор с ТОО «ОЗОН Маркетплейс Казахстан».
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `page` — integer <int64> Default: 0 Количество страниц, которое нужно пропустить.
-- `page_size` — integer <int64> <= 100 Default: 100 Количество элементов на странице.
-- `posting_numbers` — Array of strings Фильтр по номерам отправлений.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/receipts/seller/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "page": 0,
   "page_size": 100,
   "posting_numbers": [
     "string"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `page` — integer <int64> Default: 0 Количество страниц, которое нужно пропустить.
+- `page_size` — integer <int64> <= 100 Default: 100 Количество элементов на странице.
+- `posting_numbers` — Array of strings Фильтр по номерам отправлений.
 
 ### Ответы
 
@@ -72,7 +82,6 @@ Operation ID: `ReceiptsSellerList`
 - `receipts` — Array of objects Информация о чеках.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -104,12 +113,18 @@ Operation ID: `UploadReceipt`
 
 Метод доступен продавцам, которые заключили договор с ТОО «ОЗОН Маркетплейс Казахстан».
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/receipts/upload" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (multipart/form-data)
+### Тело запроса
 
 - `content required` — string <byte> Содержание файла в бинарном виде.
 - `operation_type required` — string Тип операции. Получите значение параметра методом /v1/receipts/seller/list .

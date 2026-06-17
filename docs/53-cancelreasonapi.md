@@ -1,6 +1,8 @@
 # Причины отмены
 
-_Тег: `CancelReasonAPI` · операций: 3_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `CancelReasonAPI` · методов: 3_
 
 ## Причины отмены отправлений
 
@@ -9,6 +11,12 @@ _Тег: `CancelReasonAPI` · операций: 3_
 Operation ID: `CancelReasonList`
 
 Возвращает возможные причины отмены отправлений и заказов.
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cancel-reason/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Ответы
 
@@ -21,7 +29,6 @@ Operation ID: `CancelReasonList`
   - `name` — string Причина отмены.
 
 Пример ответа:
-
 ```json
 {
   "reasons": [
@@ -43,7 +50,13 @@ Operation ID: `CancelReasonListByOrder`
 
 Возвращает возможные причины отмены для заказа.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cancel-reason/list-by-order" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `order_number required` — string Номер заказа.
 
@@ -58,7 +71,6 @@ Operation ID: `CancelReasonListByOrder`
   - `name` — string Причина отмены.
 
 Пример ответа:
-
 ```json
 {
   "reasons": [
@@ -80,7 +92,13 @@ Operation ID: `CancelReasonAPI_CancelReasonListByPosting`
 
 Возвращает возможные причины отмены для отправления.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cancel-reason/list-by-posting" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `posting_number required` — string Номер отправления.
 
@@ -95,7 +113,6 @@ Operation ID: `CancelReasonAPI_CancelReasonListByPosting`
   - `name` — string Причина отмены.
 
 Пример ответа:
-
 ```json
 {
   "reasons": [

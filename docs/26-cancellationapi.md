@@ -1,6 +1,8 @@
 # Отмены заказов
 
-_Тег: `CancellationAPI` · операций: 3_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `CancellationAPI` · методов: 3_
 
 ## Получить список заявок на отмену rFBS
 
@@ -10,17 +12,12 @@ Operation ID: `CancellationAPI_GetConditionalCancellationListV2`
 
 Метод для получения списка заявок на отмену rFBS-заказов.
 
-### Тело запроса (application/json)
-
-- `filters` — object Фильтры.
-- `last_id` — integer <int64> Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
-- `limit required` — integer <int32> <= 500 Количество заявок в ответе.
-- `with` — object Дополнительная информация.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/conditional-cancellation/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filters": {
     "cancellation_initiator": [
       "CLIENT"
@@ -35,8 +32,15 @@ Operation ID: `CancellationAPI_GetConditionalCancellationListV2`
   "with": {
     "counter": true
   }
-}
+}'
 ```
+
+### Тело запроса
+
+- `filters` — object Фильтры.
+- `last_id` — integer <int64> Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
+- `limit required` — integer <int32> <= 500 Количество заявок в ответе.
+- `with` — object Дополнительная информация.
 
 ### Ответы
 
@@ -62,7 +66,6 @@ Operation ID: `CancellationAPI_GetConditionalCancellationListV2`
   - `tpl_integration_type` — string Тип интеграции со службой доставки.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -103,26 +106,27 @@ Operation ID: `CancellationAPI_ConditionalCancellationApproveV2`
 
 Метод позволяет согласовать заявку на отмену в статусе ON_APPROVAL . Заказ будет отменён, а деньги вернутся покупателю.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/conditional-cancellation/approve" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "cancellation_id": 0,
+  "comment": "string"
+}'
+```
+
+### Тело запроса
 
 - `cancellation_id required` — integer <int64> Идентификатор заявки на отмену.
 - `comment` — string Комментарий.
-
-Пример запроса:
-
-```json
-{
-  "cancellation_id": 0,
-  "comment": "string"
-}
-```
 
 ### Ответы
 
 - 200 Заявка подтверждена
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -146,26 +150,27 @@ Operation ID: `CancellationAPI_ConditionalCancellationRejectV2`
 
 Метод позволяет отклонить заявку на отмену в статусе ON_APPROVAL . В параметре comment опишите причину. Заказ останется в том же статусе, и его нужно будет доставить покупателю.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/conditional-cancellation/reject" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "cancellation_id": 0,
+  "comment": "string"
+}'
+```
+
+### Тело запроса
 
 - `cancellation_id required` — integer <int64> Идентификатор заявки на отмену.
 - `comment` — string Комментарий.
-
-Пример запроса:
-
-```json
-{
-  "cancellation_id": 0,
-  "comment": "string"
-}
-```
 
 ### Ответы
 
 - 200 Заявка отклонена
 
 Пример ответа:
-
 ```json
 {
   "code": 0,

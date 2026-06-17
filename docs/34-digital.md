@@ -1,8 +1,10 @@
 # Работа с цифровыми товарами
 
-Работа с цифровыми товарами Подробнее о цифровых товарах в Базе знаний
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `Digital` · операций: 3_
+_Тег: `Digital` · методов: 3_
+
+Работа с цифровыми товарами Подробнее о цифровых товарах в Базе знаний
 
 ## Загрузить коды цифровых товаров для отправления
 
@@ -12,15 +14,12 @@ Operation ID: `UploadPostingCodes`
 
 Метод доступен только продавцам, работающим с цифровыми товарами. Вы можете загрузить коды цифровых товаров в течение 24 часов с момента получения заказа. Передайте все коды цифровых товаров к каждому товару в заказе за один запрос. Если передадите не все коды, запрос вернётся с ошибкой.
 
-### Тело запроса (application/json)
-
-- `exemplars_by_sku` — Array of objects Данные о кодах цифрового товара по SKU.
-- `posting_number` — string Номер отправления.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/digital/codes/upload" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "exemplars_by_sku": [
     {
       "exemplar_qty": 3,
@@ -34,8 +33,13 @@ Operation ID: `UploadPostingCodes`
     }
   ],
   "posting_number": "33920151-0719-1"
-}
+}'
 ```
+
+### Тело запроса
+
+- `exemplars_by_sku` — Array of objects Данные о кодах цифрового товара по SKU.
+- `posting_number` — string Номер отправления.
 
 ### Ответы
 
@@ -50,7 +54,6 @@ Operation ID: `UploadPostingCodes`
   - `sku` — integer <int64> Идентификатор товара в системе Ozon — SKU.
 
 Пример ответа:
-
 ```json
 {
   "exemplars_by_sku": [
@@ -79,18 +82,12 @@ Operation ID: `ListPostingCodes`
 
 Метод устаревает. Переключитесь на /v2/posting/digital/list . Возвращает список отправлений, по которым нужно загрузить коды цифровых товаров. Метод доступен только продавцам, работающим с цифровыми товарами. Чтобы получить список отправлений в любом статусе, воспользуйтесь методом /v2/posting/fbo/list .
 
-### Тело запроса (application/json)
-
-- `dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
-- `filter` — object Фильтр для поиска отправлений.
-- `limit` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
-- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента. Максимальное значение — 20000.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/digital/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "dir": "ASC",
   "filter": {
     "since": "2021-09-01T00:00:00.000Z",
@@ -106,8 +103,16 @@ Operation ID: `ListPostingCodes`
     "financial_data": true,
     "legal_info": false
   }
-}
+}'
 ```
+
+### Тело запроса
+
+- `dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
+- `filter` — object Фильтр для поиска отправлений.
+- `limit` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
+- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента. Максимальное значение — 20000.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -131,7 +136,6 @@ Operation ID: `ListPostingCodes`
   - `waiting_deadline_for_digital_code` — string <date-time> Время, до которого нужно передать коды цифровых товаров. Передайте коды цифровых товаров с помощью метода /v1/posting/digital/codes/upload .
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -202,22 +206,24 @@ Operation ID: `DigitalProductAPI_StocksImport`
 
 Метод доступен только продавцам, работающим с цифровыми товарами. Используйте метод, чтобы изменить информацию о количестве товара в наличии.
 
-### Тело запроса (application/json)
-
-- `stocks` — Array of objects Данные об остатках.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/digital/stocks/import" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "stocks": [
     {
       "stock": "2",
       "offer_id": "Мяч желтый 543561"
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `stocks` — Array of objects Данные об остатках.
 
 ### Ответы
 
@@ -233,7 +239,6 @@ Operation ID: `DigitalProductAPI_StocksImport`
   - `updated` — boolean true , если запрос выполнен успешно и остатки обновлены.
 
 Пример ответа:
-
 ```json
 {
   "status": [

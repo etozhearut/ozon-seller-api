@@ -1,6 +1,8 @@
 # Работа с FBP-черновиками с доставкой direct
 
-_Тег: `DraftDirectFBP` · операций: 10_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `DraftDirectFBP` · методов: 10_
 
 ## Создать черновик с доставкой силами продавца
 
@@ -10,17 +12,12 @@ Operation ID: `FbpDraftDirectSellerDlvCreate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
-
-- `bundle_id required` — string Идентификатор провалидированного списка товаров.
-- `delivery_details required` — object Детали доставки.
-- `package_units_count required` — integer <int32> Количество грузомест.
-- `warehouse_id required` — integer <int64> Идентификатор склада продавца.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/seller-dlv/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "bundle_id": "string",
   "delivery_details": {
     "driver_name": "string",
@@ -30,8 +27,15 @@ Operation ID: `FbpDraftDirectSellerDlvCreate`
   },
   "package_units_count": 0,
   "warehouse_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `bundle_id required` — string Идентификатор провалидированного списка товаров.
+- `delivery_details required` — object Детали доставки.
+- `package_units_count required` — integer <int32> Количество грузомест.
+- `warehouse_id required` — integer <int64> Идентификатор склада продавца.
 
 ### Ответы
 
@@ -44,7 +48,6 @@ Operation ID: `FbpDraftDirectSellerDlvCreate`
 - `supply_id` — string Идентификатор заявки на поставку.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -63,25 +66,27 @@ Operation ID: `FbpDraftDirectSellerDlvEdit`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/seller-dlv/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "driver_name": "string",
+  "row_version": 0,
+  "supply_id": "string",
+  "vehicle_number": "string",
+  "vehicle_type": "string"
+}'
+```
+
+### Тело запроса
 
 - `driver_name required` — string ФИО водителя.
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор заявки на поставку.
 - `vehicle_number required` — string Номер автомобиля.
 - `vehicle_type required` — string Тип автомобиля.
-
-Пример запроса:
-
-```json
-{
-  "driver_name": "string",
-  "row_version": 0,
-  "supply_id": "string",
-  "vehicle_number": "string",
-  "vehicle_type": "string"
-}
-```
 
 ### Ответы
 
@@ -94,7 +99,6 @@ Operation ID: `FbpDraftDirectSellerDlvEdit`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {
@@ -115,21 +119,23 @@ Operation ID: `FbpDraftDirectTimeslotEdit`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/timeslot/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "row_version": 0,
+  "supply_id": "string",
+  "timeslot_start": "2019-08-24T14:15:22Z"
+}'
+```
+
+### Тело запроса
 
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор заявки на поставку.
 - `timeslot_start required` — string <date-time> Начало таймслота.
-
-Пример запроса:
-
-```json
-{
-  "row_version": 0,
-  "supply_id": "string",
-  "timeslot_start": "2019-08-24T14:15:22Z"
-}
-```
 
 ### Ответы
 
@@ -141,7 +147,6 @@ Operation ID: `FbpDraftDirectTimeslotEdit`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": "RESERVE_FAILURE_TYPE_UNSPECIFIED",
@@ -159,23 +164,25 @@ Operation ID: `FbpDraftDirectGetTimeslot`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/timeslot/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "bundle_id": "string",
+  "interval_end": "2019-08-24T14:15:22Z",
+  "interval_start": "2019-08-24T14:15:22Z",
+  "warehouse_id": 0
+}'
+```
+
+### Тело запроса
 
 - `bundle_id required` — string Идентификатор провалидированного списка товаров.
 - `interval_end required` — string <date-time> Дата окончания нужного периода доступных таймслотов.
 - `interval_start required` — string <date-time> Дата начала нужного периода доступных таймслотов.
 - `warehouse_id required` — integer <int64> Идентификатор склада продавца.
-
-Пример запроса:
-
-```json
-{
-  "bundle_id": "string",
-  "interval_end": "2019-08-24T14:15:22Z",
-  "interval_start": "2019-08-24T14:15:22Z",
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -188,7 +195,6 @@ Operation ID: `FbpDraftDirectGetTimeslot`
 - `warehouse_timezone_name` — string Часовой пояс склада продавца.
 
 Пример ответа:
-
 ```json
 {
   "reasons": "EMPTY_TIMESLOTS_REASON_UNSPECIFIED",
@@ -212,30 +218,32 @@ Operation ID: `FbpDraftDirectCreate`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `bundle_id required` — string Идентификатор провалидированного списка товаров. Чтобы получить, используйте метод /v1/fbp/draft/direct/product/validate .
-- `delivery_details required` — object Детали доставки.
-- `package_units_count required` — integer <int32> Количество единиц упаковки.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "bundle_id": "string",
   "delivery_details": {
     "timeslot_start": "2019-08-24T14:15:22Z"
   },
   "package_units_count": 0,
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `bundle_id required` — string Идентификатор провалидированного списка товаров. Чтобы получить, используйте метод /v1/fbp/draft/direct/product/validate .
+- `delivery_details required` — object Детали доставки.
+- `package_units_count required` — integer <int32> Количество единиц упаковки.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -248,7 +256,6 @@ Operation ID: `FbpDraftDirectCreate`
 - `supply_id` — string Идентификатор поставки.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -267,12 +274,18 @@ Operation ID: `FbpDraftDirectDelete`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -286,7 +299,6 @@ Operation ID: `FbpDraftDirectDelete`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "cancellation_state": {
@@ -310,20 +322,12 @@ Operation ID: `FbpDraftDirectProductValidate`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `skus required` — Array of objects Идентификаторы товаров в системе Ozon — SKU.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/product/validate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "skus": [
     {
       "count": 0,
@@ -331,8 +335,18 @@ Operation ID: `FbpDraftDirectProductValidate`
     }
   ],
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `skus required` — Array of objects Идентификаторы товаров в системе Ozon — SKU.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -346,7 +360,6 @@ Operation ID: `FbpDraftDirectProductValidate`
 - `rejected_items` — Array of objects Отклонённые товары.
 
 Пример ответа:
-
 ```json
 {
   "approved_items": [
@@ -387,24 +400,26 @@ Operation ID: `FbpDraftDirectRegistrate`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/registrate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "row_version": 0,
+  "supply_id": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
-  "row_version": 0,
-  "supply_id": "string"
-}
-```
 
 ### Ответы
 
@@ -417,7 +432,6 @@ Operation ID: `FbpDraftDirectRegistrate`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {
@@ -444,17 +458,12 @@ Operation ID: `FbpAPI_FbpDraftDirectTplDlvCreate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
-
-- `bundle_id required` — string Идентификатор комплекта.
-- `delivery_details required` — object Детали доставки.
-- `package_units_count required` — integer <int32> Количество грузомест.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/tpl-dlv/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "bundle_id": "string",
   "delivery_details": {
     "timeslot_start": "2019-08-24T14:15:22Z",
@@ -463,8 +472,15 @@ Operation ID: `FbpAPI_FbpDraftDirectTplDlvCreate`
   },
   "package_units_count": 0,
   "warehouse_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `bundle_id required` — string Идентификатор комплекта.
+- `delivery_details required` — object Детали доставки.
+- `package_units_count required` — integer <int32> Количество грузомест.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -477,7 +493,6 @@ Operation ID: `FbpAPI_FbpDraftDirectTplDlvCreate`
 - `supply_id` — string Идентификатор поставки.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -496,23 +511,25 @@ Operation ID: `FbpAPI_FbpDraftDirectTplDlvEdit`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/direct/tpl-dlv/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "row_version": 0,
+  "supply_id": "string",
+  "tracking_number": "string",
+  "transport_company_name": "string"
+}'
+```
+
+### Тело запроса
 
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор поставки.
 - `tracking_number required` — string Трек-номер отправления.
 - `transport_company_name required` — string Название транспортной компании.
-
-Пример запроса:
-
-```json
-{
-  "row_version": 0,
-  "supply_id": "string",
-  "tracking_number": "string",
-  "transport_company_name": "string"
-}
-```
 
 ### Ответы
 
@@ -525,7 +542,6 @@ Operation ID: `FbpAPI_FbpDraftDirectTplDlvEdit`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "errors": [

@@ -1,6 +1,8 @@
 # Работа с FBP-черновиками с доставкой pick-up
 
-_Тег: `DraftPickupFBP` · операций: 5_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `DraftPickupFBP` · методов: 5_
 
 ## Создать черновик заявки на pick-up поставку
 
@@ -10,17 +12,12 @@ Operation ID: `FbpAPI_FbpDraftPickupCreate`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
-
-- `bundle_id required` — string Идентификатор состава поставки.
-- `delivery_details required` — object Детали доставки.
-- `package_units_count required` — integer <int32> Количество грузомест.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/pick-up/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "bundle_id": "string",
   "delivery_details": {
     "address": "string",
@@ -31,8 +28,15 @@ Operation ID: `FbpAPI_FbpDraftPickupCreate`
   },
   "package_units_count": 0,
   "warehouse_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `bundle_id required` — string Идентификатор состава поставки.
+- `delivery_details required` — object Детали доставки.
+- `package_units_count required` — integer <int32> Количество грузомест.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -45,7 +49,6 @@ Operation ID: `FbpAPI_FbpDraftPickupCreate`
 - `supply_id` — string Идентификатор поставки.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -64,7 +67,13 @@ Operation ID: `FbpAPI_FbpDraftPickUpDelete`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/pick-up/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -78,7 +87,6 @@ Operation ID: `FbpAPI_FbpDraftPickUpDelete`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "cancellation_state": {
@@ -102,16 +110,12 @@ Operation ID: `FbpAPI_FbpDraftPickupDlvEdit`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
-
-- `pickup_details required` — object Детали доставки.
-- `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
-- `supply_id required` — string Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/pick-up/dlv/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "pickup_details": {
     "address": "string",
     "comment": "string",
@@ -121,8 +125,14 @@ Operation ID: `FbpAPI_FbpDraftPickupDlvEdit`
   },
   "row_version": 0,
   "supply_id": "string"
-}
+}'
 ```
+
+### Тело запроса
+
+- `pickup_details required` — object Детали доставки.
+- `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
+- `supply_id required` — string Идентификатор поставки.
 
 ### Ответы
 
@@ -142,15 +152,12 @@ Operation ID: `FbpAPI_FbpDraftPickUpProductValidate`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
-
-- `skus required` — Array of objects Список идентификаторов товаров — SKU.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/pick-up/product/validate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "skus": [
     {
       "count": 0,
@@ -158,8 +165,13 @@ Operation ID: `FbpAPI_FbpDraftPickUpProductValidate`
     }
   ],
   "warehouse_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `skus required` — Array of objects Список идентификаторов товаров — SKU.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -173,7 +185,6 @@ Operation ID: `FbpAPI_FbpDraftPickUpProductValidate`
 - `rejected_items` — Array of objects Отклонённые товары.
 
 Пример ответа:
-
 ```json
 {
   "approved_items": [
@@ -216,24 +227,26 @@ Operation ID: `FbpDraftPickUpRegistrate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/pick-up/registrate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "row_version": 0,
+  "supply_id": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор заявки на поставку.
-
-Пример запроса:
-
-```json
-{
-  "row_version": 0,
-  "supply_id": "string"
-}
-```
 
 ### Ответы
 
@@ -246,7 +259,6 @@ Operation ID: `FbpDraftPickUpRegistrate`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {

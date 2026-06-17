@@ -1,6 +1,8 @@
 # Создание складов rFBS Express и управление ими
 
-_Тег: `rFBSWarehouseSetup` · операций: 7_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `rFBSWarehouseSetup` · методов: 7_
 
 ## Создать склад с методом доставки «Партнёры Ozon»
 
@@ -10,25 +12,12 @@ Operation ID: `WarehouseERFBSAggregatorCreate`
 
 Подробнее о схеме realFBS Express
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `address_coordinates required` — object Координаты адреса склада.
-- `is_auto_assembly` — boolean Default: false true , если на складе доступна автосборка.
-- `delivery_method required` — object Информация о методе доставки «Партнёры Ozon».
-- `min_order_value` — integer <int64> Минимальная стоимость заказа.
-- `name required` — string <= 100 characters Название склада.
-- `phone required` — string +7(XXX)XXX-XX-XX Номер телефона склада.
-- `timetable_warehouse required` — object Расписание работы склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/erfbs/aggregator/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "address_coordinates": {
     "latitude": 0,
     "longitude": 0
@@ -95,8 +84,23 @@ Operation ID: `WarehouseERFBSAggregatorCreate`
       }
     ]
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `address_coordinates required` — object Координаты адреса склада.
+- `is_auto_assembly` — boolean Default: false true , если на складе доступна автосборка.
+- `delivery_method required` — object Информация о методе доставки «Партнёры Ozon».
+- `min_order_value` — integer <int64> Минимальная стоимость заказа.
+- `name required` — string <= 100 characters Название склада.
+- `phone required` — string +7(XXX)XXX-XX-XX Номер телефона склада.
+- `timetable_warehouse required` — object Расписание работы склада.
 
 ### Ответы
 
@@ -116,24 +120,12 @@ Operation ID: `WarehouseERFBSUpdate`
 
 Подробнее о схеме realFBS Express
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `is_auto_assembly` — boolean Default: false true , если на складе доступна автосборка.
-- `min_order_value` — integer <int64> Минимальная стоимость заказа.
-- `name` — string <= 100 characters Название склада.
-- `phone` — string +7(XXX)XXX-XX-XX Номер телефона склада.
-- `timetable_warehouse` — object Расписание работы склада.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/erfbs/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "is_auto_assembly": false,
   "min_order_value": 0,
   "name": "string",
@@ -175,8 +167,22 @@ Operation ID: `WarehouseERFBSUpdate`
     ]
   },
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `is_auto_assembly` — boolean Default: false true , если на складе доступна автосборка.
+- `min_order_value` — integer <int64> Минимальная стоимость заказа.
+- `name` — string <= 100 characters Название склада.
+- `phone` — string +7(XXX)XXX-XX-XX Номер телефона склада.
+- `timetable_warehouse` — object Расписание работы склада.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -196,27 +202,12 @@ Operation ID: `WarehouseERFBSAggregatorDeliveryMethodUpdate`
 
 Подробнее о схеме rFBS Express
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `courier_comment` — string <= 3000 characters Комментарий для курьера.
-- `courier_phones` — Array of strings <= 3 items +7(XXX)XXX-XX-XX Номера телефонов для связи с курьером.
-- `cut_in` — integer <int64> Enum: 15 30 60 120 180 240 300 360 420 480 Время сборки.
-- `deliver_to_pvz` — boolean true , если доставка Ozon Express в пункт выдачи Ozon.
-- `delivery_costs` — object Расходы на доставку, которые вы готовы оплатить.
-- `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
-- `name` — string <= 100 characters Название метода доставки.
-- `return_settings` — object Настройки возвратов от покупателей.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/erfbs/aggregator/delivery-method/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "courier_comment": "string",
   "courier_phones": [
     "string"
@@ -239,8 +230,25 @@ Operation ID: `WarehouseERFBSAggregatorDeliveryMethodUpdate`
     "transport_company_name": "string"
   },
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `courier_comment` — string <= 3000 characters Комментарий для курьера.
+- `courier_phones` — Array of strings <= 3 items +7(XXX)XXX-XX-XX Номера телефонов для связи с курьером.
+- `cut_in` — integer <int64> Enum: 15 30 60 120 180 240 300 360 420 480 Время сборки.
+- `deliver_to_pvz` — boolean true , если доставка Ozon Express в пункт выдачи Ozon.
+- `delivery_costs` — object Расходы на доставку, которые вы готовы оплатить.
+- `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
+- `name` — string <= 100 characters Название метода доставки.
+- `return_settings` — object Настройки возвратов от покупателей.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -260,25 +268,12 @@ Operation ID: `WarehouseERFBSNonIntegratedCreate`
 
 Подробнее о схеме realFBS Express
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `address_coordinates required` — object Координаты адреса склада.
-- `is_auto_assembly` — boolean Default: false true , если на складе доступна автосборка.
-- `delivery_method required` — object Информация о методе доставки «Вы или сторонняя служба».
-- `min_order_value` — integer <int64> Минимальная стоимость заказа в рублях.
-- `name required` — string <= 100 characters Название склада.
-- `phone required` — string +7(XXX)XXX-XX-XX Номер телефона склада.
-- `timetable_warehouse required` — object Расписание работы склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/erfbs/non-integrated/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "address_coordinates": {
     "latitude": 0,
     "longitude": 0
@@ -340,8 +335,23 @@ Operation ID: `WarehouseERFBSNonIntegratedCreate`
       }
     ]
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `address_coordinates required` — object Координаты адреса склада.
+- `is_auto_assembly` — boolean Default: false true , если на складе доступна автосборка.
+- `delivery_method required` — object Информация о методе доставки «Вы или сторонняя служба».
+- `min_order_value` — integer <int64> Минимальная стоимость заказа в рублях.
+- `name required` — string <= 100 characters Название склада.
+- `phone required` — string +7(XXX)XXX-XX-XX Номер телефона склада.
+- `timetable_warehouse required` — object Расписание работы склада.
 
 ### Ответы
 
@@ -361,24 +371,12 @@ Operation ID: `WarehouseERFBSNonIntegratedDeliveryMethodUpdate`
 
 Подробнее о схеме rFBS Express
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `courier_cutoff required` — integer <int64> Enum: 5 10 15 20 25 30 35 40 45 Скорость отгрузки.
-- `cut_in required` — integer <int64> Enum: 15 30 60 120 180 240 300 360 420 480 Время сборки.
-- `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
-- `name required` — string <= 100 characters Название метода доставки.
-- `return_settings required` — object Настройки возвратов от покупателей.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/erfbs/non-integrated/delivery-method/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "courier_cutoff": 5,
   "cut_in": 15,
   "delivery_method_id": 0,
@@ -390,8 +388,22 @@ Operation ID: `WarehouseERFBSNonIntegratedDeliveryMethodUpdate`
     "transport_company_name": "string"
   },
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `courier_cutoff required` — integer <int64> Enum: 5 10 15 20 25 30 35 40 45 Скорость отгрузки.
+- `cut_in required` — integer <int64> Enum: 15 30 60 120 180 240 300 360 420 480 Время сборки.
+- `delivery_method_id required` — integer <int64> Идентификатор метода доставки.
+- `name required` — string <= 100 characters Название метода доставки.
+- `return_settings required` — object Настройки возвратов от покупателей.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -411,12 +423,18 @@ Operation ID: `WarehouseRfbsPause`
 
 Скрывает товары склада с витрины. Изменять сток не нужно.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/rfbs/pause" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_id` — integer <int64> Идентификатор склада.
 
@@ -443,12 +461,18 @@ Operation ID: `WarehouseRfbsUnpause`
 
 Возвращает товары склада на витрину.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/rfbs/unpause" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_id` — integer <int64> Идентификатор склада.
 

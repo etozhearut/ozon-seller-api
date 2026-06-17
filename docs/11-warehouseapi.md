@@ -1,6 +1,8 @@
 # Работа со складами FBS и rFBS
 
-_Тег: `WarehouseAPI` · операций: 10_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `WarehouseAPI` · методов: 10_
 
 ## Список складов
 
@@ -10,28 +12,30 @@ Operation ID: `WarehouseListV2`
 
 Метод возвращает список складов FBS и rFBS. Чтобы получить список складов FBO, используйте метод /v1/warehouse/fbo/list .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `limit required` — integer <= 200 Количество значений в ответе.
-- `cursor` — string Указатель для выборки следующих данных.
-- `warehouse_ids` — Array of strings <int64> <= 200 Идентификаторы складов.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/warehouse/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "limit": 0,
   "warehouse_ids": [
     20605650762000
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `limit required` — integer <= 200 Количество значений в ответе.
+- `cursor` — string Указатель для выборки следующих данных.
+- `warehouse_ids` — Array of strings <int64> <= 200 Идентификаторы складов.
 
 ### Ответы
 
@@ -75,7 +79,6 @@ Operation ID: `WarehouseListV2`
 - `message` — string Описание ошибки.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",
@@ -153,28 +156,30 @@ Operation ID: `WarehouseAPI_WarehouseList`
 
 Метод устаревает и будет отключён 7 апреля 2026 года. Переключитесь на /v2/warehouse/list . Возвращает список складов FBS и rFBS. Чтобы получить список складов FBO, используйте метод /v1/cluster/list . Метод можно использовать 1 раз в минуту.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `limit required` — integer <int64> <= 200 Количество значений в ответе.
-- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "limit": 1,
   "offset": 1,
   "with": {
     "able_to_set_price": true
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `limit required` — integer <int64> <= 200 Количество значений в ответе.
+- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -214,7 +219,6 @@ Operation ID: `WarehouseAPI_WarehouseList`
   - `working_days` — Array of strings Items Enum: "1" "2" "3" "4" "5" "6" "7" Рабочие дни склада.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -263,22 +267,12 @@ Operation ID: `WarehouseAPI_WarehouseList`
 
 Operation ID: `WarehouseAPI_DeliveryMethodListV2`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтр для поиска методов доставки.
-- `limit required` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/delivery-method/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "delivery_method_ids": [
@@ -296,8 +290,20 @@ Operation ID: `WarehouseAPI_DeliveryMethodListV2`
   },
   "limit": 1,
   "sort_dir": "ASC"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтр для поиска методов доставки.
+- `limit required` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
 
 ### Ответы
 
@@ -315,7 +321,6 @@ Operation ID: `WarehouseAPI_DeliveryMethodListV2`
 - `delivery_methods` — Array of objects Методы доставки.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",
@@ -358,21 +363,12 @@ Operation ID: `WarehouseAPI_DeliveryMethodList`
 
 Метод устаревает и будет отключён 7 апреля 2026 года. Переключитесь на /v2/delivery-method/list .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтр для поиска методов доставки.
-- `limit required` — integer <int64> Количество элементов в ответе. Максимум — 50, минимум — 1.
-- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/delivery-method/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "provider_id": 424,
     "status": "ACTIVE",
@@ -380,8 +376,19 @@ Operation ID: `WarehouseAPI_DeliveryMethodList`
   },
   "limit": 100,
   "offset": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтр для поиска методов доставки.
+- `limit required` — integer <int64> Количество элементов в ответе. Максимум — 50, минимум — 1.
+- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента.
 
 ### Ответы
 
@@ -409,7 +416,6 @@ Operation ID: `WarehouseAPI_DeliveryMethodList`
   - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -439,12 +445,18 @@ Operation ID: `WarehouseAPI_DeliveryMethodList`
 
 Operation ID: `GetDeliveryMethodReturnSettingsV1`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/delivery-method/return/settings/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `delivery_method_id required` — integer <int64> Идентификатор способа доставки. Получите значение параметра методом /v2/delivery-method/list .
 
@@ -460,7 +472,6 @@ Operation ID: `GetDeliveryMethodReturnSettingsV1`
   - `transport_company_details` — object Настройки транспортной компании.
 
 Пример ответа:
-
 ```json
 {
   "settings": {
@@ -486,22 +497,24 @@ Operation ID: `GetDeliveryMethodReturnSettingsV1`
 
 Operation ID: `GetWarehouseFBSOperationStatus`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/operation/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "operation_id": "a0cfefee-9a5a-4580-bc32-2f9a6c7973e3"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции.
-
-Пример запроса:
-
-```json
-{
-  "operation_id": "a0cfefee-9a5a-4580-bc32-2f9a6c7973e3"
-}
-```
 
 ### Ответы
 
@@ -516,7 +529,6 @@ Operation ID: `GetWarehouseFBSOperationStatus`
 - `type` — string Default: "UNSPECIFIED" Enum: "UNSPECIFIED" "CREATE_FBS_WAREHOUSE" "UPDATE_FBS_WAREHOUSE" "SET_FIRST_MILE" "WAREHOUSE_ENABLE_DISABLE" "WAREHOUSE_PAUSE_UNPAUSE" Тип операции: UNSPECIFIED — не определено; CREATE_FBS_WAREHOUSE — создание FBS-склада; UPDATE_FBS_WAREHOUSE — обновление FBS-склада; SET_FIRST_MILE — установка первой мили; WAREHOUSE_ENABLE_DISABLE — архивация или разархивация FBS-склада; WAREHOUSE_PAUSE_UNPAUSE — включение или выключение паузы rFBS-склада.
 
 Пример ответа:
-
 ```json
 {
   "error": {
@@ -539,26 +551,28 @@ Operation ID: `GetWarehouseFBSOperationStatus`
 
 Operation ID: `ArchiveWarehouseFBS`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/archive" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "reason": "Тестовая причина",
+  "warehouse_id": 1020002929332000,
+  "return_point_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `reason required` — string <= 200 characters Причина переноса склада в архив.
 - `return_point_id` — integer <int64> Идентификатор пункта возврата. Получите значение параметра методом /v1/warehouse/fbs/update/return-point/list .
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "reason": "Тестовая причина",
-  "warehouse_id": 1020002929332000,
-  "return_point_id": 0
-}
-```
 
 ### Ответы
 
@@ -576,24 +590,26 @@ Operation ID: `ArchiveWarehouseFBS`
 
 Operation ID: `UnarchiveWarehouseFBS`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/unarchive" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "warehouse_id": 1020002929332000,
+  "return_point_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `return_point_id` — integer <int64> Идентификатор пункта возврата. Получите значение параметра методом /v1/warehouse/fbs/update/return-point/list .
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "warehouse_id": 1020002929332000,
-  "return_point_id": 0
-}
-```
 
 ### Ответы
 
@@ -611,24 +627,26 @@ Operation ID: `UnarchiveWarehouseFBS`
 
 Operation ID: `WarehouseInvalidProductsGet`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/invalid-products/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "last_id": 0,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `last_id` — integer <int64> Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
 - `warehouse_id required` — integer <int64> Идентификатор склада. Получите значение параметра методом /v1/warehouse/warehouses-with-invalid-products .
-
-Пример запроса:
-
-```json
-{
-  "last_id": 0,
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -642,7 +660,6 @@ Operation ID: `WarehouseInvalidProductsGet`
 - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -686,6 +703,12 @@ Operation ID: `WarehouseInvalidProductsGet`
 Operation ID: `WarehouseWithInvalidProducts`
 
 Возвращает идентификаторы складов, на которых находятся товары с ограничениями. Такие товары недоступны для доставки со склада.
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/warehouses-with-invalid-products" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 

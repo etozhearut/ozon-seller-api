@@ -1,8 +1,10 @@
 # Чаты с покупателями
 
-Чаты с покупателями Больше методов в разделе Premium-методы .
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `ChatAPI` · операций: 3_
+_Тег: `ChatAPI` · методов: 3_
+
+Чаты с покупателями Больше методов в разделе Premium-методы .
 
 ## Отправить файл
 
@@ -10,28 +12,30 @@ _Тег: `ChatAPI` · операций: 3_
 
 Operation ID: `ChatAPI_ChatSendFile`
 
-Отправляет файл в существующий чат по его идентификатору. Отправить файл в чат с покупателем могут только продавцы с подпиской Premium Plus или Premium Pro . Получите список чатов с покупателем chats.chat.chat_type="Buyer_Seller" в ответе метода /v3/chat/list . Для отправлений: FBO — вы можете отправить файл в течение 48 часов с момента получения последнего сообщения от покупателя. FBS или rFBS — вы можете отправить файл покупателю после оплаты и в течение 72 часов после доставки отправления. После этого вы можете только отвечать на сообщения в течение 48 часов с момента получения последнего сообщения от покупателя.
+Отправляет файл в существующий чат по его идентификатору. Отправить файл в чат с покупателем могут только продавцы с подпиской Premium Plus или Premium Pro . Получите список чатов с покупателем chats.chat.chat_type="Buyer_Seller" в ответе метода /v3/chat/list . …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/chat/send/file" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "base64_content": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+  "chat_id": "99feb3fc-a474-469f-95d5-268b470cc607",
+  "name": "tempor"
+}'
+```
 
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `base64_content required` — string Файл в виде строки base64.
 - `chat_id required` — string Идентификатор чата.
 - `name required` — string Название файла с расширением.
-
-Пример запроса:
-
-```json
-{
-  "base64_content": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
-  "chat_id": "99feb3fc-a474-469f-95d5-268b470cc607",
-  "name": "tempor"
-}
-```
 
 ### Ответы
 
@@ -56,29 +60,31 @@ Operation ID: `ChatAPI_ChatListV3`
 
 Возвращает информацию о чатах по указанным фильтрам.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтр по чатам.
-- `limit required` — integer <int64> Количество значений в ответе. Значение по умолчанию — 30. Максимальное значение — 100.
-- `cursor` — string Указатель для выборки следующих данных.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/chat/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "chat_status": "OPENED",
     "unread_only": true
   },
   "limit": 1,
   "cursor": "304000402034"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтр по чатам.
+- `limit required` — integer <int64> Количество значений в ответе. Значение по умолчанию — 30. Максимальное значение — 100.
+- `cursor` — string Указатель для выборки следующих данных.
 
 ### Ответы
 
@@ -97,7 +103,6 @@ Operation ID: `ChatAPI_ChatListV3`
 - `has_next` — boolean Признак, что в ответе вернулись не все чаты: true — сделайте повторный запрос с новым параметром cursor для получения остальных чатов; false — ответ содержит все чаты для фильтра, который был задан в запросе.
 
 Пример ответа:
-
 ```json
 {
   "chats": [
@@ -129,23 +134,12 @@ Operation ID: `ChatAPI_ChatHistoryV3`
 
 Возвращает историю сообщений чата. По умолчанию от самого нового сообщения к старым. Получите список чатов с покупателем chats.chat.chat_type="Buyer_Seller" в ответе метода /v3/chat/list .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `chat_id required` — string Идентификатор чата.
-- `direction` — string Направление сортировки сообщений: Forward — от старых к новым. Backward — от новых к старым. Значение по умолчанию — Backward . Количество сообщений можно установить в параметре limit .
-- `filter` — object Фильтр по сообщениям.
-- `from_message_id` — integer <uint64> Идентификатор сообщения, с которого нужно начать вывод истории чата. По умолчанию — последнее видимое сообщение. Параметр from_message_id обязательный, если direction = Forward .
-- `limit` — integer <int64> Количество сообщений в ответе. По умолчанию — 50. Максимальное значение — 1000.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/chat/history" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "chat_id": "18b8e1f9-4ae7-461c-84ea-8e1f54d1a45e",
   "direction": "Forward",
   "filter": {
@@ -155,8 +149,21 @@ Operation ID: `ChatAPI_ChatHistoryV3`
   },
   "from_message_id": 3000000000118032000,
   "limit": 1
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `chat_id required` — string Идентификатор чата.
+- `direction` — string Направление сортировки сообщений: Forward — от старых к новым. Backward — от новых к старым. Значение по умолчанию — Backward . Количество сообщений можно установить в параметре limit .
+- `filter` — object Фильтр по сообщениям.
+- `from_message_id` — integer <uint64> Идентификатор сообщения, с которого нужно начать вывод истории чата. По умолчанию — последнее видимое сообщение. Параметр from_message_id обязательный, если direction = Forward .
+- `limit` — integer <int64> Количество сообщений в ответе. По умолчанию — 50. Максимальное значение — 1000.
 
 ### Ответы
 
@@ -173,7 +180,6 @@ Operation ID: `ChatAPI_ChatHistoryV3`
 - `messages` — Array of objects Массив сообщений, отсортированный в соответствии с параметром direction из тела запроса.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,

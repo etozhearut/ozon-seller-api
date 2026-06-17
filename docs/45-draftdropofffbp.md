@@ -1,6 +1,8 @@
 # Работа с FBP-черновиками c доставкой drop-off
 
-_Тег: `DraftDropOffFBP` · операций: 8_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `DraftDropOffFBP` · методов: 8_
 
 ## Создать черновик для доставки в drop-off пункт
 
@@ -10,22 +12,12 @@ Operation ID: `FbpDraftDropOffCreate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `bundle_id required` — string Идентификатор провалидированного списка товаров.
-- `delivery_details required` — object Детали доставки.
-- `package_units_count required` — integer <int32> Количество грузомест.
-- `warehouse_id required` — integer <int64> Идентификатор склада продавца.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "bundle_id": "string",
   "delivery_details": {
     "drop_off_date": "string",
@@ -34,8 +26,20 @@ Operation ID: `FbpDraftDropOffCreate`
   },
   "package_units_count": 0,
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `bundle_id required` — string Идентификатор провалидированного списка товаров.
+- `delivery_details required` — object Детали доставки.
+- `package_units_count required` — integer <int32> Количество грузомест.
+- `warehouse_id required` — integer <int64> Идентификатор склада продавца.
 
 ### Ответы
 
@@ -48,7 +52,6 @@ Operation ID: `FbpDraftDropOffCreate`
 - `supply_id` — string Идентификатор заявки на поставку.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -67,12 +70,18 @@ Operation ID: `FbpDraftDropOffDelete`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `supply_id required` — string Идентификатор заявки на поставку.
 
@@ -86,7 +95,6 @@ Operation ID: `FbpDraftDropOffDelete`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "cancellation_state": {
@@ -110,30 +118,32 @@ Operation ID: `FbpDraftDropOffDlvEdit`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/dlv/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "drop_off_date": "string",
+  "drop_off_point_id": 0,
+  "drop_off_province_uuid": "string",
+  "row_version": 0,
+  "supply_id": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `drop_off_date required` — string Дата доставки.
 - `drop_off_point_id required` — integer <int64> Идентификатор drop-off пункта.
 - `drop_off_province_uuid required` — string Уникальный идентификатор провинции.
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор заявки на поставку.
-
-Пример запроса:
-
-```json
-{
-  "drop_off_date": "string",
-  "drop_off_point_id": 0,
-  "drop_off_province_uuid": "string",
-  "row_version": 0,
-  "supply_id": "string"
-}
-```
 
 ### Ответы
 
@@ -153,24 +163,26 @@ Operation ID: `FbpDraftDropOffRegistrate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/registrate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "row_version": 0,
+  "supply_id": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор заявки на поставку.
-
-Пример запроса:
-
-```json
-{
-  "row_version": 0,
-  "supply_id": "string"
-}
-```
 
 ### Ответы
 
@@ -183,7 +195,6 @@ Operation ID: `FbpDraftDropOffRegistrate`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {
@@ -212,12 +223,18 @@ Operation ID: `FbpDraftDropOffProvinceList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/province/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_id required` — integer <int64> Идентификатор склада.
 
@@ -233,7 +250,6 @@ Operation ID: `FbpDraftDropOffProvinceList`
   - `province_uuid` — string Уникальный идентификатор провинции.
 
 Пример ответа:
-
 ```json
 {
   "provinces": [
@@ -256,28 +272,30 @@ Operation ID: `FbpDraftDropOffPointList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/point/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "next_page_number": 0,
+  "page_size": 0,
+  "province_uuid": "string",
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `next_page_number` — integer <int32> Следующий номер страницы.
 - `page_size required` — integer <int32> Количество элементов на странице.
 - `province_uuid required` — string Уникальный идентификатор провинции.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "next_page_number": 0,
-  "page_size": 0,
-  "province_uuid": "string",
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -293,7 +311,6 @@ Operation ID: `FbpDraftDropOffPointList`
   - `province_uuid` — string Уникальный идентификатор провинции.
 
 Пример ответа:
-
 ```json
 {
   "drop_off_points": [
@@ -318,26 +335,28 @@ Operation ID: `FbpDraftDropOffPointTimetable`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/point/timetable" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "drop_off_point_id": 0,
+  "province_uuid": "string",
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `drop_off_point_id required` — integer <int64> Идентификатор drop-off пункта.
 - `province_uuid required` — string Уникальный идентификатор провинции.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "drop_off_point_id": 0,
-  "province_uuid": "string",
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -350,7 +369,6 @@ Operation ID: `FbpDraftDropOffPointTimetable`
   - `day_of_week` — string Default: "DAY_OF_WEEK_UNSPECIFIED" Enum: "DAY_OF_WEEK_UNSPECIFIED" "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY" Дни недели: DAY_OF_WEEK_UNSPECIFIED — не определён, MONDAY — понедельник, TUESDAY — вторник, WEDNESDAY — среда, THURSDAY — четверг, FRIDAY — пятница, SATURDAY — суббота, SUNDAY — воскресенье.
 
 Пример ответа:
-
 ```json
 {
   "calendar": [
@@ -382,20 +400,12 @@ Operation ID: `FbpDraftDropOffProductValidate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `skus required` — Array of objects Идентификаторы товаров в системе Ozon — SKU.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/drop-off/product/validate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "skus": [
     {
       "count": 0,
@@ -403,8 +413,18 @@ Operation ID: `FbpDraftDropOffProductValidate`
     }
   ],
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `skus required` — Array of objects Идентификаторы товаров в системе Ozon — SKU.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -418,7 +438,6 @@ Operation ID: `FbpDraftDropOffProductValidate`
 - `rejected_items` — Array of objects Отклонённые товары.
 
 Пример ответа:
-
 ```json
 {
   "approved_items": [

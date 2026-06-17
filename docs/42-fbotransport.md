@@ -1,6 +1,8 @@
 # Работа с транспортными грузоместами FBO
 
-_Тег: `FBOTransport` · операций: 14_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `FBOTransport` · методов: 14_
 
 ## Получить информацию о грузоместах
 
@@ -10,19 +12,12 @@ Operation ID: `CargoesGetV2`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `supplies required` — Array of objects <= 100 items Информация о поставках.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/cargoes/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "supplies": [
     {
       "cargo_ids": [
@@ -31,8 +26,17 @@ Operation ID: `CargoesGetV2`
       "supply_id": 0
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `supplies required` — Array of objects <= 100 items Информация о поставках.
 
 ### Ответы
 
@@ -54,7 +58,6 @@ Operation ID: `CargoesGetV2`
   - `transport_cargoes` — Array of objects Информация о транспортных грузоместах.
 
 Пример ответа:
-
 ```json
 {
   "supplies": [
@@ -123,22 +126,12 @@ Operation ID: `CargoesDeleteV2`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cargo_ids required` — Array of strings <int64> <= 1500 Список идентификаторов грузомест, которые нужно удалить.
-- `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
-- `transport_cargo_deletion_type required` — string Enum: "UNBIND_CONTAINED_CARGOES" "DELETE_CONTAINED_CARGOES" Тип удаления транспортного грузоместа: UNBIND_CONTAINED_CARGOES — удалить только транспортное грузоместо и отвязать от него все грузоместа; DELETE_CONTAINED_CARGOES — удалить транспортное грузоместо вместе с грузоместами.
-- `transport_cargo_ids` — Array of strings <int64> <= 40 Список идентификаторов транспортных грузомест, которые нужно удалить.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/cargoes/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cargo_ids": [
     "string"
   ],
@@ -147,8 +140,20 @@ Operation ID: `CargoesDeleteV2`
   "transport_cargo_ids": [
     "string"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cargo_ids required` — Array of strings <int64> <= 1500 Список идентификаторов грузомест, которые нужно удалить.
+- `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
+- `transport_cargo_deletion_type required` — string Enum: "UNBIND_CONTAINED_CARGOES" "DELETE_CONTAINED_CARGOES" Тип удаления транспортного грузоместа: UNBIND_CONTAINED_CARGOES — удалить только транспортное грузоместо и отвязать от него все грузоместа; DELETE_CONTAINED_CARGOES — удалить транспортное грузоместо вместе с грузоместами.
+- `transport_cargo_ids` — Array of strings <int64> <= 40 Список идентификаторов транспортных грузомест, которые нужно удалить.
 
 ### Ответы
 
@@ -165,7 +170,6 @@ Operation ID: `CargoesDeleteV2`
 - `operation_id` — string Идентификатор операции. Получите статус операции методом /v2/cargoes/delete/status .
 
 Пример ответа:
-
 ```json
 {
   "errors": {
@@ -203,12 +207,18 @@ Operation ID: `CargoesDeleteStatusV2`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/cargoes/delete/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции из метода /v2/cargoes/delete .
 
@@ -227,7 +237,6 @@ Operation ID: `CargoesDeleteStatusV2`
 - `status` — string Default: "UNSPECIFIED" Enum: "UNSPECIFIED" "SUCCESS" "IN_PROGRESS" "FAILED" Статус удаления грузоместа: UNSPECIFIED — не определён; SUCCESS — грузоместо удалено; IN_PROGRESS — грузоместо в процессе удаления; ERROR — возникла ошибка при удалении грузоместа.
 
 Пример ответа:
-
 ```json
 {
   "errors": {
@@ -265,24 +274,26 @@ Operation ID: `CargoesTransportActivate`
 
 Если в поставке создано грузоместо, отключить транспортные грузоместа не получится. Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/transport/activate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "is_transport": true,
+  "supply_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `is_transport required` — boolean true , чтобы включить транспортные грузоместа.
 - `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
-
-Пример запроса:
-
-```json
-{
-  "is_transport": true,
-  "supply_id": 0
-}
-```
 
 ### Ответы
 
@@ -307,12 +318,18 @@ Operation ID: `CargoesTransportActivateStatus`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/transport/activate/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции из метода /v1/cargoes/transport/activate .
 
@@ -331,7 +348,6 @@ Operation ID: `CargoesTransportActivateStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "FAILED" Статус включения или отключения транспортных грузомест: SUCCESS — успешно; IN_PROGRESS — в процессе; FAILED — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -351,20 +367,12 @@ Operation ID: `CargoesTransportCreate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
-- `transport_cargoes required` — Array of objects Количество транспортных грузомест по типам.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/transport/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "supply_id": 0,
   "transport_cargoes": [
     {
@@ -372,8 +380,18 @@ Operation ID: `CargoesTransportCreate`
       "type": "PALLET"
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
+- `transport_cargoes required` — Array of objects Количество транспортных грузомест по типам.
 
 ### Ответы
 
@@ -390,7 +408,6 @@ Operation ID: `CargoesTransportCreate`
 - `operation_id` — string Идентификатор операции. Получите статус операции методом /v1/cargoes/transport/create/status .
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -410,12 +427,18 @@ Operation ID: `CargoesTransportCreateStatus`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/transport/create/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id` — string Идентификатор операции из метода /v1/cargoes/transport/create .
 
@@ -436,7 +459,6 @@ Operation ID: `CargoesTransportCreateStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "FAILED" Статус создания транспортных грузомест: SUCCESS — успешно; IN_PROGRESS — в процессе; FAILED — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -464,21 +486,12 @@ Operation ID: `CargoesTransportBind`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cargoes_unbind_transport_cargoes required` — Array of strings <int64> Идентификаторы транспортных грузомест, которые надо отвязать.
-- `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
-- `transport_cargo_bind` — Array of objects Идентификаторы грузомест и транспортных грузомест, которые надо связать.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/transport/bind" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cargoes_unbind_transport_cargoes": [
     "string"
   ],
@@ -491,8 +504,19 @@ Operation ID: `CargoesTransportBind`
       "transport_cargo_id": 0
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cargoes_unbind_transport_cargoes required` — Array of strings <int64> Идентификаторы транспортных грузомест, которые надо отвязать.
+- `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
+- `transport_cargo_bind` — Array of objects Идентификаторы грузомест и транспортных грузомест, которые надо связать.
 
 ### Ответы
 
@@ -509,7 +533,6 @@ Operation ID: `CargoesTransportBind`
 - `operation_id` — string Идентификатор операции. Получите статус операции методом /v1/cargoes/transport/bind/status .
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -529,12 +552,18 @@ Operation ID: `CargoesTransportBindStatus`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/transport/bind/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции из метода /v1/cargoes/transport/bind .
 
@@ -553,7 +582,6 @@ Operation ID: `CargoesTransportBindStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "FAILED" Статус связывания или отвязывания грузомест: SUCCESS — успешно; IN_PROGRESS — в процессе; FAILED — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -573,12 +601,18 @@ Operation ID: `CargoesSuppliesGet`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/supplies/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `supply_ids required` — Array of strings <int64> <= 50 items Список идентификаторов поставок.
 
@@ -597,7 +631,6 @@ Operation ID: `CargoesSuppliesGet`
 - `supplies_cargoes` — Array of objects Информация о грузоместах в поставках.
 
 Пример ответа:
-
 ```json
 {
   "not_found_supply_ids": [
@@ -643,12 +676,18 @@ Operation ID: `CargoesLabelTransportByOrderCreate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/label/transport-by-order/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `order_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
 
@@ -667,7 +706,6 @@ Operation ID: `CargoesLabelTransportByOrderCreate`
 - `operation_id` — string Идентификатор операции. Получите статус операции методом /v1/cargoes/label/transport-by-order/status .
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -687,12 +725,18 @@ Operation ID: `CargoesLabelTransportByOrderStatus`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/label/transport-by-order/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции из метода /v1/cargoes/label/transport-by-order/create .
 
@@ -714,7 +758,6 @@ Operation ID: `CargoesLabelTransportByOrderStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "FAILED" Статус генерации этикеток: SUCCESS — успешно; IN_PROGRESS — в процессе; FAILED — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -740,26 +783,28 @@ Operation ID: `CargoesLabelTransportCreate`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/label/transport/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "supply_id": 0,
+  "transport_cargo_ids": [
+    "string"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `supply_id required` — integer <int64> Идентификатор поставки. Получите значение параметра методом /v3/supply-order/get .
 - `transport_cargo_ids` — Array of strings <int64> <= 40 items Идентификаторы транспортных грузомест. Если ничего не передать, в ответе вернутся этикетки для всех транспортных грузомест в поставке.
-
-Пример запроса:
-
-```json
-{
-  "supply_id": 0,
-  "transport_cargo_ids": [
-    "string"
-  ]
-}
-```
 
 ### Ответы
 
@@ -776,7 +821,6 @@ Operation ID: `CargoesLabelTransportCreate`
 - `operation_id` — string Идентификатор операции. Получите статус операции методом /v1/cargoes/label/transport-by-order/status .
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -796,12 +840,18 @@ Operation ID: `CargoesLabelTransportStatus`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev. Подробнее о работе с транспортными грузоместами
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/label/transport/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id` — string Идентификатор операции из метода /v1/cargoes/label/transport/create .
 
@@ -822,7 +872,6 @@ Operation ID: `CargoesLabelTransportStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "FAILED" Статус генерации этикеток: SUCCESS — успешно; IN_PROGRESS — в процессе; FAILED — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [

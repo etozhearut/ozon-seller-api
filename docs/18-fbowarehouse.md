@@ -1,6 +1,8 @@
 # Склады FBO
 
-_Тег: `FBOWarehouse` · операций: 1_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `FBOWarehouse` · методов: 1_
 
 ## Получить список складов Ozon
 
@@ -10,24 +12,26 @@ Operation ID: `WarehouseOZONList`
 
 Возвращает список складов Ozon, которые работают по схемам FBO и FBO Fresh, и возвратных складов.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/ozon/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "warehouse_types": [
+    "FULL_FILLMENT"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_types` — Array of strings Items Enum: "FULL_FILLMENT" "FULL_FILLMENT_RETURNS" "FULL_FILLMENT_DEFECT" "EXPRESS_DARK_STORE" "CROSS_DOCK" "SORTING_CENTER" "PHARMACY" "DISTRIBUTION_CENTER" "ORDERS_RECEIVING_POINT" "OUTSOURCE_FF" "B2B" "EXTERNAL_FF" Тип склада Ozon: FULL_FILLMENT — фулфилмент; FULL_FILLMENT_RETURNS — склад возвратов; FULL_FILLMENT_DEFECT — склад брака; EXPRESS_DARK_STORE — фреш; CROSS_DOCK — кросс-док; SORTING_CENTER — сортировочный центр; PHARMACY — склад аптеки; DISTRIBUTION_CENTER — распределительный центр; ORDERS_RECEIVING_POINT — пункты приёма заказов; OUTSOURCE_FF — аутсорс-склады; B2B — B2B-склад; EXTERNAL_FF — склады партнёров.
-
-Пример запроса:
-
-```json
-{
-  "warehouse_types": [
-    "FULL_FILLMENT"
-  ]
-}
-```
 
 ### Ответы
 
@@ -51,7 +55,6 @@ Operation ID: `WarehouseOZONList`
   - `is_for_supply` — boolean true , если склад доступен для создания поставки.
 
 Пример ответа:
-
 ```json
 {
   "warehouses": [

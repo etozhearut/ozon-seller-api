@@ -1,12 +1,20 @@
 # Создание и управление заявками на поставку FBO
 
-_Тег: `FboSupplyRequest` · операций: 30_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `FboSupplyRequest` · методов: 30_
 
 ## Получить информацию о макролокальных кластерах
 
 `POST /v2/cluster/list`
 
 Operation ID: `DraftClusterList`
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/cluster/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -29,7 +37,6 @@ Operation ID: `DraftClusterList`
   - `macrolocal_cluster_id` — integer <int64> Идентификатор кластера.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -63,18 +70,20 @@ Operation ID: `DraftClusterList`
 
 Operation ID: `SupplyDraftAPI_DraftClusterList`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cluster/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "cluster_type": "CLUSTER_TYPE_OZON"
+}'
+```
+
+### Тело запроса
 
 - `cluster_ids` — Array of strings <int64> Идентификаторы кластеров.
 - `cluster_type required` — string Enum: "CLUSTER_TYPE_OZON" "CLUSTER_TYPE_CIS" Тип кластера: CLUSTER_TYPE_OZON — кластер в России, CLUSTER_TYPE_CIS — кластер в СНГ.
-
-Пример запроса:
-
-```json
-{
-  "cluster_type": "CLUSTER_TYPE_OZON"
-}
-```
 
 ### Ответы
 
@@ -90,7 +99,6 @@ Operation ID: `SupplyDraftAPI_DraftClusterList`
   - `type` — string Enum: "CLUSTER_TYPE_OZON" "CLUSTER_TYPE_CIS" Тип кластера: CLUSTER_TYPE_OZON — кластер в России, CLUSTER_TYPE_CIS — кластер в СНГ.
 
 Пример ответа:
-
 ```json
 {
   "clusters": [
@@ -125,21 +133,23 @@ Operation ID: `SupplyDraftAPI_DraftGetWarehouseFboList`
 
 Используйте метод, чтобы найти точки отгрузки для кросс-докинга и прямых поставок. Вы можете посмотреть адреса всех точек на карте и в виде таблицы в Базе знаний .
 
-### Тело запроса (application/json)
-
-- `filter_by_supply_type required` — Array of strings Items Enum: "CREATE_TYPE_CROSSDOCK" "CREATE_TYPE_DIRECT" Тип поставки: CREATE_TYPE_CROSSDOCK — кросс-докинг, CREATE_TYPE_DIRECT — прямая.
-- `search required` — string >= 4 characters Поиск по названию склада. Для поиска пунктов выдачи заказов укажите полное название.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbo/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter_by_supply_type": [
     "CREATE_TYPE_CROSSDOCK"
   ],
   "search": "string"
-}
+}'
 ```
+
+### Тело запроса
+
+- `filter_by_supply_type required` — Array of strings Items Enum: "CREATE_TYPE_CROSSDOCK" "CREATE_TYPE_DIRECT" Тип поставки: CREATE_TYPE_CROSSDOCK — кросс-докинг, CREATE_TYPE_DIRECT — прямая.
+- `search required` — string >= 4 characters Поиск по названию склада. Для поиска пунктов выдачи заказов укажите полное название.
 
 ### Ответы
 
@@ -155,7 +165,6 @@ Operation ID: `SupplyDraftAPI_DraftGetWarehouseFboList`
   - `warehouse_type` — string Enum: "WAREHOUSE_TYPE_DELIVERY_POINT" "WAREHOUSE_TYPE_ORDERS_RECEIVING_POINT" "WAREHOUSE_TYPE_SORTING_CENTER" "WAREHOUSE_TYPE_FULL_FILLMENT" "WAREHOUSE_TYPE_CROSS_DOCK" Тип склада, пункта выдачи заказов или сортировочного центра: WAREHOUSE_TYPE_DELIVERY_POINT — пункт выдачи заказов, WAREHOUSE_TYPE_ORDERS_RECEIVING_POINT — пункт приёма заказов, WAREHOUSE_TYPE_SORTING_CENTER — сортировочный центр, WAREHOUSE_TYPE_FULL_FILLMENT — фулфилмент, WAREHOUSE_TYPE_CROSS_DOCK — кросс-докинг.
 
 Пример ответа:
-
 ```json
 {
   "search": [
@@ -181,19 +190,14 @@ Operation ID: `SupplyDraftAPI_DraftGetWarehouseFboList`
 
 Operation ID: `SupplyDraftAPI_DraftCreate`
 
-Метод устаревает и будет отключён 16 марта 2026 года. Используйте /v1/draft/crossdock/create , /v1/draft/direct/create или /v1/draft/multi-cluster/create . Черновик заявки на поставку доступен 30 минут. Вы можете создавать черновики заявки на поставку 2 раза в минуту и 50 раз в час. Максимум — 500 черновиков в день. Если превысите лимит, вернётся ошибка 429. Создать черновик заявки на поставку — прямой или кросс-докинг, а также указать поставляемые товары.
+Метод устаревает и будет отключён 16 марта 2026 года. Используйте /v1/draft/crossdock/create , /v1/draft/direct/create или /v1/draft/multi-cluster/create . Черновик заявки на поставку доступен 30 минут. Вы можете создавать черновики заявки на поставку 2 раза в минуту и 50 раз в час. Максимум — 500 черновиков в день. …
 
-### Тело запроса (application/json)
-
-- `cluster_ids` — Array of strings <int64> Идентификаторы кластеров для поставки. Получите методом /v1/cluster/list .
-- `drop_off_point_warehouse_id` — integer <int64> Идентификатор точки отгрузки — пункта выдачи заказов или сортировочного центра. Можно получить с помощью метода /v1/warehouse/fbo/list . Только для типа поставки type = CREATE_TYPE_CROSSDOCK .
-- `items required` — Array of objects <= 5000 items Товары.
-- `type required` — string Enum: "CREATE_TYPE_CROSSDOCK" "CREATE_TYPE_DIRECT" Тип поставки: CREATE_TYPE_CROSSDOCK — кросс-докинг, CREATE_TYPE_DIRECT — прямая.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cluster_ids": [
     "string"
   ],
@@ -205,8 +209,15 @@ Operation ID: `SupplyDraftAPI_DraftCreate`
     }
   ],
   "type": "CREATE_TYPE_CROSSDOCK"
-}
+}'
 ```
+
+### Тело запроса
+
+- `cluster_ids` — Array of strings <int64> Идентификаторы кластеров для поставки. Получите методом /v1/cluster/list .
+- `drop_off_point_warehouse_id` — integer <int64> Идентификатор точки отгрузки — пункта выдачи заказов или сортировочного центра. Можно получить с помощью метода /v1/warehouse/fbo/list . Только для типа поставки type = CREATE_TYPE_CROSSDOCK .
+- `items required` — Array of objects <= 5000 items Товары.
+- `type required` — string Enum: "CREATE_TYPE_CROSSDOCK" "CREATE_TYPE_DIRECT" Тип поставки: CREATE_TYPE_CROSSDOCK — кросс-докинг, CREATE_TYPE_DIRECT — прямая.
 
 ### Ответы
 
@@ -226,21 +237,12 @@ Operation ID: `DraftCrossdockCreate`
 
 Черновик заявки на поставку не отображается в личном кабинете продавца и доступен 30 минут. Вы можете создавать черновики заявки на поставку: 2 раза в минуту; 50 раз в час; 500 раз в день. Если превысите лимит, вернётся ошибка 429.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cluster_info required` — object Информация о кластере.
-- `deletion_sku_mode` — string Default: "PARTIAL" Enum: "PARTIAL" "FULL" Режим удаления SKU, которые не попали в поставку. Возможные значения: PARTIAL — система удалит только те единицы SKU, которые не прошли проверку; FULL — система удалит все единицы SKU, если хотя бы 1 единица этого SKU не прошла проверку.
-- `delivery_info required` — object Информация о доставке.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/crossdock/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cluster_info": {
     "items": [
       {
@@ -259,8 +261,19 @@ Operation ID: `DraftCrossdockCreate`
     "seller_warehouse_id": 0,
     "type": "DROPOFF"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cluster_info required` — object Информация о кластере.
+- `deletion_sku_mode` — string Default: "PARTIAL" Enum: "PARTIAL" "FULL" Режим удаления SKU, которые не попали в поставку. Возможные значения: PARTIAL — система удалит только те единицы SKU, которые не прошли проверку; FULL — система удалит все единицы SKU, если хотя бы 1 единица этого SKU не прошла проверку.
+- `delivery_info required` — object Информация о доставке.
 
 ### Ответы
 
@@ -272,7 +285,6 @@ Operation ID: `DraftCrossdockCreate`
 - `errors` — Array of objects Ошибки.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -317,20 +329,12 @@ Operation ID: `DraftDirectCreate`
 
 Черновик заявки на поставку не отображается в личном кабинете продавца и доступен 30 минут. Вы можете создавать черновики заявки на поставку: 2 раза в минуту; 50 раз в час; 500 раз в день. Если превысите лимит, вернётся ошибка 429.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cluster_info required` — object Информация о кластере.
-- `deletion_sku_mode` — string Default: "PARTIAL" Enum: "PARTIAL" "FULL" Режим удаления SKU, которые не попали в поставку. Возможные значения: PARTIAL — система удалит только те единицы SKU, которые не прошли проверку; FULL — система удалит все единицы SKU, если хотя бы 1 единица этого SKU не прошла проверку.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/direct/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cluster_info": {
     "items": [
       {
@@ -341,8 +345,18 @@ Operation ID: `DraftDirectCreate`
     "macrolocal_cluster_id": 0
   },
   "deletion_sku_mode": "PARTIAL"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cluster_info required` — object Информация о кластере.
+- `deletion_sku_mode` — string Default: "PARTIAL" Enum: "PARTIAL" "FULL" Режим удаления SKU, которые не попали в поставку. Возможные значения: PARTIAL — система удалит только те единицы SKU, которые не прошли проверку; FULL — система удалит все единицы SKU, если хотя бы 1 единица этого SKU не прошла проверку.
 
 ### Ответы
 
@@ -354,7 +368,6 @@ Operation ID: `DraftDirectCreate`
 - `errors` — Array of objects Ошибки.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -399,21 +412,12 @@ Operation ID: `DraftMultiClusterCreate`
 
 Черновик заявки на поставку не отображается в личном кабинете продавца и доступен 30 минут. Вы можете создавать черновики заявки на поставку: 2 раза в минуту; 50 раз в час; 500 раз в день. Если превысите лимит, вернётся ошибка 429.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `clusters_info required` — Array of objects <= 20 items Информация о кластерах.
-- `deletion_sku_mode` — string Default: "PARTIAL" Enum: "PARTIAL" "FULL" Режим удаления SKU, которые не попали в поставку. Возможные значения: PARTIAL — система удалит только те единицы SKU, которые не прошли проверку; FULL — система удалит все единицы SKU, если хотя бы 1 единица этого SKU не прошла проверку.
-- `delivery_info required` — object Информация о доставке.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/multi-cluster/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "clusters_info": [
     {
       "items": [
@@ -434,8 +438,19 @@ Operation ID: `DraftMultiClusterCreate`
     "seller_warehouse_id": 0,
     "type": "DROPOFF"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `clusters_info required` — Array of objects <= 20 items Информация о кластерах.
+- `deletion_sku_mode` — string Default: "PARTIAL" Enum: "PARTIAL" "FULL" Режим удаления SKU, которые не попали в поставку. Возможные значения: PARTIAL — система удалит только те единицы SKU, которые не прошли проверку; FULL — система удалит все единицы SKU, если хотя бы 1 единица этого SKU не прошла проверку.
+- `delivery_info required` — object Информация о доставке.
 
 ### Ответы
 
@@ -447,7 +462,6 @@ Operation ID: `DraftMultiClusterCreate`
 - `errors` — Array of objects Ошибки.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -492,12 +506,18 @@ Operation ID: `DraftCreateInfo`
 
 Вы можете создавать черновики заявки на поставку 2 раза в минуту и 50 раз в час. Если превысите лимит, вернётся ошибка 429.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/draft/create/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `draft_id required` — integer <int64> Идентификатор черновика из методов /v1/draft/crossdock/create , /v1/draft/direct/create или /v1/draft/multi-cluster/create .
 
@@ -512,7 +532,6 @@ Operation ID: `DraftCreateInfo`
 - `status` — string Default: "UNSPECIFIED" Enum: "UNSPECIFIED" "SUCCESS" "IN_PROGRESS" "FAILED" Статус создания черновика заявки на поставку: UNSPECIFIED — не определён, SUCCESS — создан, IN_PROGRESS — создаётся, FAILED — не удалось создать.
 
 Пример ответа:
-
 ```json
 {
   "clusters": [
@@ -582,19 +601,21 @@ Operation ID: `DraftCreateInfo`
 
 Operation ID: `SupplyDraftAPI_DraftCreateInfo`
 
-Метод устаревает и будет отключён 16 марта 2026 года. Используйте /v2/draft/create/info . Вы можете создавать черновики заявки на поставку 2 раза в минуту и 50 раз в час. Если превысите лимит, вернётся ошибка 429. Возвращает информацию о созданном черновике заявки на поставку. В ответе вернутся склады размещения в каждом выбранном кластере, которые примут все товары.
+Метод устаревает и будет отключён 16 марта 2026 года. Используйте /v2/draft/create/info . Вы можете создавать черновики заявки на поставку 2 раза в минуту и 50 раз в час. Если превысите лимит, вернётся ошибка 429. Возвращает информацию о созданном черновике заявки на поставку. …
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/create/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "operation_id": "0191c1c8-041c-754f-bba1-05de7741f9cb"
+}'
+```
+
+### Тело запроса
 
 - `operation_id required` — string Уникальный идентификатор генерации черновика заявки на поставку.
-
-Пример запроса:
-
-```json
-{
-  "operation_id": "0191c1c8-041c-754f-bba1-05de7741f9cb"
-}
-```
 
 ### Ответы
 
@@ -608,7 +629,6 @@ Operation ID: `SupplyDraftAPI_DraftCreateInfo`
 - `status` — string Default: "CALCULATION_STATUS_FAILED" Enum: "CALCULATION_STATUS_FAILED" "CALCULATION_STATUS_SUCCESS" "CALCULATION_STATUS_IN_PROGRESS" "CALCULATION_STATUS_EXPIRED" Статус создания черновика заявки на поставку: CALCULATION_STATUS_FAILED — не удалось создать черновик, CALCULATION_STATUS_SUCCESS — черновик создан, CALCULATION_STATUS_IN_PROGRESS — черновик создаётся, CALCULATION_STATUS_EXPIRED — истёк срок действия черновика.
 
 Пример ответа:
-
 ```json
 {
   "clusters": [
@@ -672,23 +692,12 @@ Operation ID: `DraftTimeslotInfo`
 
 Не используйте в запросе draft_id из метода /v1/draft/create/info , иначе вернётся ошибка.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `date_from required` — string YYYY-MM-DD Дата начала периода доступных таймслотов.
-- `date_to required` — string YYYY-MM-DD Дата окончания периода доступных таймслотов. Максимальный период — 28 дней с текущей даты.
-- `draft_id required` — integer <int64> Идентификатор черновика из метода /v2/draft/create/info .
-- `supply_type required` — string Enum: "CROSSDOCK" "DIRECT" "MULTI_CLUSTER" Тип поставки: CROSSDOCK — кросс-докинг; DIRECT — прямая; MULTI_CLUSTER — для нескольких кластеров.
-- `selected_cluster_warehouses required` — Array of objects <= 20 items Информация о кластере и складах в нём. Можно передать один кластер для кросс-докинговой и прямой поставки или список всех кластеров для поставки в несколько кластеров.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/draft/timeslot/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "date_from": "string",
   "date_to": "string",
   "draft_id": 0,
@@ -699,8 +708,21 @@ Operation ID: `DraftTimeslotInfo`
       "storage_warehouse_id": 0
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `date_from required` — string YYYY-MM-DD Дата начала периода доступных таймслотов.
+- `date_to required` — string YYYY-MM-DD Дата окончания периода доступных таймслотов. Максимальный период — 28 дней с текущей даты.
+- `draft_id required` — integer <int64> Идентификатор черновика из метода /v2/draft/create/info .
+- `supply_type required` — string Enum: "CROSSDOCK" "DIRECT" "MULTI_CLUSTER" Тип поставки: CROSSDOCK — кросс-докинг; DIRECT — прямая; MULTI_CLUSTER — для нескольких кластеров.
+- `selected_cluster_warehouses required` — Array of objects <= 20 items Информация о кластере и складах в нём. Можно передать один кластер для кросс-докинговой и прямой поставки или список всех кластеров для поставки в несколько кластеров.
 
 ### Ответы
 
@@ -715,7 +737,6 @@ Operation ID: `DraftTimeslotInfo`
   - `requested_date_to` — string Дата окончания периода.
 
 Пример ответа:
-
 ```json
 {
   "error_reason": "UNSPECIFIED",
@@ -751,25 +772,27 @@ Operation ID: `SupplyDraftAPI_DraftTimeslotInfo`
 
 Метод устаревает и будет отключён 16 марта 2026 года. Используйте /v2/draft/timeslot/info . Черновик заявки на поставку доступен 30 минут. Возвращает доступные таймслоты на конечных складах отгрузки. Для кросс-док поставок вернутся таймслоты склада отгрузки, который был передан при создании черновика.
 
-### Тело запроса (application/json)
-
-- `date_from required` — string <date-time> Дата начала нужного периода доступных таймслотов.
-- `date_to required` — string <date-time> Дата окончания нужного периода доступных таймслотов. Максимальный период — 28 дней с текущей даты.
-- `draft_id required` — integer <int64> Идентификатор черновика заявки на поставку. Получите методом /v1/draft/create/info .
-- `warehouse_ids required` — Array of strings <int64> <= 10 items Идентификаторы складов размещения.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/timeslot/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "date_from": "2019-08-24T14:15:22Z",
   "date_to": "2019-08-24T14:15:22Z",
   "draft_id": 0,
   "warehouse_ids": [
     "string"
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `date_from required` — string <date-time> Дата начала нужного периода доступных таймслотов.
+- `date_to required` — string <date-time> Дата окончания нужного периода доступных таймслотов. Максимальный период — 28 дней с текущей даты.
+- `draft_id required` — integer <int64> Идентификатор черновика заявки на поставку. Получите методом /v1/draft/create/info .
+- `warehouse_ids required` — Array of strings <int64> <= 10 items Идентификаторы складов размещения.
 
 ### Ответы
 
@@ -782,7 +805,6 @@ Operation ID: `SupplyDraftAPI_DraftTimeslotInfo`
 - `requested_date_to` — string <date-time> Дата окончания интересующего периода.
 
 Пример ответа:
-
 ```json
 {
   "drop_off_warehouse_timeslots": [
@@ -818,22 +840,12 @@ Operation ID: `DraftSupplyCreate`
 
 Вы можете создавать заявку на поставку по черновику: 2 раза в минуту; 50 раз в час; 500 раз в день. Если превысите лимит, вернётся ошибка 429.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `draft_id required` — integer <int64> Идентификатор черновика из метода /v2/draft/create/info .
-- `selected_cluster_warehouses required` — Array of objects Информация о кластере и складах в нём. Можно передать один кластер для кросс-докинговой и прямой поставки или список всех кластеров для поставки в несколько кластеров.
-- `timeslot` — object Таймслот поставки.
-- `supply_type required` — string Enum: "CROSSDOCK" "DIRECT" "MULTI_CLUSTER" Тип поставки: CROSSDOCK — кросс-докинг; DIRECT — прямая; MULTI_CLUSTER — для нескольких кластеров.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/draft/supply/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "draft_id": 0,
   "selected_cluster_warehouses": [
     {
@@ -846,8 +858,20 @@ Operation ID: `DraftSupplyCreate`
     "to_in_timezone": "string"
   },
   "supply_type": "CROSSDOCK"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `draft_id required` — integer <int64> Идентификатор черновика из метода /v2/draft/create/info .
+- `selected_cluster_warehouses required` — Array of objects Информация о кластере и складах в нём. Можно передать один кластер для кросс-докинговой и прямой поставки или список всех кластеров для поставки в несколько кластеров.
+- `timeslot` — object Таймслот поставки.
+- `supply_type required` — string Enum: "CROSSDOCK" "DIRECT" "MULTI_CLUSTER" Тип поставки: CROSSDOCK — кросс-докинг; DIRECT — прямая; MULTI_CLUSTER — для нескольких кластеров.
 
 ### Ответы
 
@@ -859,7 +883,6 @@ Operation ID: `DraftSupplyCreate`
 - `error_reasons` — Array of strings Items Enum: "UNSPECIFIED" "SOME_SERVICE_ERROR" "ORDER_SKU_LIMIT" "INVALID_QUANTITY_OR_QUANT" "ORDER_ALREADY_CREATED" "ORDER_CREATION_IN_PROGRESS" "DRAFT_DOES_NOT_EXIST" "CONTRACTOR_CAN_NOT_CREATE_ORDER" "INACTIVE_CONTRACT" "DRAFT_INCORRECT_STATE" "INVALID_VOLUME" "INVALID_ROUTE" "INVALID_STORAGE_WAREHOUSE" "INVALID_STORAGE_REGION" "INVALID_SPLITTING" "INVALID_SUPPLY_CONTENT" "TIMESLOT_NOT_AVAILABLE" "SKU_DISTRIBUTION_REQUIRED_BUT_NOT_POSSIBLE" "XDOCK_IN_DELIVERY_POINT_DISABLED_FOR_SELLER" "DRAFT_IS_LOCKED" "INVALID_PACKAGE_UNITS_COUNTS" "SELLER_CONVERSATION_DOES_NOT_EXIST" "USER_CAN_NOT_CREATE_SELLER_CONVERSATION" "SKU_WITH_ETTN_REQUIRED_TAG_NOT_ALLOWED_FOR_DROP_OFF_POINT" "INVALID_SELLER_WAREHOUSE" "PICKUP_ORDER_LIMIT_EXCEEDED" "MINIMUM_VOLUME_IN_LITRES_INVALID" "INVALID_CLUSTERS_COUNT" "CAN_NOT_CREATE_ORDER" "UNDEFINED" Причина ошибки: UNSPECIFIED — не определена; SOME_SERVICE_ERROR — ошибка при редактировании поставки; ORDER_SKU_LIMIT — количество товаров в поставке больше 5000; INVALID_QUANTITY_OR_QUANT — некорректное количество товара или грузомест; ORDER_ALREADY_CREATED — заказ уже создан; ORDER_CREATION_IN_PROGRESS — создание заказа в процессе; DRAFT_DOES_NOT_EXIST — черновик не существует; CONTRACTOR_CAN_NOT_CREATE_ORDER — контрагент не может создать заказ; INACTIVE_CONTRACT — нельзя редактировать состав поставки с неактивным договором; DRAFT_INCORRECT_STATE — некорректный статус черновика; INVALID_VOLUME — некорректный объём поставки; INVALID_ROUTE — некорректный маршрут; INVALID_STORAGE_WAREHOUSE — некорректный склад хранения; INVALID_STORAGE_REGION — некорректный регион хранения; INVALID_SPLITTING — некорректное разделение; INVALID_SUPPLY_CONTENT — некорректное содержимое поставки; TIMESLOT_NOT_AVAILABLE — нет доступных таймслотов; SKU_DISTRIBUTION_REQUIRED_BUT_NOT_POSSIBLE — требуется распределение SKU, но оно невозможно; XDOCK_IN_DELIVERY_POINT_DISABLED_FOR_SELLER — поставка кросс-докингом через пункт выдачи заказов недоступна для продавца; DRAFT_IS_LOCKED — черновик заблокирован; INVALID_PACKAGE_UNITS_COUNTS — некорректное количество грузомест; SELLER_CONVERSATION_DOES_NOT_EXIST — точка отгрузки с таким id не существует; USER_CAN_NOT_CREATE_SELLER_CONVERSATION — пользователь не может создать диалог с продавцом; SKU_WITH_ETTN_REQUIRED_TAG_NOT_ALLOWED_FOR_DROP_OFF_POINT — товар с меткой is_ettn_required не разрешён для точки отгрузки; INVALID_SELLER_WAREHOUSE — склад продавца недоступен; PICKUP_ORDER_LIMIT_EXCEEDED — превышен лимит заказов на самовывоз; MINIMUM_VOLUME_IN_LITRES_INVALID — некорректный минимальный объём в литрах; INVALID_CLUSTERS_COUNT — переданы не все кластеры из расчёта; CAN_NOT_CREATE_ORDER — не удалось создать заказ; UNDEFINED — неизвестная ошибка.
 
 Пример ответа:
-
 ```json
 {
   "draft_id": 0,
@@ -879,24 +902,26 @@ Operation ID: `SupplyDraftAPI_DraftSupplyCreate`
 
 Метод устаревает и будет отключён 16 марта 2026 года. Используйте /v2/draft/supply/create .
 
-### Тело запроса (application/json)
-
-- `draft_id required` — integer <int64> Идентификатор черновика заявки на поставку.
-- `timeslot` — object Таймслот поставки.
-- `warehouse_id required` — integer <int64> Идентификатор склада размещения. Можно получить с помощью метода /v1/draft/create/info .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/supply/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "draft_id": 0,
   "timeslot": {
     "from_in_timezone": "2019-08-24T14:15:22Z",
     "to_in_timezone": "2019-08-24T14:15:22Z"
   },
   "warehouse_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `draft_id required` — integer <int64> Идентификатор черновика заявки на поставку.
+- `timeslot` — object Таймслот поставки.
+- `warehouse_id required` — integer <int64> Идентификатор склада размещения. Можно получить с помощью метода /v1/draft/create/info .
 
 ### Ответы
 
@@ -914,12 +939,18 @@ Operation ID: `SupplyDraftAPI_DraftSupplyCreate`
 
 Operation ID: `DraftSupplyCreateStatus`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/draft/supply/create/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `draft_id required` — integer <int64> Идентификатор черновика. Получите значение параметра методом /v2/draft/supply/create .
 
@@ -934,7 +965,6 @@ Operation ID: `DraftSupplyCreateStatus`
 - `status` — string Default: "UNSPECIFIED" Enum: "UNSPECIFIED" "SUCCESS" "IN_PROGRESS" "FAILED" Статус создания заявки на поставку: UNSPECIFIED — не определён, SUCCESS — создана, IN_PROGRESS — создаётся, FAILED — не удалось создать.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -955,7 +985,13 @@ Operation ID: `SupplyDraftAPI_DraftSupplyCreateStatus`
 
 Метод устаревает и будет отключён 16 марта 2026 года. Используйте /v2/draft/supply/create/status .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/draft/supply/create/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `operation_id required` — string Идентификатор заявки на поставку.
 
@@ -971,7 +1007,6 @@ Operation ID: `SupplyDraftAPI_DraftSupplyCreateStatus`
 - `status` — string Default: "DraftSupplyCreateStatusUnknown" Enum: "DraftSupplyCreateStatusUnknown" "DraftSupplyCreateStatusSuccess" "DraftSupplyCreateStatusFailed" "DraftSupplyCreateStatusInProgress" Статус создания заявки на поставку: DraftSupplyCreateStatusUnknown — неизвестный, DraftSupplyCreateStatusSuccess — создана, DraftSupplyCreateStatusFailed — не создана, DraftSupplyCreateStatusInProgress — создаётся.
 
 Пример ответа:
-
 ```json
 {
   "error_messages": [
@@ -996,21 +1031,12 @@ Operation ID: `CargoesAPI_CargoesCreate`
 
 Используйте метод, чтобы передать грузоместа и товарный состав в заявку на поставку.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cargoes required` — Array of objects Информация о грузоместах. Вы можете передать не больше 40 палет или 30 коробок.
-- `delete_current_version` — boolean true , если нужно удалить предыдущие грузоместа.
-- `supply_id required` — integer <int64> Идентификатор поставки. Можно получить с помощью метода /v3/supply-order/get . Нужное значение — в параметре ответа orders.supplies.supply_id .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cargoes": [
     {
       "key": "box-001",
@@ -1037,8 +1063,19 @@ Operation ID: `CargoesAPI_CargoesCreate`
   ],
   "delete_current_version": true,
   "supply_id": 123456
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cargoes required` — Array of objects Информация о грузоместах. Вы можете передать не больше 40 палет или 30 коробок.
+- `delete_current_version` — boolean true , если нужно удалить предыдущие грузоместа.
+- `supply_id required` — integer <int64> Идентификатор поставки. Можно получить с помощью метода /v3/supply-order/get . Нужное значение — в параметре ответа orders.supplies.supply_id .
 
 ### Ответы
 
@@ -1050,7 +1087,6 @@ Operation ID: `CargoesAPI_CargoesCreate`
 - `errors` — object Ошибки.
 
 Пример ответа:
-
 ```json
 {
   "operation_id": "op-1689012345",
@@ -1080,12 +1116,18 @@ Operation ID: `CargoesCreateInfoV2`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/cargoes/create/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции.
 
@@ -1101,7 +1143,6 @@ Operation ID: `CargoesCreateInfoV2`
 - `status` — string Default: "STATUS_UNSPECIFIED" Enum: "STATUS_UNSPECIFIED" "SUCCESS" "IN_PROGRESS" "FAILED" Статус формирования грузоместа: SUCCESS — успешно; IN_PROGRESS — формируются; FAILED — при формировании грузомест произошла ошибка.
 
 Пример ответа:
-
 ```json
 {
   "errors": {
@@ -1139,12 +1180,18 @@ Operation ID: `CargoesCreateInfoV2`
 
 Operation ID: `CargoesGet`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `supply_ids required` — Array of strings <int64> <= 100 items Список идентификаторов поставок в заявке.
 
@@ -1160,7 +1207,6 @@ Operation ID: `CargoesGet`
   - `supply_id` — integer <int64> Идентификатор поставки.
 
 Пример ответа:
-
 ```json
 {
   "supply": [
@@ -1196,21 +1242,23 @@ Operation ID: `CargoesAPI_CargoesDelete`
 
 Метод для удаления грузомест в заявке на поставку. Чтобы проверить статус удаления, используйте метод /v1/cargoes/delete/status .
 
-### Тело запроса (application/json)
-
-- `cargo_ids required` — Array of strings <int64> Список идентификаторов грузомест, которые нужно удалить. Максимум 70 значений.
-- `supply_id required` — integer <int64> Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cargo_ids": [
     "box-001"
   ],
   "supply_id": 123456
-}
+}'
 ```
+
+### Тело запроса
+
+- `cargo_ids required` — Array of strings <int64> Список идентификаторов грузомест, которые нужно удалить. Максимум 70 значений.
+- `supply_id required` — integer <int64> Идентификатор поставки.
 
 ### Ответы
 
@@ -1222,7 +1270,6 @@ Operation ID: `CargoesAPI_CargoesDelete`
 - `operation_id` — string Идентификатор операции.
 
 Пример ответа:
-
 ```json
 {
   "errors": {
@@ -1252,17 +1299,19 @@ Operation ID: `CargoesAPI_CargoesDeleteStatus`
 
 Метод для получения статуса удаления грузомест в заявке на поставку.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/delete/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "operation_id": "test-operation-delete-12345-abcde"
+}'
+```
+
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции.
-
-Пример запроса:
-
-```json
-{
-  "operation_id": "test-operation-delete-12345-abcde"
-}
-```
 
 ### Ответы
 
@@ -1274,7 +1323,6 @@ Operation ID: `CargoesAPI_CargoesDeleteStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "ERROR" Статус удаления грузоместа. Возможные статусы: SUCCESS — грузоместо удалено, IN_PROGRESS — грузоместо в процессе удаления, ERROR — возникла ошибка при удалении грузоместа.
 
 Пример ответа:
-
 ```json
 {
   "status": "SUCCESS",
@@ -1295,21 +1343,23 @@ Operation ID: `CargoesAPI_CargoesRulesGet`
 
 Метод для получения чек-листа с правилами по установке грузомест.
 
-### Тело запроса (application/json)
-
-- `supply_ids required` — Array of strings <int64> Список идентификаторов поставок в заявке. Максимум 100 идентификаторов.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes/rules/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "supply_ids": [
     2000007863,
     2000007864,
     2000007865
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `supply_ids required` — Array of strings <int64> Список идентификаторов поставок в заявке. Максимум 100 идентификаторов.
 
 ### Ответы
 
@@ -1327,7 +1377,6 @@ Operation ID: `CargoesAPI_CargoesRulesGet`
   - `supply_id` — integer <int64> Идентификатор поставки.
 
 Пример ответа:
-
 ```json
 {
   "supply_check_lists": [
@@ -1479,20 +1528,12 @@ Operation ID: `CargoesAPI_CargoesLabelCreate`
 
 Используйте метод, чтобы сгенерировать этикетки для грузомест из заявки на поставку.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cargoes` — Array of objects Информация о грузоместах.
-- `supply_id required` — integer <int64> Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes-label/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "supply_id": 2000007863,
   "cargoes": [
     {
@@ -1505,8 +1546,18 @@ Operation ID: `CargoesAPI_CargoesLabelCreate`
       "cargo_id": 50001236
     }
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cargoes` — Array of objects Информация о грузоместах.
+- `supply_id required` — integer <int64> Идентификатор поставки.
 
 ### Ответы
 
@@ -1518,7 +1569,6 @@ Operation ID: `CargoesAPI_CargoesLabelCreate`
 - `errors` — object Ошибки.
 
 Пример ответа:
-
 ```json
 {
   "operation_id": "test-cargo-label-create-56789-abcde",
@@ -1538,12 +1588,18 @@ Operation ID: `CargoesAPI_CargoesLabelGet`
 
 Возвращает статус формирования этикеток и ссылку на PDF-файл с ними.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/cargoes-label/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции.
 
@@ -1560,7 +1616,6 @@ Operation ID: `CargoesAPI_CargoesLabelGet`
 - `errors` — object Ошибки.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -1586,6 +1641,12 @@ Operation ID: `CargoesAPI_CargoesLabelFile`
 
 10 апреля 2026 года отключим метод. Переключитесь на /v1/cargoes-label/get .
 
+```bash
+curl -X GET "https://api-seller.ozon.ru/v1/cargoes-label/file/{file_guid}" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -1596,7 +1657,6 @@ Operation ID: `CargoesAPI_CargoesLabelFile`
 - 200 Этикетки грузовых мест
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -1618,12 +1678,18 @@ Operation ID: `CargoesAPI_CargoesLabelFile`
 
 Operation ID: `SupplyOrderAPI_SupplyOrderCancel`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `order_id required` — integer <int64> Идентификатор заявки на поставку.
 
@@ -1643,12 +1709,18 @@ Operation ID: `SupplyOrderAPI_SupplyOrderCancel`
 
 Operation ID: `SupplyOrderAPI_SupplyOrderCancelStatus`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/cancel/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции на отмену заявки на поставку.
 
@@ -1665,7 +1737,6 @@ Operation ID: `SupplyOrderAPI_SupplyOrderCancelStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "ERROR" Статус отмены заявки на поставку. Возможные значения: SUCCESS — заявка отменена. IN_PROGRESS — заявки в процессе отмены. ERROR — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -1697,16 +1768,12 @@ Operation ID: `SupplyOrderAPI_SupplyOrderContentUpdate`
 
 Метод для редактирования товарного состава в заявке на поставку. Чтобы проверить статус редактирования, используйте метод /v1/supply-order/content/update/status .
 
-### Тело запроса (application/json)
-
-- `items required` — Array of objects Новый товарный состав заявки на поставку. Максимум 5000 товаров.
-- `order_id required` — integer <int64> Идентификатор заявки на поставку.
-- `supply_id required` — integer <int64> Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/content/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "items": [
     {
       "quant": 0,
@@ -1716,8 +1783,14 @@ Operation ID: `SupplyOrderAPI_SupplyOrderContentUpdate`
   ],
   "order_id": 0,
   "supply_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `items required` — Array of objects Новый товарный состав заявки на поставку. Максимум 5000 товаров.
+- `order_id required` — integer <int64> Идентификатор заявки на поставку.
+- `supply_id required` — integer <int64> Идентификатор поставки.
 
 ### Ответы
 
@@ -1729,7 +1802,6 @@ Operation ID: `SupplyOrderAPI_SupplyOrderContentUpdate`
 - `operation_id` — string Идентификатор операции.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -1749,7 +1821,13 @@ Operation ID: `SupplyOrderAPI_SupplyOrderContentUpdateStatus`
 
 Метод для получения статуса редактирования товарного состава.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/content/update/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции.
 
@@ -1764,7 +1842,6 @@ Operation ID: `SupplyOrderAPI_SupplyOrderContentUpdateStatus`
 - `status` — string Enum: "SUCCESS" "IN_PROGRESS" "ERROR" Статус редактирования товарного состава поставки. Возможные статусы: SUCCESS — товарный состав изменён, IN_PROGRESS — товарный состав в процессе изменения, ERROR — возникла ошибка при изменении товарного состава.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -1785,19 +1862,21 @@ Operation ID: `SupplyOrderContentUpdateValidation`
 
 Используйте этот метод, если в /v1/supply-order/content/update/status вы получили ошибку SUPPLY_CONTENT_NOT_VALID .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/content/update/validation" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "new_bundle_id": "string",
+  "supply_id": 0
+}'
+```
+
+### Тело запроса
 
 - `new_bundle_id required` — string Идентификатор нового товарного состава поставки.
 - `supply_id required` — integer <int64> Идентификатор поставки.
-
-Пример запроса:
-
-```json
-{
-  "new_bundle_id": "string",
-  "supply_id": 0
-}
-```
 
 ### Ответы
 
@@ -1809,7 +1888,6 @@ Operation ID: `SupplyOrderContentUpdateValidation`
 - `validated_assortment` — object Информация о товарном составе.
 
 Пример ответа:
-
 ```json
 {
   "editing_errors": [
@@ -1870,6 +1948,12 @@ Operation ID: `SupplyOrderContentUpdateValidation`
 
 Operation ID: `WarehouseFboSellerList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbo/seller/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -1892,7 +1976,6 @@ Operation ID: `WarehouseFboSellerList`
   - `working_days` — Array of objects Рабочие дни склада продавца.
 
 Пример ответа:
-
 ```json
 {
   "warehouses": [

@@ -1,6 +1,8 @@
 # Работа с FBP-черновиками
 
-_Тег: `DeliveryFBPDraft` · операций: 3_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `DeliveryFBPDraft` · методов: 3_
 
 ## Получить список партнёрских складов
 
@@ -9,6 +11,12 @@ _Тег: `DeliveryFBPDraft` · операций: 3_
 Operation ID: `FbpWarehouseList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/warehouse/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -31,7 +39,6 @@ Operation ID: `FbpWarehouseList`
   - `timezone_name` — string Часовой пояс склада.
 
 Пример ответа:
-
 ```json
 {
   "warehouses": [
@@ -67,7 +74,13 @@ Operation ID: `FbpAPI_FbpDraftGet`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор поставки.
 
@@ -96,7 +109,6 @@ Operation ID: `FbpAPI_FbpDraftGet`
 - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "bundle_id": "string",
@@ -175,7 +187,13 @@ Operation ID: `FbpAPI_FbpDraftList`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/draft/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `count required` — integer <int32> Количество элементов в ответе.
 - `last_id` — integer <int64> Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
@@ -191,7 +209,6 @@ Operation ID: `FbpAPI_FbpDraftList`
 - `last_id` — integer <int64> Идентификатор последнего значения на странице.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,

@@ -1,6 +1,8 @@
 # Прочие методы
 
-_Тег: `BetaMethod` · операций: 13_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `BetaMethod` · методов: 13_
 
 ## Управление остатками
 
@@ -10,21 +12,12 @@ Operation ID: `AnalyticsAPI_ManageStocks`
 
 22 января 2026 года метод будет отключён. Переключитесь на /v1/analytics/stocks . Используйте метод, чтобы узнать, сколько товаров осталось на складах FBO. Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтр.
-- `limit` — integer <int32> [ 1 .. 1000 ] Количество значений в ответе.
-- `offset` — integer <int32> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , ответ начнётся с 11-го найденного элемента.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/analytics/manage/stocks" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "skus": [
       "string"
@@ -38,8 +31,19 @@ Operation ID: `AnalyticsAPI_ManageStocks`
   },
   "limit": 1,
   "offset": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтр.
+- `limit` — integer <int32> [ 1 .. 1000 ] Количество значений в ответе.
+- `offset` — integer <int32> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , ответ начнётся с 11-го найденного элемента.
 
 ### Ответы
 
@@ -63,7 +67,6 @@ Operation ID: `AnalyticsAPI_ManageStocks`
   - `warehouse_name` — string Название склада.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -91,28 +94,30 @@ Operation ID: `GetSupplyReturnsSummaryReport`
 
 Метод соответствует разделу FBO → Вывоз и утилизация в личном кабинете. Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/removal/from-supply/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date_from": "2025-03-01",
+  "date_to": "2025-03-30",
+  "last_id": "",
+  "limit": 500
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date_from required` — string Дата начала отчётного периода в формате YYYY-MM-DD .
 - `date_to required` — string Дата окончания отчётного периода в формате YYYY-MM-DD .
 - `last_id` — string Идентификатор последнего значения на странице. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
 - `limit required` — integer <int32> [ 1 .. 500 ] Количество элементов в ответе.
-
-Пример запроса:
-
-```json
-{
-  "date_from": "2025-03-01",
-  "date_to": "2025-03-30",
-  "last_id": "",
-  "limit": 500
-}
-```
 
 ### Ответы
 
@@ -124,7 +129,6 @@ Operation ID: `GetSupplyReturnsSummaryReport`
 - `returns_summary_report_rows` — Array of objects Информация о товарах.
 
 Пример ответа:
-
 ```json
 {
   "returns_summary_report_rows": [
@@ -171,28 +175,30 @@ Operation ID: `GetSupplierReturnsSummaryReport`
 
 Метод соответствует разделу FBO → Вывоз и утилизация в личном кабинете. Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/removal/from-stock/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date_from": "2025-03-01",
+  "date_to": "2025-03-30",
+  "last_id": "",
+  "limit": 500
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date_from required` — string Дата начала отчётного периода в формате YYYY-MM-DD .
 - `date_to required` — string Дата окончания отчётного периода в формате YYYY-MM-DD .
 - `last_id` — string Идентификатор последнего значения на странице. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
 - `limit required` — integer <int32> [ 1 .. 500 ] Количество элементов в ответе.
-
-Пример запроса:
-
-```json
-{
-  "date_from": "2025-03-01",
-  "date_to": "2025-03-30",
-  "last_id": "",
-  "limit": 500
-}
-```
 
 ### Ответы
 
@@ -204,7 +210,6 @@ Operation ID: `GetSupplierReturnsSummaryReport`
 - `returns_summary_report_rows` — Array of objects Информация о товарах.
 
 Пример ответа:
-
 ```json
 {
   "returns_summary_report_rows": [
@@ -251,20 +256,12 @@ Operation ID: `ProductAPI_SetProductStairwayDiscountByQuantity`
 
 Устанавливает или удаляет скидку на товар в зависимости от его количества в заказе. Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `stairways required` — Array of objects Информация о скидке от количества по товарам.
-- `suppress_warnings` — boolean Передайте true , чтобы игнорировать предупреждения и установить скидку.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/stairway-discount/by-quantity/set" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "stairways": [
     {
       "enabled": true,
@@ -281,8 +278,18 @@ Operation ID: `ProductAPI_SetProductStairwayDiscountByQuantity`
     }
   ],
   "suppress_warnings": true
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `stairways required` — Array of objects Информация о скидке от количества по товарам.
+- `suppress_warnings` — boolean Передайте true , чтобы игнорировать предупреждения и установить скидку.
 
 ### Ответы
 
@@ -300,7 +307,6 @@ Operation ID: `ProductAPI_SetProductStairwayDiscountByQuantity`
 - `warnings` — Array of objects Описание предупреждения.
 
 Пример ответа:
-
 ```json
 {
   "accepted": true,
@@ -345,12 +351,18 @@ Operation ID: `ProductAPI_GetProductStairwayDiscountByQuantity`
 
 Возвращает информацию о скидке на товар в зависимости от его количества в заказе. Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/stairway-discount/by-quantity/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `skus required` — Array of strings <int64> <= 5000 items Список идентификаторов товара в системе Ozon — SKU.
 
@@ -372,7 +384,6 @@ Operation ID: `ProductAPI_GetProductStairwayDiscountByQuantity`
   - `status` — string Enum: "IN_PROCESS" "ERROR" "SUCCESS" Статус изменения скидки от количества. Возможные значения: ERROR — ошибка при изменении скидки. Вызовите метод /v1/product/stairway-discount/by-quantity/set ещё раз. IN_PROCESS — изменение в процессе. SUCCESS — изменение скидки применено к товару.
 
 Пример ответа:
-
 ```json
 {
   "stairways": [
@@ -404,19 +415,21 @@ Operation ID: `GetFinanceBalanceV1`
 
 Соответствует разделу Финансы → Баланс в личном кабинете. Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/balance" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date_from": "2019-08-24",
+  "date_to": "2019-09-24"
+}'
+```
+
+### Тело запроса
 
 - `date_from required` — string <date-time> Дата начала отчётного периода в формате YYYY-MM-DD .
 - `date_to required` — string <date-time> Дата окончания отчётного периода в формате YYYY-MM-DD . Максимальный период между date_from и date_to — 30 дней.
-
-Пример запроса:
-
-```json
-{
-  "date_from": "2019-08-24",
-  "date_to": "2019-09-24"
-}
-```
 
 ### Ответы
 
@@ -428,7 +441,6 @@ Operation ID: `GetFinanceBalanceV1`
 - `total` — object Общие данные по балансу за период.
 
 Пример ответа:
-
 ```json
 {
   "cashflows": {
@@ -517,26 +529,28 @@ Operation ID: `GetDiscountTaskListV2`
 
 Возвращает список товаров, которые покупатели хотят купить со скидкой. Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/actions/discounts-task/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "last_id": 0,
+  "limit": 50,
+  "status": "ALL"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `last_id` — integer <int64> Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым.
 - `limit` — integer <int64> <= 50 Default: 50 Enum: 5 10 15 20 30 50 Максимальное количество заявок на странице.
 - `status` — string Default: "ALL" Enum: "ALL" "NEW" "APPROVED" "DECLINED" Статус заявки на скидку: ALL — все статусы, NEW — новая, APPROVED — одобренная, DECLINED — отклонённая.
-
-Пример запроса:
-
-```json
-{
-  "last_id": 0,
-  "limit": 50,
-  "status": "ALL"
-}
-```
 
 ### Ответы
 
@@ -572,7 +586,6 @@ Operation ID: `GetDiscountTaskListV2`
   - `status` — string Default: "ALL" Enum: "ALL" "NEW" "APPROVED" "DECLINED" Статус заявки на скидку: ALL — все статусы, NEW — новая, APPROVED — одобренная, DECLINED — отклонённая.
 
 Пример ответа:
-
 ```json
 {
   "tasks": [
@@ -622,22 +635,24 @@ Operation ID: `ProductVisibilitySet`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
-
-- `item_placement required` — Array of objects Информация о видимости товара.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/visibility/set" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "item_placement": [
     {
       "placement": "OZON",
       "sku": 0
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `item_placement required` — Array of objects Информация о видимости товара.
 
 ### Ответы
 
@@ -649,7 +664,6 @@ Operation ID: `ProductVisibilitySet`
 - `items_errors` — Array of objects Товары с ошибками.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -686,25 +700,14 @@ Operation ID: `ProductVisibilitySet`
 
 Operation ID: `PostingDigitalList`
 
-Возвращает список отправлений, по которым нужно загрузить коды цифровых товаров. Метод доступен только продавцам, которые работают с цифровыми товарами. Чтобы получить список отправлений в любом статусе, используйте метод /v3/posting/fbo/list . Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
+Возвращает список отправлений, по которым нужно загрузить коды цифровых товаров. Метод доступен только продавцам, которые работают с цифровыми товарами. Чтобы получить список отправлений в любом статусе, используйте метод /v3/posting/fbo/list . …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтр для поиска отправлений.
-- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/digital/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "sort_dir": "asc",
   "filter": {
     "posting_numbers": [
@@ -723,8 +726,21 @@ Operation ID: `PostingDigitalList`
     "financial_data": true,
     "legal_info": true
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтр для поиска отправлений.
+- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -742,7 +758,6 @@ Operation ID: `PostingDigitalList`
 - `postings` — Array of objects Список отправлений.
 
 Пример ответа:
-
 ```json
 {
   "postings": [
@@ -826,24 +841,26 @@ Operation ID: `GetFinanceAccrualPostings`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/accrual/postings" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "posting_numbers": [
+    "string"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_numbers required` — Array of strings [ 1 .. 200 ] items Номера отправлений.
-
-Пример запроса:
-
-```json
-{
-  "posting_numbers": [
-    "string"
-  ]
-}
-```
 
 ### Ответы
 
@@ -856,7 +873,6 @@ Operation ID: `GetFinanceAccrualPostings`
   - `posting_number` — string Номер отправления.
 
 Пример ответа:
-
 ```json
 {
   "posting_accruals": [
@@ -893,6 +909,12 @@ Operation ID: `GetFinanceAccrualTypes`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/accrual/types" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -910,7 +932,6 @@ Operation ID: `GetFinanceAccrualTypes`
   - `name` — string Название начисления.
 
 Пример ответа:
-
 ```json
 {
   "accrual_types": [
@@ -933,24 +954,26 @@ Operation ID: `GetFinanceAccrualByDay`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/accrual/by-day" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date": "string",
+  "last_id": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date required` — string YYYY-MM-DD Дата начислений. Самая ранняя — 1 января 2022 года.
 - `last_id required` — string Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
-
-Пример запроса:
-
-```json
-{
-  "date": "string",
-  "last_id": "string"
-}
-```
 
 ### Ответы
 
@@ -962,7 +985,6 @@ Operation ID: `GetFinanceAccrualByDay`
 - `last_id` — string Идентификатор последнего значения на странице.
 
 Пример ответа:
-
 ```json
 {
   "accruals": [
@@ -1069,12 +1091,18 @@ Operation ID: `ProductVisibilityInfo`
 
 Вы можете оставить обратную связь о работе метода в комментариях в сообществе разработчиков Ozon for dev.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/visibility/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `skus` — Array of strings <int64> [ 1 .. 350 ] items Идентификаторы товаров в системе Ozon — SKU.
 
@@ -1089,7 +1117,6 @@ Operation ID: `ProductVisibilityInfo`
   - `sku` — integer <int64> Идентификатор товара в системе Ozon — SKU.
 
 Пример ответа:
-
 ```json
 {
   "items": [

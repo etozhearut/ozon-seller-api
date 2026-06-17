@@ -1,6 +1,8 @@
 # Заказы
 
-_Тег: `OrderAPI` · операций: 4_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `OrderAPI` · методов: 4_
 
 ## Отменить заказ
 
@@ -10,21 +12,23 @@ Operation ID: `OrderAPI_OrderCancel`
 
 Отменяет заказ со всеми отправлениями. Используйте идентификатор причины отмены reasons.id из метода /v1/cancel-reason/list-by-order .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/order/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "order_number": "string",
+  "reason_id": 0,
+  "reason_message": "string"
+}'
+```
+
+### Тело запроса
 
 - `order_number required` — string Номер заказа.
 - `reason_id required` — integer <int32> Идентификатор причины отмены заказа.
 - `reason_message` — string Причина отмены заказа.
-
-Пример запроса:
-
-```json
-{
-  "order_number": "string",
-  "reason_id": 0,
-  "reason_message": "string"
-}
-```
 
 ### Ответы
 
@@ -44,7 +48,13 @@ Operation ID: `OrderAPI_OrderCancelCheck`
 
 Возвращает возможность отмены заказа для покупателя.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/order/cancel/check" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `order_number required` — string Номер заказа.
 
@@ -60,7 +70,6 @@ Operation ID: `OrderAPI_OrderCancelCheck`
 - `postings` — Array of objects Информация о возможности отмены отправлений.
 
 Пример ответа:
-
 ```json
 {
   "cancellable": true,
@@ -90,7 +99,13 @@ Operation ID: `OrderAPI_OrderCancelCheck`
 
 Operation ID: `OrderAPI_OrderCancelStatus`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/order/cancel/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `order_number required` — string Номер заказа.
 
@@ -105,7 +120,6 @@ Operation ID: `OrderAPI_OrderCancelStatus`
 - `state` — string Статус отмены заказа.
 
 Пример ответа:
-
 ```json
 {
   "order_number": "string",
@@ -124,20 +138,14 @@ Operation ID: `OrderAPI_OrderCancelStatus`
 
 Operation ID: `OrderAPI_OrderCreate`
 
-Создаёт заказ для покупателя и получателя в системе Ozon. Передайте вариант доставки из ответа метода /v2/delivery/checkout . В ответе могут быть не все отправления. Получите список всех отправлений по номеру заказа order_number методом: /v2/posting/fbo/list — для схемы FBO; /v3/posting/fbs/list — для схемы FBS. Значение параметра delivery_schema должно совпадать с тем, что вы передали в /v2/delivery/checkout .
+Создаёт заказ для покупателя и получателя в системе Ozon. Передайте вариант доставки из ответа метода /v2/delivery/checkout . В ответе могут быть не все отправления. Получите список всех отправлений по номеру заказа order_number методом: /v2/posting/fbo/list — для схемы FBO; /v3/posting/fbs/list — для схемы FBS. …
 
-### Тело запроса (application/json)
-
-- `buyer required` — object Информация о покупателе.
-- `delivery required` — courier (object) or pick_up (object) Информация о доставке.
-- `delivery_schema required` — string Default: "MIX" Enum: "MIX" "FBO" "FBS" Схема доставки: MIX — на выбор Ozon; FBO — FBO; FBS — FBS.
-- `recipient required` — object Информация о получателе.
-- `splits required` — Array of objects Информация об отправлениях в заказе.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/order/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "buyer": {
     "first_name": "string",
     "last_name": "string",
@@ -183,8 +191,16 @@ Operation ID: `OrderAPI_OrderCreate`
       "warehouse_id": 0
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `buyer required` — object Информация о покупателе.
+- `delivery required` — courier (object) or pick_up (object) Информация о доставке.
+- `delivery_schema required` — string Default: "MIX" Enum: "MIX" "FBO" "FBS" Схема доставки: MIX — на выбор Ozon; FBO — FBO; FBS — FBS.
+- `recipient required` — object Информация о получателе.
+- `splits required` — Array of objects Информация об отправлениях в заказе.
 
 ### Ответы
 
@@ -196,7 +212,6 @@ Operation ID: `OrderAPI_OrderCreate`
 - `postings` — Array of strings Отправления.
 
 Пример ответа:
-
 ```json
 {
   "order_number": "string",

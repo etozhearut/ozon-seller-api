@@ -1,12 +1,20 @@
 # Информация по кабинету продавца
 
-_Тег: `SellerInfo` · операций: 2_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `SellerInfo` · методов: 2_
 
 ## Информация о кабинете продавца
 
 `POST /v1/seller/info`
 
 Operation ID: `SellerAPI_SellerInfo`
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -24,7 +32,6 @@ Operation ID: `SellerAPI_SellerInfo`
 - `subscription` — object Подписка.
 
 Пример ответа:
-
 ```json
 {
   "company": {
@@ -82,6 +89,12 @@ Operation ID: `SellerAPI_SellerInfo`
 
 Operation ID: `SellerAPI_SellerOzonLogisticsInfo`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/seller/ozon-logistics/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -97,7 +110,6 @@ Operation ID: `SellerAPI_SellerOzonLogisticsInfo`
 - `ozon_logistics_enabled` — boolean true , если Ozon Доставка подключена.
 
 Пример ответа:
-
 ```json
 {
   "available_schemas": [

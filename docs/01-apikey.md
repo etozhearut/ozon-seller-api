@@ -1,6 +1,8 @@
 # Информация по API-ключу
 
-_Тег: `APIkey` · операций: 1_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `APIkey` · методов: 1_
 
 ## Получить список ролей и методов по API-ключу
 
@@ -9,6 +11,12 @@ _Тег: `APIkey` · операций: 1_
 Operation ID: `AccessAPI_RolesByToken`
 
 Метод для получения информации и ролях и методах, привязанных к API-ключу.
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/roles" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -25,7 +33,6 @@ Operation ID: `AccessAPI_RolesByToken`
 - `roles` — Array of objects Информация о доступных ролях и методах.
 
 Пример ответа:
-
 ```json
 {
   "expires_at": "2026-02-18T09:54:23.296Z",

@@ -1,6 +1,8 @@
 # Возвраты товаров FBO и FBS
 
-_Тег: `ReturnsAPI` · операций: 4_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `ReturnsAPI` · методов: 4_
 
 ## Информация о возвратах FBO и FBS
 
@@ -10,16 +12,12 @@ Operation ID: `returnsList`
 
 Метод для получения информации о возвратах FBO и FBS.
 
-### Тело запроса (application/json)
-
-- `filter` — object Фильтры. Используйте только один фильтр в запросе: logistic_return_date , storage_tariffication_start_date или visual_status_change_moment , иначе вернётся ошибка.
-- `limit required` — integer <int32> Количество подгружаемых возвратов. Максимальное значение — 500.
-- `last_id` — integer <int64> Идентификатор последнего подгруженного возврата.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/returns/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "logistic_return_date": {
       "time_from": "2026-02-01T00:00:00Z",
@@ -39,8 +37,14 @@ Operation ID: `returnsList`
   },
   "limit": 500,
   "last_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `filter` — object Фильтры. Используйте только один фильтр в запросе: logistic_return_date , storage_tariffication_start_date или visual_status_change_moment , иначе вернётся ошибка.
+- `limit required` — integer <int32> Количество подгружаемых возвратов. Максимальное значение — 500.
+- `last_id` — integer <int64> Идентификатор последнего подгруженного возврата.
 
 ### Ответы
 
@@ -52,7 +56,6 @@ Operation ID: `returnsList`
 - `has_next` — boolean true , если у продавца есть другие возвраты.
 
 Пример ответа:
-
 ```json
 {
   "returns": [
@@ -158,6 +161,12 @@ Operation ID: `returnsList`
 
 Operation ID: `UtilizationHistory`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/returns/settings/utilization/history" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -175,7 +184,6 @@ Operation ID: `UtilizationHistory`
   - `user_name` — string Имя пользователя.
 
 Пример ответа:
-
 ```json
 {
   "history": [
@@ -198,6 +206,12 @@ Operation ID: `UtilizationHistory`
 
 Operation ID: `UtilizationInfo`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/returns/settings/utilization/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -213,7 +227,6 @@ Operation ID: `UtilizationInfo`
 - `utilization_settings` — object Настройки утилизации.
 
 Пример ответа:
-
 ```json
 {
   "min_price": {
@@ -241,20 +254,12 @@ Operation ID: `UtilizationInfo`
 
 Operation ID: `UtilizationUpdate`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `utilization_price required` — object Максимальная цена автоутилизации для товаров без дефектов.
-- `utilization_price_defects required` — object Максимальная цена автоутилизации для товаров с дефектами.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/returns/settings/utilization/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "utilization_price": {
     "enabled": true,
     "value": 0
@@ -263,15 +268,24 @@ Operation ID: `UtilizationUpdate`
     "enabled": true,
     "value": 0
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `utilization_price required` — object Максимальная цена автоутилизации для товаров без дефектов.
+- `utilization_price_defects required` — object Максимальная цена автоутилизации для товаров с дефектами.
 
 ### Ответы
 
 - 200 Настройки обновлены
 
 Пример ответа:
-
 ```json
 {
   "code": 0,

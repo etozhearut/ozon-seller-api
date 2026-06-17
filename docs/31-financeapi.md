@@ -1,8 +1,10 @@
 # Финансовые отчёты
 
-Финансовые отчёты Больше методов в разделе Premium-методы .
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
 
-_Тег: `FinanceAPI` · операций: 10_
+_Тег: `FinanceAPI` · методов: 10_
+
+Финансовые отчёты Больше методов в разделе Premium-методы .
 
 ## Отчёт о реализации товаров (версия 2)
 
@@ -10,14 +12,20 @@ _Тег: `FinanceAPI` · операций: 10_
 
 Operation ID: `FinanceAPI_GetRealizationReportV2`
 
-Метод недоступен для продавцов, которые заключили договор с ТОО «ОЗОН Маркетплейс Казахстан». Метод позволяет получить отчёт за период не раньше августа 2023 года. Отчёты за более ранние периоды доступны в личном кабинете. Отчёт о реализации доставленных и возвращённых товаров за месяц. Отмены и невыкупы не включаются. Соответствует разделу Финансы → Документы → Отчёты о реализации → Отчёт о реализации товара в личном кабинете. Отчёт придёт не позднее 5-го числа следующего месяца. Подробнее об отчёте в Базе знаний продавца
+Метод недоступен для продавцов, которые заключили договор с ТОО «ОЗОН Маркетплейс Казахстан». Метод позволяет получить отчёт за период не раньше августа 2023 года. Отчёты за более ранние периоды доступны в личном кабинете. Отчёт о реализации доставленных и возвращённых товаров за месяц. …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/finance/realization" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `month required` — integer <int32> Месяц.
 - `year required` — integer <int32> Год.
@@ -38,7 +46,6 @@ Operation ID: `FinanceAPI_GetRealizationReportV2`
   - `rows` — Array of objects Таблица отчёта.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -110,12 +117,18 @@ Operation ID: `FinanceAPI_GetRealizationReportV1`
 
 Метод недоступен для продавцов, которые заключили договор с ТОО «ОЗОН Маркетплейс Казахстан». Отчёт о реализации доставленных и возвращённых товаров с детализацией по каждому заказу. Отмены и невыкупы не включаются. Отчёт доступен с настоящего времени по август 2023 года включительно.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/realization/posting" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `month required` — integer <int32> Месяц.
 - `year required` — integer <int32> Год.
@@ -135,7 +148,6 @@ Operation ID: `FinanceAPI_GetRealizationReportV1`
 - `rows` — Array of objects Таблица отчёта.
 
 Пример ответа:
-
 ```json
 {
   "header": {
@@ -211,23 +223,14 @@ Operation ID: `FinanceAPI_GetRealizationReportV1`
 
 Operation ID: `FinanceAPI_FinanceTransactionListV3`
 
-Метод устаревает и будет отключён 6 июля 2026 года. Переключитесь на /v1/finance/accrual/postings , /v1/finance/accrual/types , /v1/finance/accrual/by-day . Используйте метод с последовательной отправкой запросов. Данные могут не соответствовать информации в личном кабинете. Возвращает подробную информацию по всем начислениям. Максимальный период, за который можно получить информацию в одном запросе — 1 месяц. Если в запросе не указывать posting_number , то в ответе будут все отправления за указанный период или отправления определённого типа.
+Метод устаревает и будет отключён 6 июля 2026 года. Переключитесь на /v1/finance/accrual/postings , /v1/finance/accrual/types , /v1/finance/accrual/by-day . Используйте метод с последовательной отправкой запросов. Данные могут не соответствовать информации в личном кабинете. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — posting_number (object) or date (object) Фильтр.
-- `page required` — integer <int64> Номер страницы, возвращаемой в запросе.
-- `page_size required` — integer <int64> <= 1000 Количество элементов на странице.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/finance/transaction/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "date": {
       "from": "2021-11-01T00:00:00.000Z",
@@ -239,8 +242,19 @@ Operation ID: `FinanceAPI_FinanceTransactionListV3`
   },
   "page": 1,
   "page_size": 1000
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — posting_number (object) or date (object) Фильтр.
+- `page required` — integer <int64> Номер страницы, возвращаемой в запросе.
+- `page_size required` — integer <int64> <= 1000 Количество элементов на странице.
 
 ### Ответы
 
@@ -259,7 +273,6 @@ Operation ID: `FinanceAPI_FinanceTransactionListV3`
   - `row_count` — integer <int64> Количество транзакций на всех страницах. Если 0, транзакций больше нет.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -299,31 +312,33 @@ Operation ID: `FinanceAPI_FinanceTransactionListV3`
 
 Operation ID: `FinanceAPI_FinanceTransactionTotalV3`
 
-Метод устаревает и будет отключён 6 июля 2026 года. Переключитесь на /v1/finance/accrual/postings , /v1/finance/accrual/types , /v1/finance/accrual/by-day . Данные могут не соответствовать информации в личном кабинете. Возвращает итоговые суммы по транзакциям за указанный период. Если вы неправильно заполните номера отправлений, в ответе вернутся нулевые значения.
+Метод устаревает и будет отключён 6 июля 2026 года. Переключитесь на /v1/finance/accrual/postings , /v1/finance/accrual/types , /v1/finance/accrual/by-day . Данные могут не соответствовать информации в личном кабинете. Возвращает итоговые суммы по транзакциям за указанный период. …
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `date` — object Фильтр по дате.
-- `posting_number required` — string Номер отправления.
-- `transaction_type` — string Тип операции: all — все, orders — заказы, returns — возвраты и отмены, services — сервисные сборы, compensation — компенсация, transferDelivery — стоимость доставки, other — прочее.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/finance/transaction/totals" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "date": {
     "from": "2021-11-01T00:00:00.000Z",
     "to": "2021-11-02T00:00:00.000Z"
   },
   "posting_number": "",
   "transaction_type": "all"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `date` — object Фильтр по дате.
+- `posting_number required` — string Номер отправления.
+- `transaction_type` — string Тип операции: all — все, orders — заказы, returns — возвраты и отмены, services — сервисные сборы, compensation — компенсация, transferDelivery — стоимость доставки, other — прочее.
 
 ### Ответы
 
@@ -347,7 +362,6 @@ Operation ID: `FinanceAPI_FinanceTransactionTotalV3`
   - `services_amount` — number <double> Стоимость дополнительных услуг, не связанных напрямую с доставками и возвратами товаров. Например, продвижения или размещения товаров.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -373,19 +387,21 @@ Operation ID: `ReportAPI_CreateDocumentB2BSalesReport`
 
 Используйте метод, чтобы получить отчёт по продажам юридическим лицам. Соответствует разделу Финансы → Документы → Реестр продаж юр. лицам в личном кабинете.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/document-b2b-sales" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date": "string",
+  "language": "DEFAULT"
+}'
+```
+
+### Тело запроса
 
 - `date required` — string Отчётный период в формате YYYY-MM .
 - `language` — string Default: "DEFAULT" Язык ответа: RU — русский, EN — английский.
-
-Пример запроса:
-
-```json
-{
-  "date": "string",
-  "language": "DEFAULT"
-}
-```
 
 ### Ответы
 
@@ -406,7 +422,13 @@ Operation ID: `ReportAPI_CreateDocumentB2BSalesJSONReport`
 
 Используйте метод, чтобы получить отчёт по продажам юридическим лицам в JSON-формате. Соответствует разделу Финансы → Документы → Реестр продаж юр. лицам в личном кабинете.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/document-b2b-sales/json" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `date required` — string Отчётный период в формате YYYY-MM . Отчёт доступен до января 2019 включительно.
 
@@ -427,7 +449,6 @@ Operation ID: `ReportAPI_CreateDocumentB2BSalesJSONReport`
 - `seller_info` — object Информация о продавце.
 
 Пример ответа:
-
 ```json
 {
   "date_from": "string",
@@ -489,24 +510,26 @@ Operation ID: `ReportAPI_CreateMutualSettlementReport`
 
 Используйте метод, чтобы получить отчёт о взаиморасчетах. Соответствует разделу Финансы → Документы → Аналитические отчеты → Отчет о взаиморасчетах в личном кабинете.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/mutual-settlement" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date": "string",
+  "language": "DEFAULT"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `date required` — string Отчётный период в формате YYYY-MM .
 - `language` — string Default: "DEFAULT" Язык ответа: RU — русский, EN — английский.
-
-Пример запроса:
-
-```json
-{
-  "date": "string",
-  "language": "DEFAULT"
-}
-```
 
 ### Ответы
 
@@ -527,19 +550,21 @@ Operation ID: `GetFinanceProductsBuyout`
 
 Возвращает отчёт о товарах, которые выкупил Ozon для продажи в ЕАЭС и другие страны. Соответствует разделу Финансы → Документы → УПД по сделкам с юр. лицами → УПД по выкупленным товарам в личном кабинете. Подробнее о продаже товаров в ЕАЭС и другие страны в Базе знаний
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/products/buyout" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date_from": "YYYY-MM-DD",
+  "date_to": "YYYY-MM-DD"
+}'
+```
+
+### Тело запроса
 
 - `date_from required` — string Дата, с которой будут данные в отчёте.
 - `date_to required` — string Дата, по которую будут данные в отчёте. Максимальный период — 31 день.
-
-Пример запроса:
-
-```json
-{
-  "date_from": "YYYY-MM-DD",
-  "date_to": "YYYY-MM-DD"
-}
-```
 
 ### Ответы
 
@@ -560,7 +585,6 @@ Operation ID: `GetFinanceProductsBuyout`
   - `vat_percent` — integer <int32> Ставка НДС для товара в процентах.
 
 Пример ответа:
-
 ```json
 {
   "products": [
@@ -602,19 +626,21 @@ Operation ID: `ReportAPI_GetCompensationReport`
 
 Метод для получения отчёта о компенсациях. Соответствует отчёту из раздела Финансы → Документы → Компенсации и прочие начисления в личном кабинете.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/compensation" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date": "2023-09",
+  "language": "RU"
+}'
+```
+
+### Тело запроса
 
 - `date required` — string Отчётный период в формате YYYY-MM .
 - `language` — string Default: "RU" Язык отчёта: RU — русский, EN — английский.
-
-Пример запроса:
-
-```json
-{
-  "date": "2023-09",
-  "language": "RU"
-}
-```
 
 ### Ответы
 
@@ -635,19 +661,21 @@ Operation ID: `ReportAPI_GetDecompensationReport`
 
 Метод для получения отчёта о декомпенсациях. Соответствует отчёту из раздела Финансы → Документы → Компенсации и прочие начисления в личном кабинете.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/finance/decompensation" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "date": "2023-09",
+  "language": "RU"
+}'
+```
+
+### Тело запроса
 
 - `date required` — string Отчётный период в формате YYYY-MM .
 - `language` — string Default: "RU" Язык отчёта: RU — русский, EN — английский.
-
-Пример запроса:
-
-```json
-{
-  "date": "2023-09",
-  "language": "RU"
-}
-```
 
 ### Ответы
 

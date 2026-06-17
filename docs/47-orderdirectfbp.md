@@ -1,6 +1,8 @@
 # Работа с FBP-поставками с доставкой direct
 
-_Тег: `OrderDirectFBP` · операций: 4_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `OrderDirectFBP` · методов: 4_
 
 ## Отменить поставку
 
@@ -10,7 +12,13 @@ Operation ID: `FbpAPI_FbpOrderDirectCancel`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/direct/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `supply_id required` — string Идентификатор заявки на поставку.
 
@@ -25,7 +33,6 @@ Operation ID: `FbpAPI_FbpOrderDirectCancel`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {
@@ -48,25 +55,27 @@ Operation ID: `FbpAPI_FbpOrderDirectSellerDlvEdit`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/direct/seller-dlv/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "driver_name": "string",
+  "row_version": 0,
+  "supply_id": "string",
+  "vehicle_number": "string",
+  "vehicle_type": "string"
+}'
+```
+
+### Тело запроса
 
 - `driver_name required` — string ФИО водителя.
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор заявки на поставку.
 - `vehicle_number required` — string Номер автомобиля.
 - `vehicle_type required` — string Тип автомобиля.
-
-Пример запроса:
-
-```json
-{
-  "driver_name": "string",
-  "row_version": 0,
-  "supply_id": "string",
-  "vehicle_number": "string",
-  "vehicle_type": "string"
-}
-```
 
 ### Ответы
 
@@ -79,7 +88,6 @@ Operation ID: `FbpAPI_FbpOrderDirectSellerDlvEdit`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error": {
@@ -100,21 +108,23 @@ Operation ID: `FbpAPI_FbpEditTimeslot`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/direct/timeslot/edit" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "row_version": 0,
+  "supply_id": "string",
+  "timeslot_start": "2019-08-24T14:15:22Z"
+}'
+```
+
+### Тело запроса
 
 - `row_version required` — integer <int64> Идентификатор актуальной версии черновика.
 - `supply_id required` — string Идентификатор заявки на поставку.
 - `timeslot_start required` — string <date-time> Начало таймслота.
-
-Пример запроса:
-
-```json
-{
-  "row_version": 0,
-  "supply_id": "string",
-  "timeslot_start": "2019-08-24T14:15:22Z"
-}
-```
 
 ### Ответы
 
@@ -126,7 +136,6 @@ Operation ID: `FbpAPI_FbpEditTimeslot`
 - `row_version` — integer <int64> Идентификатор актуальной версии черновика.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -146,21 +155,23 @@ Operation ID: `FbpAPI_FbpAvailableTimeslotList`
 
 Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/fbp/order/direct/timeslot/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "interval_end": "2019-08-24T14:15:22Z",
+  "interval_start": "2019-08-24T14:15:22Z",
+  "supply_id": "string"
+}'
+```
+
+### Тело запроса
 
 - `interval_end required` — string <date-time> Дата окончания нужного периода доступных таймслотов.
 - `interval_start required` — string <date-time> Дата начала нужного периода доступных таймслотов.
 - `supply_id required` — string Идентификатор заявки на поставку.
-
-Пример запроса:
-
-```json
-{
-  "interval_end": "2019-08-24T14:15:22Z",
-  "interval_start": "2019-08-24T14:15:22Z",
-  "supply_id": "string"
-}
-```
 
 ### Ответы
 
@@ -173,7 +184,6 @@ Operation ID: `FbpAPI_FbpAvailableTimeslotList`
 - `warehouse_timezone_name` — string Часовой пояс склада продавца.
 
 Пример ответа:
-
 ```json
 {
   "reasons": [

@@ -1,6 +1,8 @@
 # Возвраты товаров rFBS
 
-_Тег: `RFBSReturnsAPI` · операций: 8_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `RFBSReturnsAPI` · методов: 8_
 
 ## Список заявок на возврат
 
@@ -8,21 +10,12 @@ _Тег: `RFBSReturnsAPI` · операций: 8_
 
 Operation ID: `RFBSReturnsAPI_ReturnsRfbsListV2`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтр.
-- `last_id` — integer <int32> Идентификатор последнего значения на странице — return_id . Оставьте это поле пустым при выполнении первого запроса.
-- `limit required` — integer <int32> Количество значений в ответе.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/returns/rfbs/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "offer_id": "test-offer-123456",
     "posting_number": "789456123-0002-3",
@@ -37,8 +30,19 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsListV2`
   },
   "last_id": 0,
   "limit": 1000
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтр.
+- `last_id` — integer <int32> Идентификатор последнего значения на странице — return_id . Оставьте это поле пустым при выполнении первого запроса.
+- `limit required` — integer <int32> Количество значений в ответе.
 
 ### Ответы
 
@@ -62,7 +66,6 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsListV2`
   - `state` — object Статусы заявки и возврата денег.
 
 Пример ответа:
-
 ```json
 {
   "returns": [
@@ -97,12 +100,18 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsListV2`
 
 Operation ID: `RFBSReturnsAPI_ReturnsRfbsGetV2`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/returns/rfbs/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `return_id required` — integer <int64> Идентификатор заявки на возврат. Получите методом /v2/returns/rfbs/list .
 
@@ -137,7 +146,6 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsGetV2`
   - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "returns": {
@@ -204,26 +212,28 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsRejectV2`
 
 В будущем метод будет отключён. Переключитесь на /v1/returns/rfbs/action/set . Метод позволяет отклонить заявку на возврат rFBS-заказа. Вы можете объяснить своё решение в параметре comment .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/returns/rfbs/reject" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "return_id": 0,
+  "comment": "string",
+  "rejection_reason_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `return_id required` — integer <int64> Идентификатор заявки на возврат.
 - `comment` — string Комментарий. Передайте комментарий, если в ответе метода /v2/returns/rfbs/get параметр rejection_reason.is_comment_required — true .
 - `rejection_reason_id required` — integer <int64> Идентификатор причины отмены. Передайте идентификатор из списка причин, полученного в ответе метода /v2/returns/rfbs/get в параметре rejection_reason .
-
-Пример запроса:
-
-```json
-{
-  "return_id": 0,
-  "comment": "string",
-  "rejection_reason_id": 0
-}
-```
 
 ### Ответы
 
@@ -244,24 +254,26 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsCompensateV2`
 
 В будущем метод будет отключён. Переключитесь на /v1/returns/rfbs/action/set . Метод для частичной компенсации стоимости товара: вы возвращаете часть денег покупателю, товар остаётся у него.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/returns/rfbs/compensate" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "compensation_amount": "string",
+  "return_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `compensation_amount` — string Сумма компенсации.
 - `return_id required` — integer <int64> Идентификатор заявки на возврат.
-
-Пример запроса:
-
-```json
-{
-  "compensation_amount": "string",
-  "return_id": 0
-}
-```
 
 ### Ответы
 
@@ -282,24 +294,26 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsVerifyV2`
 
 В будущем метод будет отключён. Переключитесь на /v1/returns/rfbs/action/set . Метод позволяет одобрить заявку и согласиться на получение товара для проверки. Подтвердите получение товара с помощью метода /v2/returns/rfbs/receive-return .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/returns/rfbs/verify" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "return_id": 0,
+  "return_method_description": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `return_id required` — integer <int64> Идентификатор заявки на возврат.
 - `return_method_description` — string Способ возврата товара.
-
-Пример запроса:
-
-```json
-{
-  "return_id": 0,
-  "return_method_description": "string"
-}
-```
 
 ### Ответы
 
@@ -320,12 +334,18 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsReceiveReturnV2`
 
 В будущем метод будет отключён. Переключитесь на /v1/returns/rfbs/action/set .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/returns/rfbs/receive-return" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `return_id required` — integer <int64> Идентификатор заявки на возврат.
 
@@ -346,26 +366,28 @@ Operation ID: `RFBSReturnsAPI_ReturnsRfbsReceiveReturnV2`
 
 Operation ID: `RFBSReturnsAPI_ReturnsRfbsReturnMoneyV2`
 
-В будущем метод будет отключён. Переключитесь на /v1/returns/rfbs/action/set . Метод подтверждает возврат полной стоимости товара. Используйте метод, если согласны: сразу вернуть стоимость товара и оставить его покупателю; вернуть стоимость после получения и проверки товара. Если товар оказался ненадлежащего качества или с браком, вы возмещаете покупателю стоимость пересылки товара.
+В будущем метод будет отключён. Переключитесь на /v1/returns/rfbs/action/set . Метод подтверждает возврат полной стоимости товара. Используйте метод, если согласны: сразу вернуть стоимость товара и оставить его покупателю; вернуть стоимость после получения и проверки товара. …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/returns/rfbs/return-money" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "return_id": 0,
+  "return_for_back_way": 0
+}'
+```
 
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `return_id required` — integer <int64> Идентификатор заявки на возврат.
 - `return_for_back_way` — integer <int64> Сумма, возмещаемая покупателю за пересылку товара.
-
-Пример запроса:
-
-```json
-{
-  "return_id": 0,
-  "return_for_back_way": 0
-}
-```
 
 ### Ответы
 
@@ -386,7 +408,22 @@ Operation ID: `ReturnsAPI_ReturnsRfbsActionSet`
 
 Метод для передачи действий для возврата rFBS.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/returns/rfbs/action/set" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "comment": "string",
+  "compensation_amount": 0,
+  "id": 0,
+  "rejection_reason_id": 0,
+  "return_for_back_way": 0,
+  "return_id": 0
+}'
+```
+
+### Тело запроса
 
 - `comment` — string Комментарий продавца. Обязателен для id: -1 и id: -10 .
 - `compensation_amount` — number <double> Сумма компенсации. Обязательна для id: 1020 .
@@ -395,25 +432,11 @@ Operation ID: `ReturnsAPI_ReturnsRfbsActionSet`
 - `return_for_back_way` — number <double> Сумма, возмещаемая покупателю за пересылку товара. Отрицательные значения приравниваются к 0 .
 - `return_id required` — integer <int64> Идентификатор заявки на возврат.
 
-Пример запроса:
-
-```json
-{
-  "comment": "string",
-  "compensation_amount": 0,
-  "id": 0,
-  "rejection_reason_id": 0,
-  "return_for_back_way": 0,
-  "return_id": 0
-}
-```
-
 ### Ответы
 
 - 200 Действие передано
 
 Пример ответа:
-
 ```json
 {
   "code": 0,

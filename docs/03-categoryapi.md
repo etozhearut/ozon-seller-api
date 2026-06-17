@@ -1,6 +1,8 @@
 # Атрибуты и характеристики Ozon
 
-_Тег: `CategoryAPI` · операций: 5_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `CategoryAPI` · методов: 5_
 
 ## Дерево категорий и типов товаров
 
@@ -10,12 +12,18 @@ Operation ID: `DescriptionCategoryAPI_GetTree`
 
 Возвращает категории и типы для товаров в виде дерева. Создание товаров доступно только в категориях последнего уровня, сравните именно их с категориями на своей площадке. Категории не создаются по запросу пользователя. Внимательно выбирайте категорию для товара: для разных категорий применяется разный размер комиссии.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/description-category/tree" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `language` — string Default: "DEFAULT" Enum: "DEFAULT" "RU" "EN" "TR" "ZH_HANS" Язык в ответе: EN — английский, RU — русский, TR — турецкий, ZH_HANS — китайский. По умолчанию используется русский язык.
 
@@ -34,7 +42,6 @@ Operation ID: `DescriptionCategoryAPI_GetTree`
   - `type_name` — string Название типа товара.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -72,26 +79,28 @@ Operation ID: `DescriptionCategoryAPI_GetAttributes`
 
 Получение характеристик для указанных категории и типа товара. Если у dictionary_id значение 0 , у атрибута нет вложенных справочников. Если значение другое, то справочники есть. Запросите их методом /v1/description-category/attribute/values .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/description-category/attribute" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "description_category_id": 200000933,
+  "language": "DEFAULT",
+  "type_id": 93080
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `description_category_id required` — integer <int64> Идентификатор категории. Можно получить с помощью метода /v1/description-category/tree .
 - `language` — string Default: "DEFAULT" Enum: "DEFAULT" "RU" "EN" "TR" "ZH_HANS" Язык в ответе: EN — английский, RU — русский, TR — турецкий, ZH_HANS — китайский. По умолчанию используется русский язык.
 - `type_id required` — integer <int64> Идентификатор типа товара. Можно получить с помощью метода /v1/description-category/tree .
-
-Пример запроса:
-
-```json
-{
-  "description_category_id": 200000933,
-  "language": "DEFAULT",
-  "type_id": 93080
-}
-```
 
 ### Ответы
 
@@ -116,7 +125,6 @@ Operation ID: `DescriptionCategoryAPI_GetAttributes`
   - `complex_is_collection` — boolean Признак, что комплексная характеристика — набор значений: true , если комплексная характеристика — набор значений, false , если комплексная характеристика — одно значение.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -150,12 +158,27 @@ Operation ID: `DescriptionCategoryAPI_GetAttributeValues`
 
 Возвращает справочник значений характеристики. Узнать, есть ли вложенный справочник, можно через метод /v1/description-category/attribute .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/description-category/attribute/values" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "attribute_id": 85,
+  "description_category_id": 17054869,
+  "language": "DEFAULT",
+  "last_value_id": 100,
+  "limit": 100,
+  "type_id": 97311
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `attribute_id required` — integer <int64> Идентификатор характеристики. Можно получить с помощью метода /v1/description-category/attribute .
 - `description_category_id required` — integer <int64> Идентификатор категории. Можно получить с помощью метода /v1/description-category/tree .
@@ -163,19 +186,6 @@ Operation ID: `DescriptionCategoryAPI_GetAttributeValues`
 - `last_value_id` — integer <int64> Идентификатор справочника, с которого нужно начать ответ. Если last_value_id — 10, то в ответе будут справочники, начиная с одиннадцатого.
 - `limit required` — integer <int64> Количество значений в ответе: максимум — 2000, минимум — 1.
 - `type_id required` — integer <int64> Идентификатор типа товара. Можно получить с помощью метода /v1/description-category/tree .
-
-Пример запроса:
-
-```json
-{
-  "attribute_id": 85,
-  "description_category_id": 17054869,
-  "language": "DEFAULT",
-  "last_value_id": 100,
-  "limit": 100,
-  "type_id": 97311
-}
-```
 
 ### Ответы
 
@@ -191,7 +201,6 @@ Operation ID: `DescriptionCategoryAPI_GetAttributeValues`
   - `value` — string Значение характеристики товара.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -222,30 +231,32 @@ Operation ID: `DescriptionCategoryAPI_SearchAttributeValues`
 
 Возвращает справочные значения характеристики по заданному значению value в запросе. Узнать, есть ли вложенный справочник, можно через метод /v1/description-category/attribute .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/description-category/attribute/values/search" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "attribute_id": 85,
+  "description_category_id": 17054869,
+  "limit": 100,
+  "type_id": 97311,
+  "value": "Name"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `attribute_id required` — integer <int64> Идентификатор характеристики. Можно получить с помощью метода /v1/description-category/attribute .
 - `description_category_id required` — integer <int64> Идентификатор категории. Можно получить с помощью метода /v1/description-category/tree .
 - `limit required` — integer <int64> Количество значений в ответе: максимум — 100, минимум — 1.
 - `type_id required` — integer <int64> Идентификатор типа товара. Можно получить с помощью метода /v1/description-category/tree .
 - `value required` — string Значение, по которому система будет искать справочные значения. Минимум — 2 символа.
-
-Пример запроса:
-
-```json
-{
-  "attribute_id": 85,
-  "description_category_id": 17054869,
-  "limit": 100,
-  "type_id": 97311,
-  "value": "Name"
-}
-```
 
 ### Ответы
 
@@ -260,7 +271,6 @@ Operation ID: `DescriptionCategoryAPI_SearchAttributeValues`
   - `value` — string Значение характеристики товара.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -284,7 +294,13 @@ Operation ID: `ProductAPI_GetProductPlacementZoneInfo`
 
 Вы можете отправить не больше 10 запросов в секунду. Подробнее о зонах размещения в Базе знаний продавца
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/placement-zone/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `skus required` — Array of strings <int64> [ 1 .. 150 ] items Список идентификаторов товаров в системе Ozon — SKU.
 
@@ -299,7 +315,6 @@ Operation ID: `ProductAPI_GetProductPlacementZoneInfo`
   - `sku` — integer <int64> Идентификатор товара в системе Ozon — SKU.
 
 Пример ответа:
-
 ```json
 {
   "products_placement": [

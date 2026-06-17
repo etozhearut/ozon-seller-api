@@ -1,6 +1,8 @@
 # Работа с вопросами и ответами
 
-_Тег: `QuestionsandAnswers` · операций: 8_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `QuestionsandAnswers` · методов: 8_
 
 ## Создать ответ на вопрос
 
@@ -10,26 +12,28 @@ Operation ID: `QuestionAnswer_Create`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/answer/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "question_id": "string",
+  "sku": 0,
+  "text": "string"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `question_id required` — string Идентификатор вопроса.
 - `sku required` — integer <int64> Идентификатор товара в системе Ozon — SKU.
 - `text required` — string Текст ответа объёмом от 2 до 3000 символов.
-
-Пример запроса:
-
-```json
-{
-  "question_id": "string",
-  "sku": 0,
-  "text": "string"
-}
-```
 
 ### Ответы
 
@@ -40,7 +44,6 @@ Operation ID: `QuestionAnswer_Create`
 - `answer_id` — string Идентификатор ответа на вопрос.
 
 Пример ответа:
-
 ```json
 {
   "answer_id": "0192e7ce-e12c-7a74-afc7-26e877799204"
@@ -57,31 +60,32 @@ Operation ID: `QuestionAnswer_Delete`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/answer/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "answer_id": "0192e7ce-e12c-7a74-afc7-26e877799204",
+  "sku": 646399170
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `answer_id required` — string Идентификатор ответа.
 - `sku required` — integer <int64> Идентификатор товара в системе Ozon — SKU.
-
-Пример запроса:
-
-```json
-{
-  "answer_id": "0192e7ce-e12c-7a74-afc7-26e877799204",
-  "sku": 646399170
-}
-```
 
 ### Ответы
 
 - 200 Ответ удалён
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -100,26 +104,28 @@ Operation ID: `QuestionAnswer_List`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/answer/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "last_id": "",
+  "question_id": "019228a7-91d8-76af-a73a-e989dfac7ac8",
+  "sku": 646399170
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `last_id` — Идентификатор последнего значения на странице. Если запрос первый, оставьте поле пустым. Для следующих значений указывайте last_id из ответа предыдущего запроса.
 - `question_id required` — string Идентификатор вопроса.
 - `sku required` — integer <int64> Идентификатор товара в системе Ozon — SKU.
-
-Пример запроса:
-
-```json
-{
-  "last_id": "",
-  "question_id": "019228a7-91d8-76af-a73a-e989dfac7ac8",
-  "sku": 646399170
-}
-```
 
 ### Ответы
 
@@ -131,7 +137,6 @@ Operation ID: `QuestionAnswer_List`
 - `last_id` — string Идентификатор последнего значения на странице. Чтобы получить следующие значения, передайте полученное значение в следующем запросе в параметре last_id .
 
 Пример ответа:
-
 ```json
 {
   "answers": [
@@ -159,33 +164,34 @@ Operation ID: `Question_ChangeStatus`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/change-status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "question_ids": [
+    "string"
+  ],
+  "status": "VIEWED"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `question_ids required` — Array of strings Идентификаторы вопросов.
 - `status required` — string Статусы вопросов: NEW — новые, VIEWED — просмотренные, PROCESSED — обработанные.
-
-Пример запроса:
-
-```json
-{
-  "question_ids": [
-    "string"
-  ],
-  "status": "VIEWED"
-}
-```
 
 ### Ответы
 
 - 200 Статус изменён
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -203,6 +209,12 @@ Operation ID: `Question_ChangeStatus`
 Operation ID: `Question_Count`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/count" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -222,7 +234,6 @@ Operation ID: `Question_Count`
 - `viewed` — integer <int64> Просмотренные вопросы.
 
 Пример ответа:
-
 ```json
 {
   "all": 10,
@@ -243,12 +254,18 @@ Operation ID: `Question_Info`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `question_id required` — string Идентификатор вопроса.
 
@@ -269,7 +286,6 @@ Operation ID: `Question_Info`
 - `text` — string Текст вопроса.
 
 Пример ответа:
-
 ```json
 {
   "answers_count": "0",
@@ -294,22 +310,12 @@ Operation ID: `Question_List`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Фильтр.
-- `last_id` — string Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
-- `limit` — integer <int64> <= 100 Количество значений в ответе.
-- `sort_dir` — string Default: "DESC" Enum: "DESC" "ASC" Направление сортировки: DESC — по убыванию; ASC — по возрастанию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "date_from": "2019-08-24T14:15:22Z",
     "date_to": "2019-08-24T14:15:22Z",
@@ -318,8 +324,20 @@ Operation ID: `Question_List`
   "limit": 100,
   "last_id": "",
   "sort_dir": "ASC"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Фильтр.
+- `last_id` — string Идентификатор последнего значения на странице. Оставьте это поле пустым при выполнении первого запроса. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
+- `limit` — integer <int64> <= 100 Количество значений в ответе.
+- `sort_dir` — string Default: "DESC" Enum: "DESC" "ASC" Направление сортировки: DESC — по убыванию; ASC — по возрастанию.
 
 ### Ответы
 
@@ -332,7 +350,6 @@ Operation ID: `Question_List`
 - `has_next` — boolean true , если в ответе вернулись не все вопросы.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -363,12 +380,18 @@ Operation ID: `Question_TopSku`
 
 Доступно для продавцов с подпиской Premium Plus . Вы можете оставить обратную связь по этому методу в комментариях к обсуждению в сообществе разработчиков Ozon for dev .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/question/top-sku" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `limit required` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
 

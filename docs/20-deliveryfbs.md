@@ -1,6 +1,8 @@
 # Доставка FBS
 
-_Тег: `DeliveryFBS` · операций: 27_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `DeliveryFBS` · методов: 27_
 
 ## Создание отгрузки
 
@@ -8,28 +10,30 @@ _Тег: `DeliveryFBS` · операций: 27_
 
 Operation ID: `CarriageAPI_CarriageCreate`
 
-Если вы продавец не из России, обратите внимание на доступность рекомендованного времени в личном кабинете. Если вам не доступен этот функционал, создайте отгрузку через метод /v2/posting/fbs/act/create . Подтверждать отгрузку, которую создали через этот метод, не нужно. Вы не сможете отредактировать состав отгрузки. Используйте метод для создания первой FBS отгрузки. В неё попадут все отправления со статусом «Готов к отгрузке». Созданная отгрузка получит статус new . Для отгрузки в статусе new можно перезаписать состав отправлений методом /v1/carriage/set-postings . Если из отгрузки исключить часть отправлений, они могут попасть в следующую отгрузку. Чтобы получить список отправлений в отгрузке, используйте метод /v2/posting/fbs/act/get-postings .
+Если вы продавец не из России, обратите внимание на доступность рекомендованного времени в личном кабинете. Если вам не доступен этот функционал, создайте отгрузку через метод /v2/posting/fbs/act/create . Подтверждать отгрузку, которую создали через этот метод, не нужно. Вы не сможете отредактировать состав отгрузки. …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "all_blr_traceable": true,
+  "delivery_method_id": 0,
+  "departure_date": "2019-08-24T14:15:22Z"
+}'
+```
 
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `all_blr_traceable` — boolean true , если нужно создать отгрузку с прослеживаемыми товарами.
 - `delivery_method_id` — integer <int64> Идентификатор метода доставки.
 - `departure_date` — string <date-time> Дата отгрузки. По умолчанию — текущая дата.
-
-Пример запроса:
-
-```json
-{
-  "all_blr_traceable": true,
-  "delivery_method_id": 0,
-  "departure_date": "2019-08-24T14:15:22Z"
-}
-```
 
 ### Ответы
 
@@ -54,24 +58,26 @@ Operation ID: `CarriageAPI_CarriageApprove`
 
 Используйте метод, чтобы подтвердить отгрузку после её создания. После подтверждения отгрузка перейдёт в статус «Сформирована». После подтверждения отгрузки вы можете получить лист отгрузки методом /v2/posting/fbs/act/get-pdf и штрихкод отгрузки методом /v2/posting/fbs/act/get-barcode .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/approve" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "carriage_id": 0,
+  "containers_count": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `carriage_id required` — integer <int64> Идентификатор отгрузки.
 - `containers_count` — integer <int32> Количество грузовых мест. Используйте параметр, если вы подключены к доверительной приёмке и отгружаете заказы грузовыми местами. Если вы не подключены к доверительной приёмке, пропустите его.
-
-Пример запроса:
-
-```json
-{
-  "carriage_id": 0,
-  "containers_count": 0
-}
-```
 
 ### Ответы
 
@@ -92,26 +98,28 @@ Operation ID: `CarriageAPI_SetPostings`
 
 Метод недоступен для продавцов из СНГ. Полностью перезаписывает список заказов в отгрузке. Передавайте только те заказы, которые находятся в статусе Ожидает отгрузки , и вы готовы их отгрузить. Чтобы вернуться к списку заказов, удалите отгрузку с помощью метода /v1/carriage/cancel , и создайте новую.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/set-postings" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "carriage_id": 0,
+  "posting_numbers": [
+    "string"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `carriage_id required` — integer <int64> Идентификатор отгрузки.
 - `posting_numbers required` — Array of strings Актуальный список отправлений.
-
-Пример запроса:
-
-```json
-{
-  "carriage_id": 0,
-  "posting_numbers": [
-    "string"
-  ]
-}
-```
 
 ### Ответы
 
@@ -130,7 +138,6 @@ Operation ID: `CarriageAPI_SetPostings`
   - `result` — boolean Результат обработки запроса. true , если запрос был обработан успешно.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -151,12 +158,18 @@ Operation ID: `CarriageAPI_SetPostings`
 
 Operation ID: `CarriageAPI_CarriageCancel`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `carriage_id required` — integer <int64> Идентификатор отгрузки.
 
@@ -175,7 +188,6 @@ Operation ID: `CarriageAPI_CarriageCancel`
 - `carriage_status` — string Статус отгрузки.
 
 Пример ответа:
-
 ```json
 {
   "error": "string",
@@ -193,29 +205,31 @@ Operation ID: `CarriageAPI_CarriageDeliveryListV2`
 
 Метод не возвращает информацию по методам доставки, у которых нет отправлений.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтр для поиска методов доставки и отгрузок.
-- `limit required` — integer <int64> <= 1000 Количество значений на странице.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/carriage/delivery/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "delivery_method_id": 0,
     "departure_date": "string"
   },
   "limit": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтр для поиска методов доставки и отгрузок.
+- `limit required` — integer <int64> <= 1000 Количество значений на странице.
 
 ### Ответы
 
@@ -233,7 +247,6 @@ Operation ID: `CarriageAPI_CarriageDeliveryListV2`
 - `methods` — Array of objects Список методов доставки.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",
@@ -309,24 +322,26 @@ Operation ID: `CarriageAPI_CarriageDeliveryList`
 
 Метод не возвращает информацию по методам доставки, у которых нет отправлений. Используйте метод, чтобы получить список созданных отгрузок для метода доставки и их статусы. 20 марта 2026 года отключим метод. Переключитесь на /v2/carriage/delivery/list .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/delivery/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "delivery_method_id": 0,
+  "departure_date": "2019-08-24T14:15:22Z"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `delivery_method_id` — integer <int64> Идентификатор метода доставки.
 - `departure_date` — string <date-time> Дата отгрузки. По умолчанию — текущая дата.
-
-Пример запроса:
-
-```json
-{
-  "delivery_method_id": 0,
-  "departure_date": "2019-08-24T14:15:22Z"
-}
-```
 
 ### Ответы
 
@@ -380,7 +395,6 @@ Operation ID: `CarriageAPI_CarriageDeliveryList`
   - `warehouse_name` — string Название склада.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -451,26 +465,28 @@ Operation ID: `PostingAPI_PostingFBSActCreate`
 
 Подтверждает отгрузку и запускает формирование транспортной накладной и штрихкода для отгрузки. Для продавцов из России также запускается формирование листа отгрузки, а для продавцов из СНГ — акта приёма-передачи. Чтобы сформировать и получить документы, переведите отправление в статус awaiting_deliver .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "containers_count": 1,
+  "delivery_method_id": 230039077005,
+  "departure_date": "2022-06-10T11:42:06.444Z"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `containers_count` — integer <int32> Количество грузовых мест. Используйте параметр, если вы подключены к доверительной приёмке и отгружаете заказы грузовыми местами. Если вы не подключены к доверительной приёмке, пропустите его. Подробнее в Базе знаний продавца
 - `delivery_method_id required` — integer <int64> Идентификатор метода доставки. Для realFBS-складов получите его с помощью метода /v2/delivery-method/list . Для FBS-складов используйте значение параметра warehouse_id . Его можно получить с помощью метода /v2/warehouse/list .
 - `departure_date` — string <date-time> Дата отгрузки.
-
-Пример запроса:
-
-```json
-{
-  "containers_count": 1,
-  "delivery_method_id": 230039077005,
-  "departure_date": "2022-06-10T11:42:06.444Z"
-}
-```
 
 ### Ответы
 
@@ -487,7 +503,6 @@ Operation ID: `PostingAPI_PostingFBSActCreate`
   - `id` — integer <int64> Номер задания на формирование штрихкода и документов.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -506,24 +521,26 @@ Operation ID: `PostingAPI_GetCarriageAvailableList`
 
 20 марта 2026 года отключим метод. Переключитесь на /v2/carriage/delivery/list . Метод для получения перевозок, по которым нужно распечатать штрихкод для отгрузки и документы: для продацов из России — лист отгрузки и транспортную накладную; для продавцов из СНГ — акт и транспортную накладную.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/carriage-available/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "delivery_method_id": 0,
+  "departure_date": "2019-08-24T14:15:22Z"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `delivery_method_id required` — integer <int64> Фильтр по методу доставки. Можно получить с помощью метода /v2/delivery-method/list .
 - `departure_date` — string <date-time> Дата отгрузки. По умолчанию — текущая дата.
-
-Пример запроса:
-
-```json
-{
-  "delivery_method_id": 0,
-  "departure_date": "2019-08-24T14:15:22Z"
-}
-```
 
 ### Ответы
 
@@ -558,7 +575,6 @@ Operation ID: `PostingAPI_GetCarriageAvailableList`
   - `warehouse_timezone` — string Часовой пояс, в котором находится склад.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -600,7 +616,13 @@ Operation ID: `PostingAPI_GetCarriageAvailableList`
 
 Operation ID: `CarriageGet`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `carriage_id required` — integer <int64> Идентификатор перевозки.
 
@@ -636,7 +658,6 @@ Operation ID: `CarriageGet`
 - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "act_type": "string",
@@ -681,15 +702,12 @@ Operation ID: `CarriageGet`
 
 Operation ID: `FbsSplit`
 
-### Тело запроса (application/json)
-
-- `posting_number required` — string Номер отправления.
-- `postings required` — Array of objects Список отправлений, на которые поделится заказ. За один запрос можно разделить один заказ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/split" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "posting_number": "string",
   "postings": [
     {
@@ -701,8 +719,13 @@ Operation ID: `FbsSplit`
       ]
     }
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `posting_number required` — string Номер отправления.
+- `postings required` — Array of objects Список отправлений, на которые поделится заказ. За один запрос можно разделить один заказ.
 
 ### Ответы
 
@@ -714,7 +737,6 @@ Operation ID: `FbsSplit`
 - `postings` — Array of objects Список отправлений, на которые разделился заказ.
 
 Пример ответа:
-
 ```json
 {
   "parent_posting": {
@@ -750,12 +772,18 @@ Operation ID: `PostingAPI_ActPostingList`
 
 Возвращает список отправлений в акте по его идентификатору.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/get-postings" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — int <int64> Идентификатор акта. Получите значение параметра методом /v2/posting/fbs/act/list или /v1/carriage/create .
 
@@ -781,7 +809,6 @@ Operation ID: `PostingAPI_ActPostingList`
   - `products` — Array of objects Список товаров в отправлении.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -817,12 +844,18 @@ Operation ID: `PostingAPI_PostingFBSActGetContainerLabels`
 
 Метод создает этикетки для грузового места.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/get-container-labels" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Номер задания на формирование документов (также идентификатор перевозки) из метода POST /v2/posting/fbs/act/create .
 
@@ -842,7 +875,6 @@ Operation ID: `PostingAPI_PostingFBSActGetContainerLabels`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "application/pdf",
@@ -861,12 +893,18 @@ Operation ID: `PostingAPI_PostingFBSGetBarcode`
 
 Метод для получения штрихкода, который нужно показать в пункте выдачи или сортировочном центре при отгрузке отправления.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/get-barcode" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Идентификатор перевозки.
 
@@ -886,7 +924,6 @@ Operation ID: `PostingAPI_PostingFBSGetBarcode`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "image/png",
@@ -905,12 +942,18 @@ Operation ID: `PostingAPI_PostingFBSGetBarcodeText`
 
 Используйте этот метод, чтобы получить штрихкод из ответа /v2/posting/fbs/act/get-barcode в текстовом виде.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/get-barcode/text" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Идентификатор перевозки.
 
@@ -932,12 +975,18 @@ Operation ID: `PostingAPI_PostingFBSDigitalActCheckStatus`
 
 Метод устаревает и будет отключён 22 марта 2026 года. Переключитесь на /v2/posting/fbs/act/check-status .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/digital/act/check-status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Номер задания на формирование документов (также идентификатор перевозки) из метода POST /v2/posting/fbs/act/create .
 
@@ -965,12 +1014,18 @@ Operation ID: `PostingAPI_PostingFBSGetAct`
 
 С помощью метода можно получить: продацам из России — лист отгрузки и транспортную накладную; продавцам из СНГ — акт и транспортную накладную. Получите список доступных документов для отгрузки в параметре available_actions метода /v1/carriage/get .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/get-pdf" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Номер задания на формирование документов (также идентификатор перевозки) из методов /v2/posting/fbs/act/create или /v1/carriage/create .
 
@@ -990,7 +1045,6 @@ Operation ID: `PostingAPI_PostingFBSGetAct`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "application/pdf",
@@ -1009,12 +1063,18 @@ Operation ID: `CarriageActDiscrepancyPDF`
 
 Акт о расхождениях доступен только для отгрузок в статусе closed и только для продавцов из СНГ.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/act-discrepancy/pdf" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `carriage_id required` — integer <int64> Идентификатор отгрузки.
 
@@ -1034,7 +1094,6 @@ Operation ID: `CarriageActDiscrepancyPDF`
 - `type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content": "string",
@@ -1053,20 +1112,12 @@ Operation ID: `PostingAPI_FbsActList`
 
 Возвращает список актов по отгрузкам с возможностью отфильтровать отгрузки по периоду, статусу и типу интеграции.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter` — object Параметры фильтра.
-- `limit required` — integer <int64> <= 50 Максимальное количество актов в ответе.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "date_from": "2021-08-04",
     "date_to": "2022-08-04",
@@ -1076,8 +1127,18 @@ Operation ID: `PostingAPI_FbsActList`
     ]
   },
   "limit": 50
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter` — object Параметры фильтра.
+- `limit required` — integer <int64> <= 50 Максимальное количество актов в ответе.
 
 ### Ответы
 
@@ -1107,7 +1168,6 @@ Operation ID: `PostingAPI_FbsActList`
   - `related_docs` — object Информация про акты перевозки.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -1152,26 +1212,28 @@ Operation ID: `PostingAPI_FbsActList`
 
 Operation ID: `PostingAPI_PostingFBSGetDigitalAct`
 
-Метод устаревает и будет отключён 22 марта 2026 года. Переключитесь на /v2/posting/fbs/act/get-pdf . Вы можете получить документы, если в ответе метода /v2/posting/fbs/digital/act/check-status был один из статусов: FORMED — перевозка сформирована успешно, CONFIRMED — перевозка подтверждена Ozon, CONFIRMED_WITH_MISMATCH — перевозка принята Ozon с расхождениями.
+Метод устаревает и будет отключён 22 марта 2026 года. Переключитесь на /v2/posting/fbs/act/get-pdf . …
+
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/digital/act/get-pdf" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "id": 900000250859000,
+  "doc_type": "act_of_acceptance"
+}'
+```
 
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Номер задания на формирование документов (также идентификатор перевозки) из метода POST /v2/posting/fbs/act/create .
 - `doc_type` — any <string> Тип электронного документа: act_of_acceptance — лист отгрузки, act_of_mismatch — акт о расхождениях, act_of_excess — акт об излишках, waybill — транспортная накладная.
-
-Пример запроса:
-
-```json
-{
-  "id": 900000250859000,
-  "doc_type": "act_of_acceptance"
-}
-```
 
 ### Ответы
 
@@ -1189,7 +1251,6 @@ Operation ID: `PostingAPI_PostingFBSGetDigitalAct`
 - `content_type` — string Тип файла.
 
 Пример ответа:
-
 ```json
 {
   "content_type": "application/pdf",
@@ -1208,12 +1269,18 @@ Operation ID: `PostingAPI_PostingFBSActCheckStatus`
 
 Возвращает статус формирования штрихкода для отгрузки и документов: для продавцов из России — транспортной накладной и листа отгрузки; для продавцов из СНГ — транспортной накладной и акта приёма-передачи.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbs/act/check-status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `id required` — integer <int64> Номер задания на формирование документов (также идентификатор перевозки) из метода POST /v2/posting/fbs/act/create .
 
@@ -1238,7 +1305,6 @@ Operation ID: `PostingAPI_PostingFBSActCheckStatus`
   - `partial_num` — integer <int64> Порядковый номер частичной перевозки.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -1265,12 +1331,18 @@ Operation ID: `PostingAPI_PostingFBSActCheckStatus`
 
 Operation ID: `PostingFbsTraceableSplit`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/traceable/split" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — string Номер отправления.
 
@@ -1286,7 +1358,6 @@ Operation ID: `PostingFbsTraceableSplit`
   - `products` — Array of objects Список товаров в отправлении.
 
 Пример ответа:
-
 ```json
 {
   "postings": [
@@ -1312,12 +1383,18 @@ Operation ID: `PostingFbsTraceableSplit`
 
 Operation ID: `PostingFbsProductTraceableAttribute`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbs/product/traceable/attribute" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `posting_number required` — string Номер отправления.
 
@@ -1332,7 +1409,6 @@ Operation ID: `PostingFbsProductTraceableAttribute`
   - `sku` — integer <int64> Идентификатор товара в системе Ozon — SKU.
 
 Пример ответа:
-
 ```json
 {
   "products": [
@@ -1354,12 +1430,18 @@ Operation ID: `PostingFbsProductTraceableAttribute`
 
 Operation ID: `CarriageEttnStatus`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/carriage/ettn/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `carriage_id required` — integer <int64> Идентификатор перевозки.
 
@@ -1373,7 +1455,6 @@ Operation ID: `CarriageEttnStatus`
 - `status` — string Enum: "NOT_UPLOADED" "PROCESSING" "SUCCESS" "FAILED" Статус проверки электронной ТТН на прослеживаемой отгрузке: NOT_UPLOADED — не загружена; PROCESSING — в процессе проверки; SUCCESS — проверена; FAILED — ошибка.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -1391,21 +1472,12 @@ Operation ID: `CarriageEttnStatus`
 
 Operation ID: `AssemblyCarriagePostingList`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter required` — object Фильтр.
-- `limit required` — integer <int64> <= 100 Количество значений на странице.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/assembly/carriage/posting/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "carriage_id": 0,
@@ -1414,8 +1486,19 @@ Operation ID: `AssemblyCarriagePostingList`
     "delivery_method_id": 0
   },
   "limit": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter required` — object Фильтр.
+- `limit required` — integer <int64> <= 100 Количество значений на странице.
 
 ### Ответы
 
@@ -1428,7 +1511,6 @@ Operation ID: `AssemblyCarriagePostingList`
 - `postings` — Array of objects Список отправлений.
 
 Пример ответа:
-
 ```json
 {
   "can_print_mass_label": true,
@@ -1460,21 +1542,12 @@ Operation ID: `AssemblyCarriagePostingList`
 
 Operation ID: `AssemblyCarriageProductList`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter required` — object Фильтр.
-- `limit required` — integer <int64> <= 100 Количество значений на странице.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/assembly/carriage/product/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "carriage_id": 0,
@@ -1483,8 +1556,19 @@ Operation ID: `AssemblyCarriageProductList`
     "delivery_method_id": 0
   },
   "limit": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter required` — object Фильтр.
+- `limit required` — integer <int64> <= 100 Количество значений на странице.
 
 ### Ответы
 
@@ -1496,7 +1580,6 @@ Operation ID: `AssemblyCarriageProductList`
 - `products` — Array of objects Список товаров.
 
 Пример ответа:
-
 ```json
 {
   "cursor": "string",
@@ -1523,22 +1606,12 @@ Operation ID: `AssemblyCarriageProductList`
 
 Operation ID: `AssemblyFbsPostingList`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter required` — object Фильтр.
-- `limit required` — integer <int64> <= 1000 Количество значений на странице.
-- `sort_dir required` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/assembly/fbs/posting/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "cutoff_from": "2026-03-01T00:00:00Z",
     "cutoff_to": "2026-03-07T23:59:59Z",
@@ -1547,8 +1620,20 @@ Operation ID: `AssemblyFbsPostingList`
   "limit": 50,
   "sort_dir": "ASC",
   "cursor": ""
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter required` — object Фильтр.
+- `limit required` — integer <int64> <= 1000 Количество значений на странице.
+- `sort_dir required` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
 
 ### Ответы
 
@@ -1561,7 +1646,6 @@ Operation ID: `AssemblyFbsPostingList`
 - `postings` — Array of objects Список отправлений.
 
 Пример ответа:
-
 ```json
 {
   "cutoff": "2026-03-07T10:00:00Z",
@@ -1639,22 +1723,12 @@ Operation ID: `AssemblyFbsPostingList`
 
 Operation ID: `AssemblyFbsProductList`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `filter required` — object Фильтр.
-- `limit required` — integer <int64> <= 1000 Количество значений на странице.
-- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , ответ начнётся с 11 найденного элемента.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/assembly/fbs/product/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "cutoff_from": "2019-08-24T14:15:22Z",
     "cutoff_to": "2019-08-24T14:15:22Z",
@@ -1663,8 +1737,20 @@ Operation ID: `AssemblyFbsProductList`
   "limit": 0,
   "offset": 0,
   "sort_dir": "ASC"
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `filter required` — object Фильтр.
+- `limit required` — integer <int64> <= 1000 Количество значений на странице.
+- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , ответ начнётся с 11 найденного элемента.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
 
 ### Ответы
 
@@ -1677,7 +1763,6 @@ Operation ID: `AssemblyFbsProductList`
 - `products_count` — integer <int32> Количество товаров.
 
 Пример ответа:
-
 ```json
 {
   "products": [

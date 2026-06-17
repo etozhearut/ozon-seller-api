@@ -1,12 +1,20 @@
 # Сертификаты качества
 
-_Тег: `CertificationAPI` · операций: 15_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `CertificationAPI` · методов: 15_
 
 ## Список типов соответствия требованиям (версия 1)
 
 `GET /v1/product/certificate/accordance-types`
 
 Operation ID: `ProductAPI_ProductCertificateAccordanceTypes`
+
+```bash
+curl -X GET "https://api-seller.ozon.ru/v1/product/certificate/accordance-types" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
 
 ### Параметры
 
@@ -29,7 +37,6 @@ Operation ID: `ProductAPI_ProductCertificateAccordanceTypes`
   - `value` — string Значение справочника.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -57,6 +64,12 @@ Operation ID: `ProductAPI_ProductCertificateAccordanceTypes`
 
 Operation ID: `CertificateAccordanceTypes`
 
+```bash
+curl -X GET "https://api-seller.ozon.ru/v2/product/certificate/accordance-types/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -73,7 +86,6 @@ Operation ID: `CertificateAccordanceTypes`
   - `hazard` — Array of objects Типов соответствия требованиям, относящиеся к опасным товарам.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -117,6 +129,12 @@ Operation ID: `CertificateAccordanceTypes`
 
 Operation ID: `ProductAPI_ProductCertificateTypes`
 
+```bash
+curl -X GET "https://api-seller.ozon.ru/v1/product/certificate/types" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -138,7 +156,6 @@ Operation ID: `ProductAPI_ProductCertificateTypes`
   - `value` — string Значение справочника.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -182,12 +199,18 @@ Operation ID: `ProductAPI_ProductCertificateTypes`
 
 Operation ID: `ProductAPI_ProductCertificationList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/product/certification/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `page required` — integer <int64> Номер страницы.
 - `page_size required` — integer <int64> [ 1 .. 1000 ] Количество элементов на странице.
@@ -202,7 +225,6 @@ Operation ID: `ProductAPI_ProductCertificationList`
 - `total` — integer <int64> Всего категорий.
 
 Пример ответа:
-
 ```json
 {
   "certification": [
@@ -228,12 +250,18 @@ Operation ID: `ProductAPI_V1ProductCertificationList`
 
 14 апреля 2025 года метод будет отключён. Переключитесь на /v2/product/certification/list .
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certification/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `page` — integer <int32> Номер страницы, возвращаемой в запросе.
 - `page_size` — integer <int32> Количество элементов на странице.
@@ -254,7 +282,6 @@ Operation ID: `ProductAPI_V1ProductCertificationList`
   - `total` — integer <int64> Всего категорий.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -277,12 +304,18 @@ Operation ID: `ProductAPI_V1ProductCertificationList`
 
 Operation ID: `ProductAPI_ProductCertificateCreate`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (multipart/form-data)
+### Тело запроса
 
 - `files required` — Array of file Массив сертификатов для товара. Допустимые расширения jpg, jpeg, png, pdf.
 - `name required` — string Название сертификата. Максимум 100 символов.
@@ -309,26 +342,28 @@ Operation ID: `ProductAPI_ProductCertificateCreate`
 
 Operation ID: `ProductAPI_ProductCertificateBind`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/bind" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "certificate_id": 50058,
+  "product_id": [
+    290
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `certificate_id required` — integer <int64> Идентификатор сертификата, который был присвоен при его загрузке.
 - `product_id required` — Array of integers <int64> Массив идентификаторов товаров, к которым относится этот сертификат.
-
-Пример запроса:
-
-```json
-{
-  "certificate_id": 50058,
-  "product_id": [
-    290
-  ]
-}
-```
 
 ### Ответы
 
@@ -351,7 +386,13 @@ Operation ID: `ProductAPI_ProductCertificateBind`
 
 Operation ID: `CertificateDelete`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `certificate_id required` — integer <int32> Идентификатор сертификата.
 
@@ -366,7 +407,6 @@ Operation ID: `CertificateDelete`
   - `error_message` — string Описание ошибок при удалении сертификата.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -384,22 +424,24 @@ Operation ID: `CertificateDelete`
 
 Operation ID: `CertificateInfo`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "certificate_number": "2312342134123"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `certificate_number required` — string Идентификатор сертификата.
-
-Пример запроса:
-
-```json
-{
-  "certificate_number": "2312342134123"
-}
-```
 
 ### Ответы
 
@@ -421,7 +463,6 @@ Operation ID: `CertificateInfo`
   - `products_count` — integer <int32> Количество товаров, привязанных к сертификату.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -448,30 +489,32 @@ Operation ID: `CertificateInfo`
 
 Operation ID: `CertificateList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "offer_id": "OFFER-2026-001",
+  "status": "approved",
+  "type": "certificate_of_conformity,declaration",
+  "page": 1,
+  "page_size": 50
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `offer_id` — string Идентификатор товара в системе продавца — артикул, привязанный к сертификату. Передайте параметр, если нужны сертификаты, к которым привязаны определённые товары.
 - `status` — string Статус сертификата. Передайте параметр, если нужны сертификаты с определённым статусом.
 - `type` — string Тип сертификата. Передайте параметр, если нужны сертификаты с определённым типом.
 - `page required` — integer <int32> Страница, с которой следует выводить список. Минимальное значение — 1.
 - `page_size required` — integer <int32> Количество объектов на странице. Значение — от 1 до 1000.
-
-Пример запроса:
-
-```json
-{
-  "offer_id": "OFFER-2026-001",
-  "status": "approved",
-  "type": "certificate_of_conformity,declaration",
-  "page": 1,
-  "page_size": 50
-}
-```
 
 ### Ответы
 
@@ -484,7 +527,6 @@ Operation ID: `CertificateList`
   - `page_count` — integer <int32> Количество страниц.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -531,6 +573,12 @@ Operation ID: `ProductStatusList`
 
 Метод для получения списка возможных статусов товаров при их привязке к сертификату.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/product_status/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -547,7 +595,6 @@ Operation ID: `ProductStatusList`
   - `name` — string Описание статуса.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -575,28 +622,30 @@ Operation ID: `ProductStatusList`
 
 Operation ID: `CertificateProductsList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/products/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "certificate_id": 624047,
+  "product_status_code": "approved",
+  "page": 1,
+  "page_size": 50
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `certificate_id required` — integer <int32> Идентификатор сертификата.
 - `product_status_code` — string Статус проверки товара при привязке к сертификату.
 - `page required` — integer <int32> Номер страницы, с которой выводить список. Минимальное значение — 1.
 - `page_size required` — integer <int32> Количество объектов на странице. Значение — от 1 до 1000.
-
-Пример запроса:
-
-```json
-{
-  "certificate_id": 624047,
-  "product_status_code": "approved",
-  "page": 1,
-  "page_size": 50
-}
-```
 
 ### Ответы
 
@@ -609,7 +658,6 @@ Operation ID: `CertificateProductsList`
   - `count` — integer <int64> Количество найденных товаров.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -632,26 +680,28 @@ Operation ID: `CertificateProductsList`
 
 Operation ID: `CertificateUnbind`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/unbind" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "certificate_id": 624047,
+  "product_id": [
+    "53110101"
+  ]
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `certificate_id required` — integer <int32> Идентификатор сертификата.
 - `product_id required` — Array of strings <int64> Список идентификаторов товара, которые нужно отвязать от сертификата.
-
-Пример запроса:
-
-```json
-{
-  "certificate_id": 624047,
-  "product_id": [
-    "53110101"
-  ]
-}
-```
 
 ### Ответы
 
@@ -665,7 +715,6 @@ Operation ID: `CertificateUnbind`
   - `updated` — boolean Был ли отвязан товар от сертификата: true — отвязан, false — не отвязан.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -686,6 +735,12 @@ Operation ID: `CertificateUnbind`
 
 Operation ID: `RejectionReasonsList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/rejection_reasons/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -702,7 +757,6 @@ Operation ID: `RejectionReasonsList`
   - `name` — string Описание причины отклонения сертификата.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -762,6 +816,12 @@ Operation ID: `RejectionReasonsList`
 
 Operation ID: `CertificateStatusList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/product/certificate/status/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -778,7 +838,6 @@ Operation ID: `CertificateStatusList`
   - `name` — string Описание статуса.
 
 Пример ответа:
-
 ```json
 {
   "result": [

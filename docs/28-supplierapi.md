@@ -1,6 +1,8 @@
 # Накладные
 
-_Тег: `SupplierAPI` · операций: 4_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `SupplierAPI` · методов: 4_
 
 ## Создать или изменить счёт-фактуру
 
@@ -10,20 +12,12 @@ Operation ID: `InvoiceAPI_InvoiceCreateOrUpdateV2`
 
 Создание или изменение таможенного счёта-фактуры для возврата НДС продавцам из Турции. Вы можете создать счёт-фактуру только для отправлений в статусах awaiting_approve или awaiting_packaging .
 
-### Тело запроса (application/json)
-
-- `date required` — string <date-time> Дата счёта-фактуры.
-- `hs_codes` — Array of objects HS-коды товаров.
-- `number` — string Номер счёта-фактуры. Номер может содержать буквы и цифры, максимальная длина — 50 символов.
-- `posting_number required` — string Номер отправления.
-- `price` — number <double> Стоимость, указанная в счёте-фактуре. Разделитель дробной части — точка, до двух знаков после точки.
-- `price_currency` — string Валюта счёта-фактуры: USD — доллар, EUR — евро, TRY — турецкая лира, CNY — юань, RUB — рубль, GBP — фунт стерлингов. Значение по умолчанию — USD .
-- `url required` — string Ссылка на счёт-фактуру. Чтобы создать ссылку, используйте метод v1/invoice/file/upload .
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/invoice/create-or-update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "HS_code": [
     {
       "sku": "SKU123",
@@ -44,8 +38,18 @@ Operation ID: `InvoiceAPI_InvoiceCreateOrUpdateV2`
   "price": 234.34,
   "price_currency": "RUB",
   "url": "https://cdn.ozone.ru/s3/ozon-disk-api/techdoc/seller-api/earsivfatura_1690960445.pdf"
-}
+}'
 ```
+
+### Тело запроса
+
+- `date required` — string <date-time> Дата счёта-фактуры.
+- `hs_codes` — Array of objects HS-коды товаров.
+- `number` — string Номер счёта-фактуры. Номер может содержать буквы и цифры, максимальная длина — 50 символов.
+- `posting_number required` — string Номер отправления.
+- `price` — number <double> Стоимость, указанная в счёте-фактуре. Разделитель дробной части — точка, до двух знаков после точки.
+- `price_currency` — string Валюта счёта-фактуры: USD — доллар, EUR — евро, TRY — турецкая лира, CNY — юань, RUB — рубль, GBP — фунт стерлингов. Значение по умолчанию — USD .
+- `url required` — string Ссылка на счёт-фактуру. Чтобы создать ссылку, используйте метод v1/invoice/file/upload .
 
 ### Ответы
 
@@ -65,19 +69,21 @@ Operation ID: `invoice_upload`
 
 Доступные форматы: JPEG и PDF. Максимальный размер файла: 10 МБ.
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/invoice/file/upload" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "base64_content": "string",
+  "posting_number": "string"
+}'
+```
+
+### Тело запроса
 
 - `base64_content required` — string Счёт-фактура в кодировке Base64.
 - `posting_number required` — string Номер отправления.
-
-Пример запроса:
-
-```json
-{
-  "base64_content": "string",
-  "posting_number": "string"
-}
-```
 
 ### Ответы
 
@@ -95,7 +101,13 @@ Operation ID: `invoice_upload`
 
 Operation ID: `invoice_getV2`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/invoice/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `posting_number required` — string Номер отправления.
 
@@ -114,7 +126,6 @@ Operation ID: `invoice_getV2`
   - `price_currency` — string Валюта счёта-фактуры: USD — доллар, EUR — евро, TRY — турецкая лира, CNY — юань, RUB — рубль, GBP — фунт стерлингов. Значение по умолчанию — USD .
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -141,7 +152,13 @@ Operation ID: `invoice_getV2`
 
 Operation ID: `invoice_delete`
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/invoice/delete" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `posting_number required` — string Номер отправления.
 

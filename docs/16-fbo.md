@@ -1,6 +1,8 @@
 # Доставка FBO
 
-_Тег: `FBO` · операций: 15_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `FBO` · методов: 15_
 
 ## Получить список отправлений
 
@@ -10,24 +12,12 @@ Operation ID: `PostingFboList`
 
 Возвращает список отправлений за указанный период времени. Если период больше года, вернётся ошибка PERIOD_IS_TOO_LONG . Дополнительно можно отфильтровать отправления по их статусу.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтр для поиска отправлений.
-- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-- `translit` — boolean true , чтобы включить транслитерацию адреса из кириллицы в латиницу.
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/posting/fbo/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "",
   "filter": {
     "posting_numbers": [
@@ -51,8 +41,22 @@ Operation ID: `PostingFboList`
     "financial_data": true,
     "legal_info": true
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтр для поиска отправлений.
+- `limit` — integer <int64> [ 1 .. 100 ] Количество значений в ответе.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
+- `translit` — boolean true , чтобы включить транслитерацию адреса из кириллицы в латиницу.
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -70,7 +74,6 @@ Operation ID: `PostingFboList`
 - `postings` — Array of objects Список отправлений.
 
 Пример ответа:
-
 ```json
 {
   "has_next": false,
@@ -152,24 +155,12 @@ Operation ID: `PostingAPI_GetFboPostingList`
 
 С 1 июня 2026 года метод будет отключён. Переключитесь на /v3/posting/fbo/list . Возвращает список отправлений за указанный период времени. Если период больше года, вернётся ошибка PERIOD_IS_TOO_LONG . Дополнительно можно отфильтровать отправления по их статусу.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `dir` — string Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
-- `filter required` — object Фильтр для поиска отправлений.
-- `limit required` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
-- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента. Максимальное значение — 20000.
-- `translit` — boolean Если включена транслитерация адреса из кириллицы в латиницу — true .
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbo/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "dir": "ASC",
   "filter": {
     "since": "2021-09-01T00:00:00.000Z",
@@ -184,8 +175,22 @@ Operation ID: `PostingAPI_GetFboPostingList`
     "financial_data": true,
     "legal_info": false
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `dir` — string Направление сортировки: ASC — по возрастанию, DESC — по убыванию.
+- `filter required` — object Фильтр для поиска отправлений.
+- `limit required` — integer <int64> Количество значений в ответе: максимум — 1000, минимум — 1.
+- `offset` — integer <int64> Количество элементов, которое будет пропущено в ответе. Например, если offset = 10 , то ответ начнётся с 11-го найденного элемента. Максимальное значение — 20000.
+- `translit` — boolean Если включена транслитерация адреса из кириллицы в латиницу — true .
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -214,7 +219,6 @@ Operation ID: `PostingAPI_GetFboPostingList`
   - `substatus` — string Подстатус отправления: posting_split_pending , posting_created — создано; posting_packing — на упаковке; posting_transferring_to_delivery — передаётся в доставку; posting_on_way_to_city — на пути в город доставки; posting_returned_to_warehouse — возвращено на склад; posting_transferred_to_courier_service — передаётся в службу доставки; posting_in_courier_service — курьер в пути; posting_on_way_to_pickup_point — в пути в пункт выдачи; posting_in_pickup_point — в пункте выдачи; posting_delivered — доставлено курьером; posting_received — получено в пункте выдачи; posting_canceled — отменено.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -296,21 +300,12 @@ Operation ID: `PostingAPI_GetFboPosting`
 
 Возвращает информацию об отправлении по его идентификатору.
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `posting_number required` — string Номер отправления.
-- `translit` — boolean Если включена транслитерация адреса из кириллицы в латиницу — true .
-- `with` — object Дополнительные поля, которые нужно добавить в ответ.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v2/posting/fbo/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "posting_number": "50520644-0012-7",
   "translit": true,
   "with": {
@@ -318,8 +313,19 @@ Operation ID: `PostingAPI_GetFboPosting`
     "financial_data": true,
     "legal_info": false
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `posting_number required` — string Номер отправления.
+- `translit` — boolean Если включена транслитерация адреса из кириллицы в латиницу — true .
+- `with` — object Дополнительные поля, которые нужно добавить в ответ.
 
 ### Ответы
 
@@ -349,7 +355,6 @@ Operation ID: `PostingAPI_GetFboPosting`
   - `substatus` — string Подстатус отправления: posting_split_pending , posting_created — создано; posting_packing — на упаковке; posting_transferring_to_delivery — передаётся в доставку; posting_on_way_to_city — на пути в город доставки; posting_returned_to_warehouse — возвращено на склад; posting_transferred_to_courier_service — передаётся в службу доставки; posting_in_courier_service — курьер в пути; posting_on_way_to_pickup_point — в пути в пункт выдачи; posting_in_pickup_point — в пункте выдачи; posting_delivered — доставлено курьером; posting_received — получено в пункте выдачи; posting_canceled — отменено.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -425,6 +430,12 @@ Operation ID: `PostingAPI_GetPostingFboCancelReasonList`
 
 Возвращает список причин отмены для всех FBO-отправлений.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/posting/fbo/cancel-reason/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -441,7 +452,6 @@ Operation ID: `PostingAPI_GetPostingFboCancelReasonList`
   - `name` — string Причина отмены.
 
 Пример ответа:
-
 ```json
 {
   "result": [
@@ -483,6 +493,12 @@ Operation ID: `SupplyOrderAPI_SupplyOrderStatusCounter`
 
 Возвращает количество заявок в конкретном статусе.
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/status/counter" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -499,7 +515,6 @@ Operation ID: `SupplyOrderAPI_SupplyOrderStatusCounter`
   - `order_state` — string Default: "ORDER_STATE_UNSPECIFIED" Enum: "ORDER_STATE_UNSPECIFIED" "ORDER_STATE_DATA_FILLING" "ORDER_STATE_READY_TO_SUPPLY" "ORDER_STATE_ACCEPTED_AT_SUPPLY_WAREHOUSE" "ORDER_STATE_IN_TRANSIT" "ORDER_STATE_ACCEPTANCE_AT_STORAGE_WAREHOUSE" "ORDER_STATE_REPORTS_CONFIRMATION_AWAITING" "ORDER_STATE_REPORT_REJECTED" "ORDER_STATE_COMPLETED" "ORDER_STATE_REJECTED_AT_SUPPLY_WAREHOUSE" "ORDER_STATE_CANCELLED" Статус поставки: UNSPECIFIED — статус не указан; DATA_FILLING — заполнение данных; READY_TO_SUPPLY — готова к отгрузке; ACCEPTED_AT_SUPPLY_WAREHOUSE — принята на точке отгрузки; IN_TRANSIT — в пути; ACCEPTANCE_AT_STORAGE_WAREHOUSE — приёмка на складе; REPORTS_CONFIRMATION_AWAITING — согласование актов; REPORT_REJECTED — спор; COMPLETED — завершена; REJECTED_AT_SUPPLY_WAREHOUSE — отказано в приёмке; CANCELLED — отменена.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -521,20 +536,12 @@ Operation ID: `SupplyOrderBundle`
 
 Используйте метод, чтобы получить товарный состав поставки или черновика заявки на поставку. Одним вызовом метода можно получить состав одной поставки или черновика заявки.
 
-### Тело запроса (application/json)
-
-- `bundle_ids required` — Array of strings [ 1 .. 100 ] items Идентификаторы товарного состава поставки. Можно получить в методе /v3/supply-order/get .
-- `is_asc` — boolean true , чтобы сортировать по возрастанию.
-- `item_tags_calculation` — object Список складов для расчёта товарных тегов.
-- `last_id` — string Идентификатор последнего значения SKU на странице.
-- `limit required` — integer <int32> [ 1 .. 100 ] Количество товаров на странице.
-- `query` — string Поисковый запрос, например: по названию, артикулу или SKU.
-- `sort_field` — string Enum: "SKU" "NAME" "QUANTITY" "TOTAL_VOLUME_IN_LITRES" Сортировка по параметрам: SKU — SKU; NAME — названию товара; QUANTITY — количеству; TOTAL_VOLUME_IN_LITRES — объёму в литрах.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/bundle" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "bundle_ids": [
     "bundle_123456789",
     "bundle_987654321"
@@ -551,8 +558,18 @@ Operation ID: `SupplyOrderBundle`
   "limit": 100,
   "query": "книга Хайям",
   "sort_field": "NAME"
-}
+}'
 ```
+
+### Тело запроса
+
+- `bundle_ids required` — Array of strings [ 1 .. 100 ] items Идентификаторы товарного состава поставки. Можно получить в методе /v3/supply-order/get .
+- `is_asc` — boolean true , чтобы сортировать по возрастанию.
+- `item_tags_calculation` — object Список складов для расчёта товарных тегов.
+- `last_id` — string Идентификатор последнего значения SKU на странице.
+- `limit required` — integer <int32> [ 1 .. 100 ] Количество товаров на странице.
+- `query` — string Поисковый запрос, например: по названию, артикулу или SKU.
+- `sort_field` — string Enum: "SKU" "NAME" "QUANTITY" "TOTAL_VOLUME_IN_LITRES" Сортировка по параметрам: SKU — SKU; NAME — названию товара; QUANTITY — количеству; TOTAL_VOLUME_IN_LITRES — объёму в литрах.
 
 ### Ответы
 
@@ -566,7 +583,6 @@ Operation ID: `SupplyOrderBundle`
 - `last_id` — string Идентификатор последнего значения на странице.
 
 Пример ответа:
-
 ```json
 {
   "items": [
@@ -628,18 +644,12 @@ Operation ID: `SupplyOrderList`
 
 Учитываются заявки с поставкой на конкретный склад и через виртуальный распределительный центр (вРЦ) .
 
-### Тело запроса (application/json)
-
-- `filter required` — object Фильтр.
-- `last_id` — string Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
-- `limit required` — integer <int32> [ 1 .. 100 ] Количество значений на странице.
-- `sort_by required` — string Enum: "ORDER_CREATION" "ORDER_STATE_UPDATED_AT" "TIMESLOT_FROM_UTC" "TIMESLOT_FROM_LOCAL" Параметр, по которому заявки на поставку будут отсортированы: ORDER_CREATION — по дате создания заявки; ORDER_STATE_UPDATED_AT — по обновлению статуса заявки; TIMESLOT_FROM_UTC — по таймслоту в UTC; TIMESLOT_FROM_LOCAL — по таймслоту в локальном времени.
-- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/supply-order/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "filter": {
     "states": [
       "COMPLETED"
@@ -649,8 +659,16 @@ Operation ID: `SupplyOrderList`
   "limit": 1,
   "sort_by": "ORDER_CREATION",
   "sort_dir": "DESC"
-}
+}'
 ```
+
+### Тело запроса
+
+- `filter required` — object Фильтр.
+- `last_id` — string Идентификатор последнего значения на странице. При первом запросе оставьте это поле пустым. Чтобы получить следующие значения, укажите last_id из ответа предыдущего запроса.
+- `limit required` — integer <int32> [ 1 .. 100 ] Количество значений на странице.
+- `sort_by required` — string Enum: "ORDER_CREATION" "ORDER_STATE_UPDATED_AT" "TIMESLOT_FROM_UTC" "TIMESLOT_FROM_LOCAL" Параметр, по которому заявки на поставку будут отсортированы: ORDER_CREATION — по дате создания заявки; ORDER_STATE_UPDATED_AT — по обновлению статуса заявки; TIMESLOT_FROM_UTC — по таймслоту в UTC; TIMESLOT_FROM_LOCAL — по таймслоту в локальном времени.
+- `sort_dir` — string Enum: "ASC" "DESC" Направление сортировки: ASC — по возрастанию; DESC — по убыванию.
 
 ### Ответы
 
@@ -662,7 +680,6 @@ Operation ID: `SupplyOrderList`
 - `order_ids` — Array of strings <int64> Идентификаторы заявок на поставку.
 
 Пример ответа:
-
 ```json
 {
   "order_ids": [
@@ -682,7 +699,13 @@ Operation ID: `SupplyOrderGet`
 
 Учитываются заявки с поставкой на конкретный склад и через виртуальный распределительный центр (вРЦ) .
 
-### Тело запроса (application/json)
+```bash
+curl -X POST "https://api-seller.ozon.ru/v3/supply-order/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
+### Тело запроса
 
 - `order_ids required` — Array of strings <int64> <= 50 items Идентификаторы заявок на поставку.
 
@@ -705,7 +728,6 @@ Operation ID: `SupplyOrderGet`
   - `timeslot` — object Информация о таймслоте.
 
 Пример ответа:
-
 ```json
 {
   "orders": [
@@ -775,12 +797,18 @@ Operation ID: `SupplyOrderGet`
 
 Operation ID: `SupplyOrderAPI_GetSupplyOrderTimeslots`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/timeslot/get" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `supply_order_id required` — integer <int64> Идентификатор заявки на поставку.
 
@@ -794,7 +822,6 @@ Operation ID: `SupplyOrderAPI_GetSupplyOrderTimeslots`
 - `timezone` — Array of objects Часовой пояс.
 
 Пример ответа:
-
 ```json
 {
   "timeslots": [
@@ -820,27 +847,29 @@ Operation ID: `SupplyOrderAPI_GetSupplyOrderTimeslots`
 
 Operation ID: `SupplyOrderAPI_UpdateSupplyOrderTimeslot`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `supply_order_id required` — integer <int64> Идентификатор заявки на поставку.
-- `timeslot required` — object Время интервала поставки.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/timeslot/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "supply_order_id": 84882285,
   "timeslot": {
     "from": "2019-08-24T14:15:22Z",
     "to": "2019-08-24T14:15:22Z"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `supply_order_id required` — integer <int64> Идентификатор заявки на поставку.
+- `timeslot required` — object Время интервала поставки.
 
 ### Ответы
 
@@ -852,7 +881,6 @@ Operation ID: `SupplyOrderAPI_UpdateSupplyOrderTimeslot`
 - `operation_id` — string Идентификатор операции.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -870,22 +898,24 @@ Operation ID: `SupplyOrderAPI_UpdateSupplyOrderTimeslot`
 
 Operation ID: `SupplyOrderAPI_GetSupplyOrderTimeslotStatus`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/timeslot/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "operation_id": "89ta-98sk123451"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции.
-
-Пример запроса:
-
-```json
-{
-  "operation_id": "89ta-98sk123451"
-}
-```
 
 ### Ответы
 
@@ -897,7 +927,6 @@ Operation ID: `SupplyOrderAPI_GetSupplyOrderTimeslotStatus`
 - `status` — string Default: "STATUS_UNSPECIFIED" Enum: "STATUS_UNSPECIFIED" "STATUS_ERROR" "STATUS_IN_PROGRESS" "STATUS_SUCCESS" Статус данных: UNSPECIFIED — не указан; ERROR — ошибка; IN_PROGRESS — устанавливается; SUCCESS — установлен.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -915,20 +944,12 @@ Operation ID: `SupplyOrderAPI_GetSupplyOrderTimeslotStatus`
 
 Operation ID: `SupplyOrderAPI_SupplyOrderPassCreate`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `supply_order_id required` — integer <int64> Идентификатор заявки на поставку.
-- `vehicle required` — object Информация о водителе и автомобиле.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/pass/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "supply_order_id": 1001,
   "vehicle": {
     "driver_name": "Иван Петров",
@@ -936,8 +957,18 @@ Operation ID: `SupplyOrderAPI_SupplyOrderPassCreate`
     "vehicle_model": "ГАЗель NEXT",
     "vehicle_number": "А 123 ВВ 799"
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `supply_order_id required` — integer <int64> Идентификатор заявки на поставку.
+- `vehicle required` — object Информация о водителе и автомобиле.
 
 ### Ответы
 
@@ -949,7 +980,6 @@ Operation ID: `SupplyOrderAPI_SupplyOrderPassCreate`
 - `operation_id` — string Идентификатор операции.
 
 Пример ответа:
-
 ```json
 {
   "error_reasons": [
@@ -967,22 +997,24 @@ Operation ID: `SupplyOrderAPI_SupplyOrderPassCreate`
 
 Operation ID: `SupplyOrderAPI_SupplyOrderPassStatus`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/pass/status" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "operation_id": "550e8400-e29b-41d4-a716-446655440000"
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `operation_id required` — string Идентификатор операции.
-
-Пример запроса:
-
-```json
-{
-  "operation_id": "550e8400-e29b-41d4-a716-446655440000"
-}
-```
 
 ### Ответы
 
@@ -994,7 +1026,6 @@ Operation ID: `SupplyOrderAPI_SupplyOrderPassStatus`
 - `result` — string Default: "Unknown" Enum: "Unknown" "Success" "InProgress" "Failed" Статус ввода данных о водителе и автомобиле: Unknown — статус неизвестен; Success — данные указаны; InProgress — данные обрабатываются; Failed — не удалось обработать данные.
 
 Пример ответа:
-
 ```json
 {
   "errors": [
@@ -1012,12 +1043,18 @@ Operation ID: `SupplyOrderAPI_SupplyOrderPassStatus`
 
 Operation ID: `SupplyOrderAPI_SupplyOrderDetails`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/supply-order/details" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `order_id required` — integer <int64> Идентификатор заявки на поставку.
 
@@ -1045,7 +1082,6 @@ Operation ID: `SupplyOrderAPI_SupplyOrderDetails`
 - `vehicle` — object Информация о водителе и машине.
 
 Пример ответа:
-
 ```json
 {
   "created_date": "2019-08-24T14:15:22Z",
@@ -1146,6 +1182,12 @@ Operation ID: `SupplierAPI_SupplierAvailableWarehouses`
 
 Метод возвращает список активных складов Ozon с информацией об их средней загруженности на ближайшее время.
 
+```bash
+curl -X GET "https://api-seller.ozon.ru/v1/supplier/available_warehouses" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -1162,7 +1204,6 @@ Operation ID: `SupplierAPI_SupplierAvailableWarehouses`
   - `warehouse` — object Склад.
 
 Пример ответа:
-
 ```json
 {
   "result": [

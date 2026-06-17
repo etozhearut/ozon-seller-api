@@ -1,6 +1,8 @@
 # Создание FBS-складов и управление ими
 
-_Тег: `FBSWarehouseSetup` · операций: 17_
+Базовый URL: `https://api-seller.ozon.ru`. Заголовки авторизации: `Client-Id`, `Api-Key`.
+
+_Тег: `FBSWarehouseSetup` · методов: 17_
 
 ## Получить список drop-off пунктов для создания склада
 
@@ -8,17 +10,12 @@ _Тег: `FBSWarehouseSetup` · операций: 17_
 
 Operation ID: `WarehouseAPI_ListDropOffPointsForCreateFBSWarehouse`
 
-### Тело запроса (application/json)
-
-- `coordinates` — object Координаты.
-- `country_code required` — string Код страны в формате ISO 2.
-- `is_kgt required` — boolean true , если товар крупногабаритный.
-- `search` — object Параметры поиска.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/create/drop-off/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "country_code": "RU",
   "is_kgt": false,
   "coordinates": {
@@ -31,8 +28,15 @@ Operation ID: `WarehouseAPI_ListDropOffPointsForCreateFBSWarehouse`
       "PPZ"
     ]
   }
-}
+}'
 ```
+
+### Тело запроса
+
+- `coordinates` — object Координаты.
+- `country_code required` — string Код страны в формате ISO 2.
+- `is_kgt required` — boolean true , если товар крупногабаритный.
+- `search` — object Параметры поиска.
 
 ### Ответы
 
@@ -49,7 +53,6 @@ Operation ID: `WarehouseAPI_ListDropOffPointsForCreateFBSWarehouse`
   - `type` — string Enum: "PVZ" "PPZ" "SC" Тип drop-off пункта: PVZ — пункт выдачи заказов; PPZ — пункт приёма заказов; SC — сортировочный центр.
 
 Пример ответа:
-
 ```json
 {
   "points": [
@@ -81,15 +84,12 @@ Operation ID: `WarehouseAPI_ListDropOffPointsForCreateFBSWarehouse`
 
 Operation ID: `WarehouseAPI_ListDropOffPointsForUpdateFBSWarehouse`
 
-### Тело запроса (application/json)
-
-- `search` — object Параметры поиска.
-- `warehouse_id required` — integer <int64> Фильтр по существующему FBS-складу.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/update/drop-off/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "search": {
     "address": "москва",
     "types": [
@@ -97,8 +97,13 @@ Operation ID: `WarehouseAPI_ListDropOffPointsForUpdateFBSWarehouse`
     ]
   },
   "warehouse_id": 0
-}
+}'
 ```
+
+### Тело запроса
+
+- `search` — object Параметры поиска.
+- `warehouse_id required` — integer <int64> Фильтр по существующему FBS-складу.
 
 ### Ответы
 
@@ -115,7 +120,6 @@ Operation ID: `WarehouseAPI_ListDropOffPointsForUpdateFBSWarehouse`
   - `type` — string Enum: "PVZ" "PPZ" "SC" Тип drop-off пункта: PVZ — пункт выдачи заказов; PPZ — пункт приёма заказов; SC — сортировочный центр.
 
 Пример ответа:
-
 ```json
 {
   "points": [
@@ -147,12 +151,18 @@ Operation ID: `WarehouseAPI_ListDropOffPointsForUpdateFBSWarehouse`
 
 Operation ID: `WarehouseFbsCreateDropOffTimeslotList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/create/drop-off/timeslot/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `drop_off_point_id required` — integer <int64> Идентификатор drop-off пункта.
 
@@ -170,7 +180,6 @@ Operation ID: `WarehouseFbsCreateDropOffTimeslotList`
   - `to` — string Время окончания таймслота.
 
 Пример ответа:
-
 ```json
 {
   "timeslots": [
@@ -193,24 +202,26 @@ Operation ID: `WarehouseFbsCreateDropOffTimeslotList`
 
 Operation ID: `WarehouseFbsUpdateDropOffTimeslotList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/update/drop-off/timeslot/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "drop_off_point_id": 0,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `drop_off_point_id required` — integer <int64> Идентификатор drop-off пункта.
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "drop_off_point_id": 0,
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -226,7 +237,6 @@ Operation ID: `WarehouseFbsUpdateDropOffTimeslotList`
   - `to` — string Время окончания таймслота.
 
 Пример ответа:
-
 ```json
 {
   "timeslots": [
@@ -249,27 +259,29 @@ Operation ID: `WarehouseFbsUpdateDropOffTimeslotList`
 
 Operation ID: `WarehouseFbsCreatePickUpTimeslotList`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `address_coordinates required` — object Координаты склада.
-- `is_kgt required` — boolean Признак крупногабаритного товара.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/create/pick-up/timeslot/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "is_kgt": true,
   "address_coordinates": {
     "latitude": 55.7558,
     "longitude": 37.6173
   }
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `address_coordinates required` — object Координаты склада.
+- `is_kgt required` — boolean Признак крупногабаритного товара.
 
 ### Ответы
 
@@ -281,7 +293,6 @@ Operation ID: `WarehouseFbsCreatePickUpTimeslotList`
 - `timeslots` — Array of objects Список таймслотов.
 
 Пример ответа:
-
 ```json
 {
   "is_pickup_supported": true,
@@ -308,12 +319,18 @@ Operation ID: `WarehouseFbsCreatePickUpTimeslotList`
 
 Operation ID: `WarehouseFbsUpdatePickUpTimeslotList`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/update/pick-up/timeslot/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_id required` — integer <int64> Идентификатор склада.
 
@@ -329,7 +346,6 @@ Operation ID: `WarehouseFbsUpdatePickUpTimeslotList`
   - `to` — string Время окончания таймслота.
 
 Пример ответа:
-
 ```json
 {
   "timeslots": [
@@ -357,24 +373,12 @@ Operation ID: `WarehouseAPI_CreateWarehouseFBS`
 
 Если создаёте склад с доставкой в drop-off пункт, используйте метод /v1/warehouse/fbs/create/drop-off/list , чтобы получить точки.
 
-### Тело запроса (application/json)
-
-- `address_coordinates required` — object Координаты адреса склада.
-- `cut_in_time required` — integer <int64> Время на приём заказов в минутах. Например, если вы передадите 3000 , приём заказов будет завершён через 50 часов с момента передачи.
-- `drop_off_point_id` — integer <int64> Идентификатор drop-off пункта.
-- `first_mile_type required` — string Enum: "PICK_UP" "DROP_OFF" Тип первой мили: PICK_UP — отгрузка заказов курьеру; DROP_OFF — отгрузка заказов в пункт приёма.
-- `is_kgt required` — boolean true , если товар крупногабаритный.
-- `name required` — string Название склада.
-- `options` — object Параметры склада.
-- `phone required` — string Номер телефона склада. Укажите в формате +7(XXX)XXX-XX-XX.
-- `timeslot_id required` — integer <int64> Идентификатор таймслота.
-- `return_point_id` — integer <int64> Идентификатор пункта возврата. Получите значение параметра методом /v1/warehouse/fbs/create/return-point/list .
-- `working_days` — Array of strings <= 7 items Items Enum: "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY" Рабочие дни склада: MONDAY — понедельник, TUESDAY — вторник, WEDNESDAY — среда, THURSDAY — четверг, FRIDAY — пятница, SATURDAY — суббота, SUNDAY — воскресенье.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "address_coordinates": {
     "latitude": 55.69626,
     "longitude": 37.42686
@@ -402,8 +406,22 @@ Operation ID: `WarehouseAPI_CreateWarehouseFBS`
     "THURSDAY",
     "FRIDAY"
   ]
-}
+}'
 ```
+
+### Тело запроса
+
+- `address_coordinates required` — object Координаты адреса склада.
+- `cut_in_time required` — integer <int64> Время на приём заказов в минутах. Например, если вы передадите 3000 , приём заказов будет завершён через 50 часов с момента передачи.
+- `drop_off_point_id` — integer <int64> Идентификатор drop-off пункта.
+- `first_mile_type required` — string Enum: "PICK_UP" "DROP_OFF" Тип первой мили: PICK_UP — отгрузка заказов курьеру; DROP_OFF — отгрузка заказов в пункт приёма.
+- `is_kgt required` — boolean true , если товар крупногабаритный.
+- `name required` — string Название склада.
+- `options` — object Параметры склада.
+- `phone required` — string Номер телефона склада. Укажите в формате +7(XXX)XXX-XX-XX.
+- `timeslot_id required` — integer <int64> Идентификатор таймслота.
+- `return_point_id` — integer <int64> Идентификатор пункта возврата. Получите значение параметра методом /v1/warehouse/fbs/create/return-point/list .
+- `working_days` — Array of strings <= 7 items Items Enum: "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY" Рабочие дни склада: MONDAY — понедельник, TUESDAY — вторник, WEDNESDAY — среда, THURSDAY — четверг, FRIDAY — пятница, SATURDAY — суббота, SUNDAY — воскресенье.
 
 ### Ответы
 
@@ -414,7 +432,6 @@ Operation ID: `WarehouseAPI_CreateWarehouseFBS`
 - `operation_id` — string Идентификатор операции на создание FBS-склада. Чтобы получить статус операции, используйте метод /v1/warehouse/operation/status .
 
 Пример ответа:
-
 ```json
 {
   "operation_id": "a0cfefee-9a5a-4580-bc32-2f9a6c7973e3"
@@ -429,24 +446,12 @@ Operation ID: `WarehouseAPI_CreateWarehouseFBS`
 
 Operation ID: `UpdateWarehouseFBS`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `address_coordinates required` — object Координаты склада.
-- `name` — string >= 100 characters Название склада.
-- `options` — object Параметры склада.
-- `phone` — string +7(XXX)XXX-XX-XX Номер телефона склада.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-- `working_days` — Array of strings [ 5 .. 7 ] Items Enum: "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY" Рабочие дни склада: MONDAY — понедельник; TUESDAY — вторник; WEDNESDAY — среда; THURSDAY — четверг; FRIDAY — пятница; SATURDAY — суббота; SUNDAY — воскресенье.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "address_coordinates": {
     "latitude": 55.69626,
     "longitude": 37.42686
@@ -469,8 +474,22 @@ Operation ID: `UpdateWarehouseFBS`
     "THURSDAY",
     "FRIDAY"
   ]
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `address_coordinates required` — object Координаты склада.
+- `name` — string >= 100 characters Название склада.
+- `options` — object Параметры склада.
+- `phone` — string +7(XXX)XXX-XX-XX Номер телефона склада.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
+- `working_days` — Array of strings [ 5 .. 7 ] Items Enum: "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY" Рабочие дни склада: MONDAY — понедельник; TUESDAY — вторник; WEDNESDAY — среда; THURSDAY — четверг; FRIDAY — пятница; SATURDAY — суббота; SUNDAY — воскресенье.
 
 ### Ответы
 
@@ -488,12 +507,27 @@ Operation ID: `UpdateWarehouseFBS`
 
 Operation ID: `UpdateWarehouseFBSFirstMile`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/first-mile/update" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "first_mile_type": "DROP_OFF",
+  "drop_off_point_id": 0,
+  "cut_in_time": 0,
+  "timeslot_id": 0,
+  "return_point_id": 0,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `cut_in_time required` — integer <int64> Время на приём заказов в минутах. Например, если вы передадите 3000 , приём заказов будет завершён через 50 часов с момента передачи.
 - `drop_off_point_id` — integer <int64> Идентификатор drop-off пункта. Если first_mile_type = DROP_OFF , параметр обязательный.
@@ -501,19 +535,6 @@ Operation ID: `UpdateWarehouseFBSFirstMile`
 - `timeslot_id required` — integer <int64> Идентификатор таймслота.
 - `return_point_id` — integer <int64> Идентификатор пункта возврата. Получите значение параметра методом /v1/warehouse/fbs/update/return-point/list .
 - `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "first_mile_type": "DROP_OFF",
-  "drop_off_point_id": 0,
-  "cut_in_time": 0,
-  "timeslot_id": 0,
-  "return_point_id": 0,
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -531,24 +552,12 @@ Operation ID: `UpdateWarehouseFBSFirstMile`
 
 Operation ID: `WarehouseFBSCreateReturnPointList`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `coordinates required` — object Координаты пункта возврата.
-- `country_code required` — string Код страны в формате ISO 2.
-- `last_id` — integer <int64> Идентификатор последнего значения на странице.
-- `limit required` — integer <int32> [ 1 .. 500 ] Количество значений в ответе.
-- `search` — object Параметры поиска.
-- `selected_dropoff_point_id` — integer <int64> Идентификатор выбранной точки отгрузки на складе.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/create/return-point/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "coordinates": {
     "latitude": 0,
     "longitude": 0
@@ -563,8 +572,22 @@ Operation ID: `WarehouseFBSCreateReturnPointList`
     ]
   },
   "selected_dropoff_point_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `coordinates required` — object Координаты пункта возврата.
+- `country_code required` — string Код страны в формате ISO 2.
+- `last_id` — integer <int64> Идентификатор последнего значения на странице.
+- `limit required` — integer <int32> [ 1 .. 500 ] Количество значений в ответе.
+- `search` — object Параметры поиска.
+- `selected_dropoff_point_id` — integer <int64> Идентификатор выбранной точки отгрузки на складе.
 
 ### Ответы
 
@@ -578,7 +601,6 @@ Operation ID: `WarehouseFBSCreateReturnPointList`
 - `points` — Array of objects Список пунктов возврата.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -615,24 +637,12 @@ Operation ID: `WarehouseFBSCreateReturnPointList`
 
 Operation ID: `WarehouseFBSUpdateReturnPointList`
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `current_dropoff_point_id` — integer <int64> Идентификатор выбранной точки отгрузки на складе.
-- `current_return_point_id` — integer <int64> Установленный пункт возврата. Получите значение параметра методом /v1/warehouse/fbs/return-mile/info .
-- `last_id` — integer <int64> Идентификатор последнего значения на странице.
-- `limit required` — integer <int32> [ 1 .. 500 ] Количество значений в ответе.
-- `search` — object Параметры поиска.
-- `warehouse_id required` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/update/return-point/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "current_dropoff_point_id": 0,
   "current_return_point_id": 0,
   "last_id": 0,
@@ -644,8 +654,22 @@ Operation ID: `WarehouseFBSUpdateReturnPointList`
     ]
   },
   "warehouse_id": 0
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `current_dropoff_point_id` — integer <int64> Идентификатор выбранной точки отгрузки на складе.
+- `current_return_point_id` — integer <int64> Установленный пункт возврата. Получите значение параметра методом /v1/warehouse/fbs/return-mile/info .
+- `last_id` — integer <int64> Идентификатор последнего значения на странице.
+- `limit required` — integer <int32> [ 1 .. 500 ] Количество значений в ответе.
+- `search` — object Параметры поиска.
+- `warehouse_id required` — integer <int64> Идентификатор склада.
 
 ### Ответы
 
@@ -659,7 +683,6 @@ Operation ID: `WarehouseFBSUpdateReturnPointList`
 - `points` — Array of objects Список пунктов возврата.
 
 Пример ответа:
-
 ```json
 {
   "has_next": true,
@@ -696,12 +719,18 @@ Operation ID: `WarehouseFBSUpdateReturnPointList`
 
 Operation ID: `WarehouseFBSReturnMileInfo`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/return-mile/info" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_ids required` — Array of strings <int64> [ 1 .. 1000 ] Идентификаторы складов.
 
@@ -717,7 +746,6 @@ Operation ID: `WarehouseFBSReturnMileInfo`
   - `warehouse_id` — integer <int64> Идентификатор склада.
 
 Пример ответа:
-
 ```json
 {
   "return_mile_settings": [
@@ -755,28 +783,30 @@ Operation ID: `WarehouseFBSReturnMileInfo`
 
 Operation ID: `WarehouseFbsReturnMileCheck`
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/return-mile/check" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "country_code": "string",
+  "first_mile_type": "PICK_UP",
+  "is_kgt": true,
+  "warehouse_id": 0
+}'
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `country_code required` — string Код страны в формате ISO 2.
 - `first_mile_type required` — string Enum: "PICK_UP" "DROP_OFF" Тип первой мили: PICK_UP — отгрузка заказов курьеру; DROP_OFF — отгрузка заказов в пункт приёма.
 - `is_kgt required` — boolean Признак крупногабаритного товара.
 - `warehouse_id` — integer <int64> Идентификатор склада.
-
-Пример запроса:
-
-```json
-{
-  "country_code": "string",
-  "first_mile_type": "PICK_UP",
-  "is_kgt": true,
-  "warehouse_id": 0
-}
-```
 
 ### Ответы
 
@@ -788,7 +818,6 @@ Operation ID: `WarehouseFbsReturnMileCheck`
 - `unavailability_reasons` — Array of strings Причины, по которым нельзя установить возвратную милю.
 
 Пример ответа:
-
 ```json
 {
   "should_set_return_mile": true,
@@ -808,12 +837,18 @@ Operation ID: `WarehouseFbsPickUpCourierCreate`
 
 Метод позволяет запланировать приезд курьера для отгрузки ему отправлений. Подробнее об отгрузках курьеру на FBS в Базе знаний
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/pickup/courier/create" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_id required` — integer <int64> Идентификатор склада. Чтобы получить список складов для планирования выездов, используйте /v1/warehouse/fbs/pickup/planning/list .
 
@@ -822,7 +857,6 @@ Operation ID: `WarehouseFbsPickUpCourierCreate`
 - 200 Вызов создан
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -846,12 +880,18 @@ Operation ID: `WarehouseFbsPickUpCourierCancel`
 
 Метод позволяет отменить запланированный приезд курьера. Подробнее об отгрузках курьеру на FBS в Базе знаний
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/pickup/courier/cancel" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
 - `Api-Key required` — string API-ключ.
 
-### Тело запроса (application/json)
+### Тело запроса
 
 - `warehouse_id required` — integer <int64> Идентификатор склада.
 
@@ -860,7 +900,6 @@ Operation ID: `WarehouseFbsPickUpCourierCancel`
 - 200 Вызов отменён
 
 Пример ответа:
-
 ```json
 {
   "code": 0,
@@ -884,21 +923,12 @@ Operation ID: `WarehouseFbsPickUpHistoryList`
 
 Подробнее об отгрузках курьеру в Базе знаний продавца
 
-### Параметры
-
-- `Client-Id required` — string Идентификатор клиента.
-- `Api-Key required` — string API-ключ.
-
-### Тело запроса (application/json)
-
-- `cursor` — string Указатель для выборки следующих данных.
-- `filter` — object Фильтр.
-- `limit required` — integer <int64> [ 1 .. 1000 ] Количество значений на странице.
-
-Пример запроса:
-
-```json
-{
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/pickup/history/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
   "cursor": "string",
   "filter": {
     "planned_date": "string",
@@ -908,8 +938,19 @@ Operation ID: `WarehouseFbsPickUpHistoryList`
     "was_planned": true
   },
   "limit": 1
-}
+}'
 ```
+
+### Параметры
+
+- `Client-Id required` — string Идентификатор клиента.
+- `Api-Key required` — string API-ключ.
+
+### Тело запроса
+
+- `cursor` — string Указатель для выборки следующих данных.
+- `filter` — object Фильтр.
+- `limit required` — integer <int64> [ 1 .. 1000 ] Количество значений на странице.
 
 ### Ответы
 
@@ -927,7 +968,6 @@ Operation ID: `WarehouseFbsPickUpHistoryList`
   - `history` — Array of objects История отгрузок.
 
 Пример ответа:
-
 ```json
 {
   "result": {
@@ -956,6 +996,12 @@ Operation ID: `WarehouseFbsPickUpPlanningList`
 
 Чтобы создать отгрузку, используйте метод /v1/warehouse/fbs/pickup/courier/create . Подробнее об отгрузках курьеру на FBS в Базе знаний
 
+```bash
+curl -X POST "https://api-seller.ozon.ru/v1/warehouse/fbs/pickup/planning/list" \
+  -H "Client-Id: <CLIENT_ID>" \
+  -H "Api-Key: <API_KEY>"
+```
+
 ### Параметры
 
 - `Client-Id required` — string Идентификатор клиента.
@@ -971,7 +1017,6 @@ Operation ID: `WarehouseFbsPickUpPlanningList`
   - `warehouses` — Array of objects Информация о складах.
 
 Пример ответа:
-
 ```json
 {
   "result": {
